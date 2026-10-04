@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2F5D8A">
+<title>AI-이음 · 관리자</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="shared/ai-ieum.css">
+<style>
+/* 관리자 페이지 — 사용자 페이지와 같은 틀(shared/ai-ieum.css). 특정 지역 색 대신 기본 남색 하나만 쓰고,
+   지역 사진·색은 관리 대상으로만 보여준다. */
+
+/* 관리 카드: 지역 사진 6장 모자이크 위에 남색 */
+.rcard.admin{min-height:164px;background:#1D2B3F}
+.rcard.admin::before{inset:0;width:auto;height:auto;border-radius:0;z-index:1;background:linear-gradient(180deg,color-mix(in oklab,var(--accent) 62%,transparent) 0%,color-mix(in oklab,var(--accent) 80%,#000) 55%,color-mix(in oklab,var(--accent) 70%,#000) 100%)}
+.rcard.admin::after{display:none}
+.rcard.admin .mosaic{position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);z-index:0}
+.rcard.admin .mosaic img{width:100%;height:100%;object-fit:cover;display:block}
+.rcard.admin .txt{position:relative;z-index:2}
+.rcard.admin .chg{z-index:2}
+.rcard .mood.ok::before,.rcard .mood.off::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:1px;background:#6EE7B7}
+.rcard .mood.off::before{background:#FCD34D}
+.acct a.btn{grid-column:1/-1}
+
+/* 개요 */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(200px,15vw,260px),1fr));gap:clamp(10px,1vw,16px);margin-bottom:18px}
+.kpi{padding:16px 18px;display:grid;gap:8px;align-content:start}
+.kh{display:flex;align-items:center;gap:9px;color:var(--sub);font-weight:700;font-size:.8rem}
+.ki{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);flex:none}
+.ki svg{width:17px;height:17px}
+.ki.warn{background:var(--warn-bg);color:var(--warn)}.ki.red{background:var(--seal-bg);color:var(--seal)}.ki.ok{background:var(--ok-bg);color:var(--ok)}
+.kpi b{font-size:clamp(1.75rem,2vw,2.25rem);letter-spacing:-.035em;line-height:1.05;font-variant-numeric:tabular-nums}
+.kpi b span{font-size:.95rem;color:var(--faint);font-weight:700;letter-spacing:0}
+.bar{height:7px;background:var(--line-2);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:4px}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(12px,1.2vw,20px);align-items:stretch} /* 나란한 박스는 너비·높이를 같게 */
+.panel.fill{display:flex;flex-direction:column}
+/* 내용이 길어도 옆 박스 높이에 맞추고 안에서 스크롤 — contain:size로 이 칸의 내용이 줄 높이를 늘리지 않게 */
+.panel .scroll{flex:1 1 auto;contain:size;overflow:auto;min-height:260px;margin-right:-10px;padding-right:10px;scrollbar-width:thin}
+.panel .push{margin-top:auto}
+.panel{padding:18px 20px}
+.panel h2{font-size:1rem;margin:0 0 2px;letter-spacing:-.01em}
+.panel>.note{margin:0 0 14px}
+/* 합격선: 칸마다 숫자 + 점 3개 (채운 만큼 색) */
+.goal{display:grid;grid-template-columns:76px repeat(4,1fr);gap:6px}
+.panel.fill .goal{flex:1;grid-template-rows:auto repeat(3,minmax(54px,1fr))} /* 박스 높이만큼 칸이 늘어남 */
+.goal .g{align-content:center}
+.tbl th.num,.tbl td.num{text-align:center;width:9%}
+.goal .h{font-size:.75rem;font-weight:700;color:var(--sub);text-align:center;padding-bottom:2px}
+.goal .rh{font-size:.75rem;font-weight:700;color:var(--sub);align-self:center}
+.goal .g{background:var(--line-2);border-radius:12px;padding:10px 6px 9px;display:grid;justify-items:center;gap:6px}
+.goal .g b{font-size:1.05rem;font-variant-numeric:tabular-nums;line-height:1}
+.dots{display:flex;gap:4px}
+.dots i{width:7px;height:7px;border-radius:50%;background:#D3D8E0}
+.dots i.on{background:var(--accent)}
+.goal .g.full{background:var(--ok-bg);color:var(--ok)}
+.goal .g.full .dots i{background:var(--ok)}
+/* 표 안의 지역: 사진 썸네일 + 지역 색 테두리 */
+.rth{display:inline-flex;align-items:center;gap:10px;white-space:nowrap}
+.rth img,.rth span.ph{width:46px;height:32px;border-radius:8px;object-fit:cover;box-shadow:0 0 0 2px #fff,0 0 0 3.5px var(--c);display:block;flex:none;background:linear-gradient(135deg,var(--c),#ddd)}
+.rth b{display:block;font-size:.875rem}
+.rth small{display:block;color:var(--faint);font-size:.72rem}
+.pill{display:inline-grid;place-items:center;min-width:24px;height:22px;padding:0 7px;border-radius:999px;background:var(--accent-soft);color:var(--accent-ink);font-weight:800;font-size:.75rem;font-variant-numeric:tabular-nums}
+.pill.warn{background:var(--warn-bg);color:var(--warn)}.pill.ok{background:var(--ok-bg);color:var(--ok)}.pill.red{background:var(--seal-bg);color:var(--seal)}
+.z{color:#C9CED6}
+
+/* 도구 줄 */
+.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.tools .sp{flex:1}
+/* 도구 줄의 선택·검색·스위치·분절형은 모두 같은 높이(44px), 입력칸은 같은 너비 */
+.tools .inp,.tools select.inp{height:44px;min-height:44px;width:clamp(170px,13vw,230px);max-width:none;flex:none;padding-top:0;padding-bottom:0}
+.tools .seg,.tools .switch{min-height:44px}
+.tools .seg{align-items:center}
+/* 탭 버튼은 묶음 안에서 모두 같은 폭 (가장 긴 버튼에 맞춤) */
+.tools .seg{display:inline-grid;grid-auto-flow:column;grid-auto-columns:1fr}
+.tools .seg button{justify-content:center}
+@media (max-width:860px){ .tools .seg{display:grid;grid-auto-flow:row;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;overflow:visible} }
+/* 커버 표 · 요약 칸이 박스 높이를 채움 */
+.panel.fill .cover{flex:1;max-width:none;margin:0;grid-template-rows:auto repeat(3,minmax(40px,1fr))}
+.sumgrid{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:minmax(64px,1fr);gap:8px}
+.sumgrid div{background:var(--line-2);border-radius:12px;padding:10px 14px;display:grid;align-content:center;gap:2px}
+.sumgrid b{font-size:1.5rem;letter-spacing:-.03em;line-height:1.1;font-variant-numeric:tabular-nums}
+.sumgrid small{color:var(--sub);font-weight:700;font-size:.78rem}
+.sumgrid .ok{background:var(--ok-bg);color:var(--ok)}.sumgrid .red{background:var(--seal-bg);color:var(--seal)}
+.sumgrid .ok small,.sumgrid .red small{color:inherit}
+.miss{background:var(--warn-bg);color:var(--warn);border-radius:14px;padding:11px 14px;font-size:.84rem;font-weight:600;margin-bottom:16px}
+.miss a{color:inherit}
+.miss.red{background:var(--seal-bg);color:#8A2620}
+
+/* 지역 표 */
+.colorpair{display:flex;gap:6px;align-items:center}
+.colorpair input[type=color]{width:34px;height:34px;border:1px solid var(--line);border-radius:8px;padding:2px;background:#fff;cursor:pointer}
+.grad{width:56px;height:34px;border-radius:8px} /* 표 안 칸은 모두 높이 34 */
+.phbtn{width:76px;height:48px;border-radius:10px;border:1px dashed var(--line);background:var(--line-2);padding:0;overflow:hidden;display:grid;place-items:center;font-size:.72rem;color:var(--sub);font-weight:700;position:relative}
+.phbtn img{width:100%;height:100%;object-fit:cover;display:block}
+.phbtn::after{content:"바꾸기";position:absolute;inset:0;display:grid;place-items:center;background:rgba(16,24,40,.55);color:#fff;font-size:.72rem;opacity:0;transition:opacity .2s}
+.phbtn:hover::after,.phbtn:focus-visible::after{opacity:1}
+.phprev{aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:linear-gradient(140deg,var(--c),#ddd);display:grid;place-items:center;color:#fff;font-size:.84rem;font-weight:700}
+.phprev img{width:100%;height:100%;object-fit:cover}
+.tbl .inp{height:34px;min-height:34px;padding:0 .55rem;font-size:.84rem}
+.tbl td.name b{display:block}
+.tbl td.name small{color:var(--faint)}
+.thumb{width:36px}
+.thumb .screen{border-radius:7px}
+/* 템플릿 커버 */
+.cover{display:grid;grid-template-columns:76px repeat(4,1fr);gap:6px;max-width:560px;margin-bottom:16px}
+.cover .h{font-size:.75rem;color:var(--sub);font-weight:700;text-align:center}
+.cover .rh{font-size:.75rem;color:var(--sub);font-weight:700;align-self:center}
+.cover .c{background:var(--line-2);border-radius:10px;min-height:36px;font-weight:800;display:grid;place-items:center;font-variant-numeric:tabular-nums}
+.cover .c.zero{color:var(--seal);background:var(--seal-bg)}
+
+/* 템플릿 편집 */
+.edit{display:grid;grid-template-columns:minmax(0,1fr) clamp(200px,18vw,260px);gap:22px}
+.frm{display:grid;gap:14px}
+.frm .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.checks-inline{display:flex;gap:6px;flex-wrap:wrap}
+.checks-inline label{position:relative}
+.checks-inline input{position:absolute;opacity:0}
+.checks-inline span{display:inline-flex;align-items:center;justify-content:center;width:5.75rem;border:1px solid var(--line);border-radius:999px;padding:.35rem .4rem;font-size:.84rem;font-weight:600;cursor:pointer;min-height:34px;white-space:nowrap}
+/* 화면 위쪽 버튼 묶음(내려받기 등)은 묶음 안에서 같은 폭 */
+.hb{display:inline-grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:8px}
+@media (max-width:860px){ .hb{display:grid;grid-auto-flow:row;grid-template-columns:repeat(2,minmax(0,1fr));width:100%} .hb .btn{padding:0 .5rem} }
+.checks-inline input:checked+span{background:var(--accent);color:#fff;border-color:var(--accent)}
+.checks-inline input:focus-visible+span{outline:2.5px solid var(--accent);outline-offset:2px}
+.counter{font-size:.72rem;color:var(--faint);float:right;font-weight:600}
+.counter.over{color:var(--seal)}
+.scn{display:grid;gap:8px}
+.scn-row{display:grid;grid-template-columns:28px 74px 110px 110px minmax(0,1fr) minmax(0,1fr) auto;gap:6px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:6px 8px;background:#fff}
+.scn-row .i{font-weight:800;text-align:center;color:var(--sub)}
+.scn-row .inp{height:34px;min-height:34px;padding:0 .5rem;font-size:.84rem} /* 지역 표 작은 칸과 같은 글자 크기 */
+.scn-row .acts{display:flex;gap:2px}
+.scn-row .acts button{border:0;background:var(--line-2);width:34px;height:34px;border-radius:8px;font-size:.8rem} /* 옆 입력칸과 같은 34 */
+.scn-row .acts button:hover{background:var(--line)}
+.scn-row.on{border-color:var(--accent)}
+.side-pv{position:sticky;top:0;display:grid;gap:10px;align-content:start}
+.errs{margin:0;padding:10px 12px 10px 28px;border-radius:12px;background:var(--seal-bg);color:#8A2620;font-size:.8rem;display:grid;gap:3px}
+.oklist{padding:10px 12px;border-radius:12px;background:var(--ok-bg);color:var(--ok);font-size:.84rem;font-weight:700}
+.dl{display:grid;grid-template-columns:110px 1fr;gap:6px 12px;font-size:.875rem;margin:0}
+.dl dt{color:var(--sub)}.dl dd{margin:0;font-weight:600}
+.schema td:first-child{font-family:ui-monospace,Consolas,monospace;font-size:.8rem;white-space:nowrap}
+/* 저장·백업: 한 줄 동작 막대 (왼쪽 백업 | 오른쪽 시연 도구) */
+.actbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));margin-bottom:18px}
+.actbar .ag{display:flex;align-items:center;gap:12px;padding:14px 18px;flex-wrap:wrap}
+.actbar .ag+.ag{border-left:1px solid var(--line-2)}
+.actbar .at{flex:1 1 180px;min-width:0}
+.actbar .at b{display:block;font-size:.95rem}
+.actbar .at small{color:var(--sub);font-size:.78rem}
+.actbar .ab{display:grid;grid-template-columns:repeat(2,11rem);gap:8px} /* 백업·시연 도구 네 버튼 모두 같은 폭 */
+/* 팝업 아래 버튼은 모든 팝업에서 같은 최소 폭 */
+.dlg-f .btn{min-width:7.5rem}
+@media (max-width:1100px){ .actbar{grid-template-columns:1fr} .actbar .ag+.ag{border-left:0;border-top:1px solid var(--line-2)} }
+@media (max-width:860px){
+  .tbl .inp,.scn-row .inp{font-size:16px} /* 작은 칸도 16px — 아이폰 확대 방지 */
+  .actbar .ab{grid-template-columns:minmax(0,1fr);width:100%}
+  /* 폰 팝업 아래: 안내·되돌리기는 한 줄 전체, 취소·저장은 반반 같은 폭 */
+  .dlg-f{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dlg-f .note,.dlg-f #pReset{grid-column:1/-1;margin:0 !important} /* 데스크톱용 왼쪽 밀기(margin-right:auto) 해제 */
+  .dlg-f .btn{min-width:0}
+}
+.filebtn{position:relative;overflow:hidden}
+.filebtn input{position:absolute;inset:0;opacity:0;cursor:pointer}
+@media (max-width:1100px){ .cols{grid-template-columns:1fr} .edit{grid-template-columns:1fr} .side-pv{position:static;max-width:240px} }
+@media (max-width:860px){
+  .frm .row2{grid-template-columns:1fr}
+  .scn-row{grid-template-columns:24px 1fr 1fr;grid-auto-rows:auto}
+  .scn-row .t,.scn-row .n{grid-column:1/-1}
+  .scn-row .acts{grid-column:1/-1;justify-content:flex-end}
+  dialog,dialog.narrow,dialog.mid{width:100%;max-width:none;margin:auto 0 0;border-radius:20px 20px 0 0;max-height:94vh}
+  .dlg{max-height:94vh}
+  .goal,.cover{grid-template-columns:52px repeat(4,1fr)}
+  .tools .inp,.tools select.inp{width:auto;flex:1 1 140px}
+  .kpis{grid-template-columns:1fr 1fr}
+  .tabs a{font-size:.68rem}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="rail" aria-label="관리 메뉴">
+    <a class="brand" href="#/" data-home title="처음 화면으로 (필터·검색 초기화)"><i></i>AI-이음<small>관리자</small></a>
+    <a class="rcard admin" href="#/regions" id="acard"></a>
+    <nav class="rnav" aria-label="관리 화면">
+      <a href="#/" data-r="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 13h6V4H4zM14 20h6v-9h-6zM4 20h6v-4H4zM14 4v4h6V4z"/></svg><span>개요</span></a>
+      <a href="#/regions" data-r="regions"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span>지역 · 담당자</span></a>
+      <a href="#/templates" data-r="templates"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="12" rx="2"/><rect x="14" y="3" width="7" height="12" rx="2"/><path d="M3 20h18"/></svg><span>템플릿</span></a>
+      <a href="#/data" data-r="data"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg><span>콘텐츠 · 기록</span><span class="count" data-cnt hidden>0</span></a>
+      <a href="#/storage" data-r="storage"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg><span>저장 · 백업</span></a>
+    </nav>
+    <div class="acct"><span class="av">관리</span><div><b>광역 관리자</b><small>시연 계정 · 운영 땐 로그인 필요</small></div><a class="btn ghost sm" id="userLink" href="#" target="_blank" rel="noopener">사용자 사이트 열기 ↗</a></div>
+  </aside>
+  <div>
+    <header class="topbar"><a href="#/" data-home><b>AI-이음 관리자</b><small>지역 41곳 · 템플릿 · 기록</small></a><button type="button" id="userBtn">사용자 ↗</button></header>
+    <main id="view" tabindex="-1"></main>
+  </div>
+</div>
+<nav class="tabs" aria-label="관리 화면 (폰)">
+  <a href="#/" data-r="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 13h6V4H4zM14 20h6v-9h-6zM4 20h6v-4H4zM14 4v4h6V4z"/></svg>개요</a>
+  <a href="#/regions" data-r="regions"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>지역</a>
+  <a href="#/templates" data-r="templates"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="12" rx="2"/><rect x="14" y="3" width="7" height="12" rx="2"/><path d="M3 20h18"/></svg>템플릿</a>
+  <a href="#/data" data-r="data"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>기록<span class="count" data-cnt hidden>0</span></a>
+  <a href="#/storage" data-r="storage"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg>저장</a>
+</nav>
+<dialog id="dlg"></dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="config.js"></script>
+<script src="shared/workflow.js"></script>
+<script src="shared/template-rules.js"></script>
+<script src="shared/templates-data.js"></script>
+<script src="shared/shared.js"></script>
+<script>
+"use strict";
+const W = window.Workflow, Sh = window.Shared, R = window.TemplateRules;
+const { esc, fmt, day, ROLE, SRC, HOOK, STATUS } = Sh;
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+let DB = { plans: [], logs: [], threads: {} };
+$("#userLink").href = Sh.CFG.userAppUrl || "#";
+$("#userBtn").onclick = () => { if (Sh.CFG.userAppUrl) window.open(Sh.CFG.userAppUrl, "_blank", "noopener"); else toast("config.js에 사용자 사이트 주소가 없어요"); };
+/* 왼쪽 관리 카드 — 지역 사진 6장 모자이크 + 공용 DB 상태 */
+const MOSAIC = ["전남 보성군", "전남 여수시", "전북 전주시", "광주 북구", "전남 순천시", "전남 신안군"];
+function renderShell(){
+  const imgs = MOSAIC.map(id => Sh.photoUrl(Sh.regionSettings(id), 330)).filter(Boolean);
+  const active = Sh.REGIONS.filter(r => Sh.regionSettings(r.id).active).length;
+  $("#acard").innerHTML = `<span class="mosaic" aria-hidden="true">${imgs.map(u => `<img src="${esc(u)}" alt="" referrerpolicy="no-referrer">`).join("")}</span>
+    <span class="txt"><small>광역 운영 · 광주·전남·전북</small><b>지역 ${active}곳</b><span class="mood ${Sh.REMOTE ? "ok" : "off"}">${Sh.REMOTE ? "공용 DB 연결됨" : "이 주소에만 저장 중"}</span></span><span class="chg">지역 관리 ›</span>`;
+  const n = DB.plans.filter(p => /gate\d_wait/.test(p.status)).length;
+  $$("[data-cnt]").forEach(c => { c.textContent = n; c.hidden = !n; });
+}
+const icon = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">${d}</svg>`;
+const ICON = { pub: icon("<path d=\"M5 12l5 5L20 7\"/>"), wait: icon("<circle cx=\"12\" cy=\"12\" r=\"8\"/><path d=\"M12 8v4l3 2\"/>"), rej: icon("<path d=\"M6 6l12 12M18 6L6 18\"/>"), map: icon("<path d=\"M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z\"/><circle cx=\"12\" cy=\"9.5\" r=\"2.5\"/>") };
+const pill = (n, cls) => n ? `<span class="pill ${cls||""}">${n}</span>` : `<span class="z">·</span>`;
+const freshA = () => ({ rg:{sido:"all", q:"", activeOnly:false}, data:{tab:"plans", region:"", status:"", q:""} });
+let A = freshA();
+/* 제목을 누르면 개요로 돌아가고 필터·검색·열린 팝업을 처음 상태로 (저장된 데이터는 그대로) */
+$$("[data-home]").forEach(a => a.addEventListener("click", e => {
+  e.preventDefault();
+  if ($("#dlg").open) $("#dlg").close();
+  A = freshA();
+  if (location.hash === "#/" || location.hash === "") route(); else location.hash = "#/";
+  window.scrollTo({ top: 0 });
+  toast("처음 화면으로 돌아왔어요");
+}));
+function toast(m){ const t = $("#toast"); t.textContent = m; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 2200); }
+const regionTitle = id => { const r = Sh.regionOf(id); return r ? `${r.short} ${r.name}` : id; };
+function regionCell(id, sub){
+  const s = Sh.regionSettings(id), u = Sh.photoUrl(s, 330);
+  return `<span class="rth" style="--c:${s.color}">${u ? `<img src="${esc(u)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : `<span class="ph"></span>`}<span><b>${esc(regionTitle(id))}</b>${sub ? `<small>${esc(sub)}</small>` : ""}</span></span>`;
+}
+function download(name, text, type){
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([text], {type: type || "application/json"}));
+  a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+const csv = rows => "﻿" + rows.map(r => r.map(v => `"${String(v == null ? "" : v).replace(/"/g, '""')}"`).join(",")).join("\r\n");
+const phead = (eyebrow, title, lead, right) => `<div class="phead"><div><div class="eyebrow">${eyebrow}</div><h1>${title}</h1>${lead?`<p class="lead">${lead}</p>`:""}</div>${right||""}</div>`;
+
+function route(){
+  const r = location.hash.replace(/^#\/?/, "").split("/")[0] || "home";
+  const name = ["regions","templates","data","storage"].includes(r) ? r : "home";
+  $$(".rnav a, .tabs a").forEach(a => a.setAttribute("aria-current", a.dataset.r === name ? "page" : "false"));
+  ({home:viewHome, regions:viewRegions, templates:viewTemplates, data:viewData, storage:viewStorage})[name]();
+  /* 공용 DB가 없으면 사용자 페이지(다른 도메인)와 데이터를 공유하지 못한다는 걸 늘 보여준다 */
+  renderShell();
+  if (!Sh.REMOTE) $("#view").insertAdjacentHTML("afterbegin", `<div class="miss">공용 DB 미연결 — 지금 바꾸는 내용은 이 관리자 주소에만 저장돼요. 사용자 페이지(다른 도메인)에 반영하려면 config.js에 Supabase를 연결하세요. <a href="#/storage">자세히</a></div>`);
+}
+window.addEventListener("hashchange", () => { route(); window.scrollTo(0,0); });
+window.addEventListener("storage", () => { DB = Sh.loadDB(); route(); });
+
+/* =========================================================
+   개요 — 목표(11/1까지 40편) · 합격선(12유형마다 3편) · 지역별 현황
+   ========================================================= */
+function viewHome(){
+  const P = DB.plans, pub = P.filter(p => p.status === "published");
+  const wait = g => P.filter(p => p.status === `gate${g}_wait`).length;
+  const active = Sh.REGIONS.filter(r => Sh.regionSettings(r.id).active).length;
+  const withData = new Set(Sh.ASSETS.map(a => a.region)).size;
+  const per = (c,a) => pub.filter(p => { const k = Sh.candOf(p.cand); return k && k.cat === c && k.age === a; }).length;
+  const regions = [...new Set(P.map(p => p.region))];
+  const recent = DB.logs.slice().sort((a,b) => a.at < b.at ? 1 : -1).slice(0, 30);
+  const what = l => l.kind === "request" ? "1차 확인 요청" : l.kind === "system" ? l.note : `${l.gate}차 ${l.decision === "pass" ? "통과" : "반려"}`;
+  $("#view").innerHTML = `${phead("관리자 · 개요", "전체 현황", "모든 지역의 콘텐츠와 확인 상황을 한눈에 봐요. 수치는 이 브라우저에 저장된 시연 데이터 기준이에요.")}
+  <div class="kpis">
+    <div class="card kpi"><span class="kh"><span class="ki ok">${ICON.pub}</span>게시 완료 · 11/1까지 40편</span><b>${pub.length}<span> / 40</span></b><div class="bar" role="img" aria-label="40편 중 ${pub.length}편"><i style="width:${Math.min(100, pub.length/40*100)}%"></i></div></div>
+    <div class="card kpi"><span class="kh"><span class="ki warn">${ICON.wait}</span>확인 대기</span><b>${wait(1)+wait(2)+wait(3)}<span> 건</span></b><span class="note">1차 ${wait(1)} · 2차 ${wait(2)} · 3차 ${wait(3)} · 제작 중 ${P.filter(p=>p.status==="making").length}</span></div>
+    <div class="card kpi"><span class="kh"><span class="ki red">${ICON.rej}</span>반려</span><b>${P.filter(p=>p.status==="rejected").length}<span> 건</span></b><span class="note">사유는 <a href="#/data">콘텐츠 · 기록</a>에서</span></div>
+    <div class="card kpi"><span class="kh"><span class="ki">${ICON.map}</span>사용 중인 지역</span><b>${active}<span> / ${Sh.REGIONS.length}</span></b><span class="note">관광자료가 있는 지역 ${withData}곳 (시연)</span></div>
+  </div>
+  <div class="cols">
+    <section class="card panel fill"><h2>합격선 — 12유형마다 3편</h2><p class="note">게시 완료 기준. 점 하나가 1편, 3편을 채우면 초록색이에요.</p>
+      <div class="goal"><span></span>${R.CATS.map(c => `<span class="h">${c}</span>`).join("")}
+      ${R.AGES.map(a => `<span class="rh">${a}</span>${R.CATS.map(c => { const n = per(c,a); return `<span class="g${n>=3?" full":""}" aria-label="${c} ${a} ${n}편"><b>${n}</b><span class="dots">${[0,1,2].map(i => `<i class="${i<n?"on":""}"></i>`).join("")}</span></span>`; }).join("")}`).join("")}</div>
+    </section>
+    <section class="card panel fill"><h2>최근 기록</h2><p class="note">결정 기록은 지울 수 없어요. 박스 안에서 스크롤돼요.</p>
+      <div class="scroll"><ol class="tl2">${recent.map(l => { const p = DB.plans.find(x => x.id === l.planId), cls = l.kind === "system" ? "sys" : l.decision || ""; return `<li><span class="av ${cls}">${esc(l.reviewer.slice(0,2))}</span><div><div class="w"><b>${esc(l.reviewer)}</b><time datetime="${l.at}">${fmt(l.at)}</time></div><div class="m">${esc(what(l))}</div><span class="note">${esc(l.planId)} ${p?esc(p.title):""}</span></div></li>`; }).join("")}</ol></div>
+    </section>
+  </div>
+  <section class="card panel" style="margin-top:18px"><h2>지역별 현황</h2><p class="note">콘텐츠가 하나 이상 있는 지역</p>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>지역</th><th>담당자</th><th class="num">1차</th><th class="num">2차</th><th class="num">3차</th><th class="num">제작 중</th><th class="num">게시</th><th class="num">반려</th></tr></thead>
+    <tbody>${regions.map(id => { const L = P.filter(p => p.region === id), n = s => L.filter(p => p.status === s).length; return `<tr><td>${regionCell(id)}</td><td>${esc(Sh.regionSettings(id).manager)}</td><td class="num">${pill(n("gate1_wait"),"warn")}</td><td class="num">${pill(n("gate2_wait"),"warn")}</td><td class="num">${pill(n("gate3_wait"),"warn")}</td><td class="num">${pill(n("making"))}</td><td class="num">${pill(n("published"),"ok")}</td><td class="num">${pill(n("rejected"),"red")}</td></tr>`; }).join("")}</tbody></table></div>
+  </section>`;
+}
+
+/* =========================================================
+   지역 · 담당자 — 사용 여부, 담당자, 교차 확인, 지역 색
+   ========================================================= */
+function viewRegions(){
+  const f = A.rg;
+  $("#view").innerHTML = `${phead("관리자 · 지역", "지역 · 담당자", "시·군·구마다 담당자 한 명이 1·2·3차를 확인해요. 색은 사용자 페이지에서 그 지역을 고르면 화면 전체에 입혀져요. 바꾸면 바로 저장돼요.")}
+  <div class="tools">
+    <div class="seg" role="group" aria-label="광역">${[{id:"all",name:"전체",list:Sh.REGIONS}].concat(Sh.SIDO).map(s => `<button data-sido="${s.id}" aria-pressed="${f.sido===s.id}">${s.name}<i>${s.list.length}</i></button>`).join("")}</div>
+    <span class="sp"></span>
+    <label class="switch"><input type="checkbox" id="onlyA" ${f.activeOnly?"checked":""}> 사용 중만</label>
+    <input class="inp" id="rq" type="search" placeholder="지역·담당자 찾기" aria-label="지역 찾기" value="${esc(f.q)}">
+  </div>
+  <div class="tbl-wrap"><table class="tbl"><thead><tr><th>사진</th><th>색 (진한 · 밝은)</th><th>지역</th><th>분위기 문구</th><th>담당자</th><th>교차 확인</th><th>사용</th><th class="num">관광자료</th><th></th></tr></thead><tbody id="rbody"></tbody></table></div>
+  <p class="note" style="margin-top:10px">교차 확인을 켜면 요청한 사람은 2차를 통과시킬 수 없어요. 담당자가 한 명인 지역은 끄고 쓰세요 (기본 꺼짐). · 색은 그 지역 하면 떠오르는 느낌이며 공식 상징색이 아니에요.</p>`;
+  const body = () => {
+    const list = Sh.REGIONS.filter(r => (f.sido === "all" || r.sido === f.sido) && (!f.activeOnly || Sh.regionSettings(r.id).active) && (!f.q || (r.name + r.sidoName + Sh.regionSettings(r.id).manager).includes(f.q)));
+    $("#rbody").innerHTML = list.map(r => { const s = Sh.regionSettings(r.id), id = esc(r.id), ph = Sh.photoUrl(s, 330); return `<tr data-id="${id}">
+      <td><button class="phbtn" data-photo title="${ph ? esc(Sh.photoCredit(s)) : "사진 없음"}" aria-label="${id} 사진 바꾸기">${ph ? `<img src="${esc(ph)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : "<span>+ 사진</span>"}</button></td>
+      <td><div class="colorpair"><input type="color" data-k="color" value="${s.color}" aria-label="${id} 진한 색"><input type="color" data-k="color2" value="${s.color2}" aria-label="${id} 밝은 색"><span class="grad" style="background:linear-gradient(135deg,${s.color},${s.color2})"></span></div></td>
+      <td class="name"><span class="rth" style="--c:${s.color}"><span><b>${esc(r.name)}</b><small>${esc(r.sidoName)}</small></span></span></td>
+      <td><input class="inp" data-k="mood" value="${esc(s.mood)}" maxlength="14" aria-label="${id} 분위기 문구" style="min-width:130px"></td>
+      <td><input class="inp" data-k="manager" value="${esc(s.manager)}" maxlength="20" aria-label="${id} 담당자" style="min-width:130px"></td>
+      <td><label class="switch"><input type="checkbox" data-k="crossCheck" ${s.crossCheck?"checked":""}><span class="sr">${id} 교차 확인</span></label></td>
+      <td><label class="switch"><input type="checkbox" data-k="active" ${s.active?"checked":""}><span class="sr">${id} 사용</span></label></td>
+      <td class="num">${Sh.assetsIn(r.id).length || '<span class="note">없음</span>'}</td>
+      <td><button class="btn ghost sm" data-reset>색 되돌리기</button></td></tr>`; }).join("") || `<tr><td colspan="9" class="empty">맞는 지역이 없어요.</td></tr>`;
+    $$("#rbody tr[data-id]").forEach(tr => {
+      const id = tr.dataset.id;
+      tr.querySelectorAll("[data-k]").forEach(el => {
+        const ev = el.type === "checkbox" || el.type === "color" ? "change" : "change";
+        el.addEventListener(ev, () => {
+          const k = el.dataset.k, v = el.type === "checkbox" ? el.checked : el.value.trim();
+          if (k === "manager" && !v) { toast("담당자 이름은 비울 수 없어요"); el.value = Sh.regionSettings(id).manager; return; }
+          Sh.saveRegionSettings(id, {[k]: v});
+          if (k === "color" || k === "color2") { const s = Sh.regionSettings(id); tr.querySelector(".grad").style.background = `linear-gradient(135deg,${s.color},${s.color2})`; }
+          toast(`${regionTitle(id)} 저장했어요`);
+        });
+      });
+      tr.querySelector("[data-reset]").onclick = () => { Sh.resetRegionColor(id); body(); toast(`${regionTitle(id)} 색을 기본값으로 되돌렸어요`); };
+      tr.querySelector("[data-photo]").onclick = () => editPhoto(id, body);
+    });
+  };
+  body();
+  $$("[data-sido]").forEach(b => b.onclick = () => { f.sido = b.dataset.sido; viewRegions(); });
+  $("#onlyA").onchange = e => { f.activeOnly = e.target.checked; body(); };
+  $("#rq").oninput = e => { f.q = e.target.value.trim(); body(); };
+}
+
+/* 지역 사진 바꾸기 — 출처·라이선스를 꼭 함께 남긴다 */
+function editPhoto(id, done){
+  const s = Sh.regionSettings(id), d = $("#dlg"), cur = Sh.photoUrl(s, 960);
+  d.className = "narrow";
+  d.innerHTML = `<form class="dlg" id="pf"><div class="dlg-h"><div><div class="eyebrow">지역 사진</div><h2>${esc(regionTitle(id))}</h2></div><button type="button" class="x" data-close aria-label="닫기">×</button></div>
+    <div class="dlg-b" style="display:grid;gap:12px">
+      <div class="phprev" id="pp" style="--c:${s.color}">${cur ? `<img src="${esc(cur)}" alt="${esc(regionTitle(id))} 사진 미리보기" referrerpolicy="no-referrer">` : `<span>사진 없음 — 지역 색 타일로 보여요</span>`}</div>
+      <div><label class="lbl2" for="pu">사진 주소 (https://…)</label><input class="inp" id="pu" type="url" value="${esc(s.photo.includes("{w}") ? cur : s.photo)}" placeholder="관광공사·지자체 사진 주소"></div>
+      <div class="row2" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div><label class="lbl2" for="pb">저작자·출처</label><input class="inp" id="pb" value="${esc(s.photoBy)}" placeholder="예: 한국관광공사"></div>
+        <div><label class="lbl2" for="pl">라이선스</label><input class="inp" id="pl" value="${esc(s.photoLic)}" placeholder="예: 공공누리 제1유형"></div>
+      </div>
+      <div><label class="lbl2" for="pg">원본 페이지 (선택)</label><input class="inp" id="pg" type="url" value="${esc(s.photoPage)}"></div>
+      <p class="note" style="margin:0">사진은 출처·라이선스를 꼭 적어야 저장돼요. 변경 금지 조건 사진은 자르거나 고치지 않은 원본만 쓰세요.</p>
+      <div class="err-t" id="perr" role="alert"></div>
+    </div>
+    <div class="dlg-f"><button type="button" class="btn red" id="pReset" style="margin-right:auto">기본 사진으로</button><button type="button" class="btn ghost" data-close>취소</button><button type="submit" class="btn">저장</button></div></form>`;
+  const v = k => d.querySelector(k).value.trim();
+  d.querySelector("#pu").oninput = () => { const u = v("#pu"); d.querySelector("#pp").innerHTML = u ? `<img src="${esc(u)}" alt="미리보기" referrerpolicy="no-referrer">` : `<span>사진 없음 — 지역 색 타일로 보여요</span>`; };
+  d.querySelectorAll("[data-close]").forEach(b => b.onclick = () => d.close());
+  d.querySelector("#pReset").onclick = () => { Sh.resetRegionPhoto(id); d.close(); done(); toast(`${regionTitle(id)} 기본 사진으로 되돌렸어요`); };
+  d.querySelector("#pf").onsubmit = e => {
+    e.preventDefault();
+    const u = v("#pu");
+    if (u && !/^https:\/\//.test(u)) { d.querySelector("#perr").textContent = "https:// 로 시작하는 주소만 쓸 수 있어요"; return; }
+    if (u && (!v("#pb") || !v("#pl"))) { d.querySelector("#perr").textContent = "저작자·출처와 라이선스를 적어주세요"; return; }
+    Sh.saveRegionSettings(id, { photo: u, photoBy: v("#pb"), photoLic: v("#pl"), photoPage: v("#pg") });
+    d.close(); done(); toast(u ? `${regionTitle(id)} 사진을 바꿨어요` : `${regionTitle(id)} 사진을 뺐어요`);
+  };
+  d.onclose = () => { d.className = ""; };
+  d.showModal();
+}
+
+/* =========================================================
+   템플릿 — 사용/중지, 편집(실시간 규칙 검사), 내려받기
+   ========================================================= */
+function viewTemplates(){
+  const list = Sh.templates(), off = Sh.disabledIds(), on = list.filter(t => !off.includes(t.id));
+  const missing = R.missingTypes(on), customized = !!Sh.read(Sh.KEY.tpl, null);
+  const n = (c,a) => on.filter(t => t.categories.includes(c) && t.ages.includes(a)).length;
+  $("#view").innerHTML = `${phead("관리자 · 템플릿", "템플릿 관리", `사용 중 ${on.length}개 / 전체 ${list.length}개. 고치면 사용자 페이지에 바로 반영돼요. 규칙(장면 4·6·8초, 15~45초, 마지막은 정보 장면, AI 장면은 실제 장소 아님)을 어기면 저장되지 않아요.`,
+    `<div class="hb"><button class="btn" id="tNew">+ 새 템플릿</button><button class="btn ghost" id="tDl">templates.json 내려받기</button>${customized?`<button class="btn red" id="tReset">기본값으로</button>`:""}</div>`)}
+  ${missing.length ? `<div class="miss">사용 중인 템플릿이 없는 유형: ${missing.join(", ")} — 사용자 화면에서 이 유형은 고를 형식이 없어요.</div>` : ""}
+  <div class="cols" style="margin-bottom:18px">
+    <section class="card panel fill"><h2>분야 × 연령 커버</h2><p class="note">사용 중인 템플릿 수. 빨간 칸은 사용자가 고를 형식이 없는 유형이에요.</p>
+      <div class="cover" aria-label="사용 중 템플릿의 분야×연령 커버"><span></span>${R.CATS.map(c => `<span class="h">${c}</span>`).join("")}
+      ${R.AGES.map(a => `<span class="rh">${a}</span>${R.CATS.map(c => { const k = n(c,a); return `<span class="c${k?"":" zero"}">${k}</span>`; }).join("")}`).join("")}</div>
+    </section>
+    <section class="card panel fill"><h2>규칙 검사</h2><p class="note">장면 4·6·8초 · 15~45초 · 마지막은 정보 장면 · AI 장면은 실제 장소 아님</p>
+      <div class="sumgrid">
+        <div><b>${on.length}</b><small>사용 중</small></div>
+        <div><b>${list.length - on.length}</b><small>사용 중지</small></div>
+        <div class="ok"><b>${list.filter(t => !R.validateTemplate(t).length).length}</b><small>규칙 통과</small></div>
+        <div class="${list.some(t => R.validateTemplate(t).length) ? "red" : ""}"><b>${list.filter(t => R.validateTemplate(t).length).length}</b><small>오류 있음</small></div>
+      </div>
+    </section>
+  </div>
+  <div class="tbl-wrap"><table class="tbl"><thead><tr><th>사용</th><th></th><th>이름</th><th>분야 · 연령</th><th>훅</th><th class="num">장면 · 길이</th><th>규칙 검사</th><th></th></tr></thead>
+  <tbody>${list.map(t => { const e = R.validateTemplate(t), used = !off.includes(t.id); return `<tr>
+    <td><label class="switch"><input type="checkbox" data-on="${t.id}" ${used?"checked":""}><span class="sr">${esc(t.name)} 사용</span></label></td>
+    <td><div class="thumb">${Sh.screen(t,0,{still:true})}</div></td>
+    <td class="name"><b>${esc(t.name)}</b><small>${esc(t.id)}</small></td>
+    <td><div class="tags">${t.categories.map(c => `<span class="tag">${c}</span>`).join("")}${t.ages.map(a => `<span class="tag info">${a}</span>`).join("")}</div></td>
+    <td>${HOOK[t.hook.type] || esc(t.hook.type)}</td>
+    <td class="num">${t.scenes.length}장면 · ${R.totalSeconds(t)}초</td>
+    <td>${e.length ? `<span class="tag red">오류 ${e.length}</span>` : `<span class="tag ok">통과</span>`}</td>
+    <td><button class="btn ghost sm" data-edit="${t.id}">수정</button></td></tr>`; }).join("")}</tbody></table></div>`;
+  $$("[data-on]").forEach(x => x.onchange = () => {
+    const off = new Set(Sh.disabledIds()); x.checked ? off.delete(x.dataset.on) : off.add(x.dataset.on);
+    Sh.write(Sh.KEY.off, [...off]); toast(x.checked ? "사용으로 바꿨어요" : "사용 중지했어요 — 사용자 화면에서 빠져요"); viewTemplates();
+  });
+  $$("[data-edit]").forEach(b => b.onclick = () => editTemplate(Sh.templates().find(t => t.id === b.dataset.edit), false));
+  $("#tNew").onclick = () => {
+    const base = JSON.parse(JSON.stringify(Sh.templates()[0]));
+    editTemplate(Object.assign(base, {id:"new-template", name:"새 템플릿", description:"", scenes:base.scenes}), true);
+  };
+  $("#tDl").onclick = () => download("templates.json", JSON.stringify(Sh.templates(), null, 2));
+  const rst = $("#tReset"); if (rst) rst.onclick = () => { if (!confirm("관리자가 고친 템플릿을 모두 버리고 기본 data/templates.json으로 되돌릴까요?")) return; Sh.remove(Sh.KEY.tpl); Sh.remove(Sh.KEY.off); toast("기본값으로 되돌렸어요"); viewTemplates(); };
+}
+function editTemplate(src, isNew){
+  const t = JSON.parse(JSON.stringify(src));
+  let sel = 0;
+  const d = $("#dlg");
+  d.className = ""; // 편집기는 두 칸(입력 · 미리보기)이라 넓은 팝업 그대로
+  const opt = (obj, cur) => Object.entries(obj).map(([k,v]) => `<option value="${k}" ${k===cur?"selected":""}>${v}</option>`).join("");
+  const render = () => {
+    d.innerHTML = `<form class="dlg" id="tf">
+      <div class="dlg-h"><div><div class="eyebrow">${isNew?"새 템플릿":"템플릿 수정"}</div><h2>${esc(t.name || "이름 없음")}</h2></div><button type="button" class="x" data-close aria-label="닫기">×</button></div>
+      <div class="dlg-b"><div class="edit">
+        <div class="frm">
+          <div class="row2">
+            <div><label class="lbl2" for="fName">이름</label><input class="inp" id="fName" value="${esc(t.name)}"></div>
+            <div><label class="lbl2" for="fId">id <span class="note">(영문 소문자-하이픈)</span></label><input class="inp" id="fId" value="${esc(t.id)}" ${isNew?"":"readonly"}></div>
+          </div>
+          <div><label class="lbl2" for="fDesc">설명</label><textarea class="inp" id="fDesc" style="min-height:64px">${esc(t.description)}</textarea></div>
+          <div class="row2">
+            <div><span class="lbl2">분야</span><div class="checks-inline">${R.CATS.map(c => `<label><input type="checkbox" data-cat="${c}" ${t.categories.includes(c)?"checked":""}><span>${c}</span></label>`).join("")}</div></div>
+            <div><span class="lbl2">연령</span><div class="checks-inline">${R.AGES.map(a => `<label><input type="checkbox" data-age="${a}" ${t.ages.includes(a)?"checked":""}><span>${a}</span></label>`).join("")}</div></div>
+          </div>
+          <div class="row2">
+            <div><label class="lbl2" for="fHook">훅 방식</label><select class="inp" id="fHook">${opt(HOOK, t.hook.type)}</select></div>
+            <div><label class="lbl2" for="fHookEx">훅 예시 <span class="counter" id="hc"></span></label><input class="inp" id="fHookEx" value="${esc(t.hook.example)}"></div>
+          </div>
+          <div><span class="lbl2">장면 <span class="note">— 길이 · 역할 · 재료 · 자막 · 메모</span></span>
+            <div class="scn">${t.scenes.map((s,i) => `<div class="scn-row${i===sel?" on":""}" data-i="${i}">
+              <span class="i">${i+1}</span>
+              <select class="inp" data-f="seconds" aria-label="장면 ${i+1} 길이">${R.SECONDS.map(x => `<option value="${x}" ${x==s.seconds?"selected":""}>${x}초</option>`).join("")}</select>
+              <select class="inp" data-f="role" aria-label="장면 ${i+1} 역할">${opt(ROLE, s.role)}</select>
+              <select class="inp" data-f="source" aria-label="장면 ${i+1} 재료">${opt(SRC, s.source)}</select>
+              <input class="inp t" data-f="text" value="${esc(s.text||"")}" placeholder="자막" aria-label="장면 ${i+1} 자막">
+              <input class="inp n" data-f="note" value="${esc(s.note||"")}" placeholder="메모 (AI 장면은 '실제 장소·인물 아님')" aria-label="장면 ${i+1} 메모">
+              <span class="acts"><button type="button" data-mv="-1" aria-label="위로">↑</button><button type="button" data-mv="1" aria-label="아래로">↓</button><button type="button" data-del aria-label="장면 삭제">✕</button></span>
+            </div>`).join("")}</div>
+            <button type="button" class="btn soft sm" id="addS" style="margin-top:8px">+ 장면 추가</button>
+          </div>
+        </div>
+        <div class="side-pv">
+          <div id="pv">${Sh.screen(t, sel, {still:true, safe:true})}</div>
+          <p class="note" style="margin:0;text-align:center">장면 ${sel+1} 미리보기 · 총 ${R.totalSeconds(t)}초 · 빗금 = 안전 영역 밖</p>
+          <div id="errs"></div>
+        </div>
+      </div></div>
+      <div class="dlg-f"><span class="note" style="margin-right:auto">참고 레퍼런스 ${t.references.length}개는 그대로 유지돼요</span><button type="button" class="btn ghost" data-close>취소</button><button type="submit" class="btn" id="tSave">저장</button></div></form>`;
+    bind();
+  };
+  const check = () => {
+    const list = Sh.templates();
+    const e = R.validateTemplate(t);
+    if (isNew && list.some(x => x.id === t.id)) e.unshift("같은 id가 이미 있어요");
+    $("#errs").innerHTML = e.length ? `<ul class="errs">${e.map(x => `<li>${esc(x)}</li>`).join("")}</ul>` : `<div class="oklist">규칙 검사 통과 — 저장할 수 있어요</div>`;
+    $("#tSave").disabled = e.length > 0;
+    const hc = $("#hc"), len = (t.hook.example||"").length; hc.textContent = `${len}/${R.MAX_TEXT}자`; hc.classList.toggle("over", len > R.MAX_TEXT);
+    $("#pv").innerHTML = Sh.screen(t, Math.min(sel, t.scenes.length-1), {still:true, safe:true});
+  };
+  const bind = () => {
+    d.querySelectorAll("[data-close]").forEach(b => b.onclick = () => d.close());
+    const on = (id, fn) => d.querySelector(id).addEventListener("input", fn);
+    on("#fName", e => { t.name = e.target.value; check(); });
+    on("#fId", e => { t.id = e.target.value.trim(); check(); });
+    on("#fDesc", e => { t.description = e.target.value; check(); });
+    on("#fHookEx", e => { t.hook.example = e.target.value; check(); });
+    d.querySelector("#fHook").onchange = e => { t.hook.type = e.target.value; check(); };
+    d.querySelectorAll("[data-cat]").forEach(x => x.onchange = () => { t.categories = R.CATS.filter(c => d.querySelector(`[data-cat="${c}"]`).checked); check(); });
+    d.querySelectorAll("[data-age]").forEach(x => x.onchange = () => { t.ages = R.AGES.filter(a => d.querySelector(`[data-age="${a}"]`).checked); check(); });
+    d.querySelectorAll(".scn-row").forEach(row => {
+      const i = +row.dataset.i;
+      row.addEventListener("focusin", () => { if (sel !== i) { sel = i; d.querySelectorAll(".scn-row").forEach(r => r.classList.toggle("on", +r.dataset.i === i)); check(); } });
+      row.querySelectorAll("[data-f]").forEach(el => el.addEventListener(el.tagName === "SELECT" ? "change" : "input", () => {
+        const k = el.dataset.f; t.scenes[i][k] = k === "seconds" ? Number(el.value) : (k === "text" && !el.value ? null : el.value);
+        if (k === "note" && !el.value) delete t.scenes[i].note;
+        check();
+      }));
+      row.querySelectorAll("[data-mv]").forEach(b => b.onclick = () => { const j = i + Number(b.dataset.mv); if (j < 0 || j >= t.scenes.length) return; [t.scenes[i], t.scenes[j]] = [t.scenes[j], t.scenes[i]]; sel = j; render(); });
+      row.querySelector("[data-del]").onclick = () => { t.scenes.splice(i, 1); sel = Math.max(0, Math.min(sel, t.scenes.length-1)); render(); };
+    });
+    d.querySelector("#addS").onclick = () => { t.scenes.splice(Math.max(t.scenes.length-1,0), 0, {seconds:4, role:"detail", source:"photo", text:""}); sel = Math.max(t.scenes.length-2,0); render(); };
+    d.querySelector("#tf").onsubmit = e => {
+      e.preventDefault();
+      if (R.validateTemplate(t).length) return;
+      const list = Sh.templates(), i = list.findIndex(x => x.id === t.id);
+      if (i >= 0 && !isNew) list[i] = t; else list.push(t);
+      Sh.write(Sh.KEY.tpl, list); d.close(); toast(`'${t.name}' 저장했어요 — 사용자 화면에 바로 반영돼요`); viewTemplates();
+    };
+    check();
+  };
+  render();
+  d.showModal();
+}
+
+/* =========================================================
+   콘텐츠 · 기록 (content_plans · review_logs)
+   ========================================================= */
+function viewData(){
+  const f = A.data;
+  const regions = [...new Set(DB.plans.map(p => p.region))].sort();
+  const plans = DB.plans.filter(p => (!f.region || p.region === f.region) && (!f.status || p.status === f.status) && (!f.q || (p.id + p.title + p.requestedBy).includes(f.q)));
+  const ids = new Set(DB.plans.filter(p => !f.region || p.region === f.region).map(p => p.id));
+  const logs = DB.logs.filter(l => ids.has(l.planId) && (!f.q || (l.planId + l.reviewer + (l.reasonText||"") + (l.note||"")).includes(f.q))).sort((a,b) => a.at < b.at ? 1 : -1);
+  const kind = l => l.kind === "request" ? "요청" : l.kind === "system" ? "시스템" : l.decision === "pass" ? "통과" : "반려";
+  $("#view").innerHTML = `${phead("관리자 · DB", "콘텐츠 · 기록", "모든 지역의 콘텐츠(content_plans)와 결정 기록(review_logs)이에요. 기록은 지울 수 없고, 고칠 때는 새 기록이 붙어요.",
+    `<div class="hb"><button class="btn ghost" id="xCsv">CSV 내려받기</button><button class="btn ghost" id="xJson">JSON 내려받기</button></div>`)}
+  <div class="tools">
+    <div class="seg" role="group" aria-label="표"><button data-tab="plans" aria-pressed="${f.tab==="plans"}">콘텐츠<i>${plans.length}</i></button><button data-tab="logs" aria-pressed="${f.tab==="logs"}">결정 기록<i>${logs.length}</i></button></div>
+    <span class="sp"></span>
+    <select class="inp" id="fRegion" aria-label="지역"><option value="">모든 지역</option>${regions.map(r => `<option value="${esc(r)}" ${f.region===r?"selected":""}>${esc(regionTitle(r))}</option>`).join("")}</select>
+    ${f.tab==="plans" ? `<select class="inp" id="fStatus" aria-label="상태"><option value="">모든 상태</option>${Object.entries(STATUS).map(([k,v]) => `<option value="${k}" ${f.status===k?"selected":""}>${v}</option>`).join("")}</select>` : ""}
+    <input class="inp" id="fq" type="search" placeholder="ID·제목·사람·사유" aria-label="찾기" value="${esc(f.q)}">
+  </div>
+  ${f.tab === "plans" ? `<div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>지역</th><th>제목</th><th>형식</th><th>상태</th><th>요청</th><th>요청일</th></tr></thead>
+    <tbody>${plans.map(p => { const t = Sh.templates().find(x => x.id === p.templateId); return `<tr class="clickable" data-p="${p.id}" tabindex="0"><td>${esc(p.id)}</td><td>${regionCell(p.region)}</td><td>${esc(p.title)}</td><td>${t?esc(t.name):esc(p.templateId)}</td><td><span class="tag ${p.status==="published"?"ok":p.status==="rejected"?"red":/wait/.test(p.status)?"warn":""}">${STATUS[p.status]}</span></td><td>${esc(p.requestedBy)}</td><td>${fmt(p.createdAt)}</td></tr>`; }).join("") || `<tr><td colspan="7" class="empty">없어요</td></tr>`}</tbody></table></div>`
+  : `<div class="tbl-wrap"><table class="tbl"><thead><tr><th>시각</th><th>콘텐츠</th><th>지역</th><th>누가</th><th>단계</th><th>결정</th><th>사유 · 내용</th></tr></thead>
+    <tbody>${logs.map(l => { const p = DB.plans.find(x => x.id === l.planId); return `<tr><td>${fmt(l.at)}</td><td>${esc(l.planId)}</td><td>${p?esc(regionTitle(p.region)):""}</td><td>${esc(l.reviewer)}</td><td>${l.gate?l.gate+"차":"—"}</td><td><span class="tag ${l.decision==="pass"?"ok":l.decision==="reject"?"red":""}">${kind(l)}</span></td><td>${l.decision==="reject"?esc(`${l.reasonCategory} — ${l.reasonText}`):esc(l.note||"")}${l.gate===2&&l.decision==="pass"?`점검표 ${Object.values(l.checklist||{}).filter(Boolean).length}/6`:""}${l.uploadUrl?esc(l.uploadUrl):""}</td></tr>`; }).join("") || `<tr><td colspan="7" class="empty">없어요</td></tr>`}</tbody></table></div>`}`;
+  $$("[data-tab]").forEach(b => b.onclick = () => { f.tab = b.dataset.tab; viewData(); });
+  $("#fRegion").onchange = e => { f.region = e.target.value; viewData(); };
+  const st = $("#fStatus"); if (st) st.onchange = e => { f.status = e.target.value; viewData(); };
+  $("#fq").onchange = e => { f.q = e.target.value.trim(); viewData(); };
+  $$("[data-p]").forEach(tr => { const open = () => planDetail(DB.plans.find(p => p.id === tr.dataset.p)); tr.onclick = open; tr.onkeydown = e => { if (e.key === "Enter") open(); }; });
+  $("#xCsv").onclick = () => f.tab === "plans"
+    ? download("content_plans.csv", csv([["id","region","title","templateId","status","requestedBy","createdAt","parentId"], ...plans.map(p => [p.id,p.region,p.title,p.templateId,p.status,p.requestedBy,p.createdAt,p.parentId])]), "text/csv")
+    : download("review_logs.csv", csv([["id","planId","kind","gate","decision","reviewer","at","reasonCategory","reasonText","note","uploadUrl"], ...logs.map(l => [l.id,l.planId,l.kind,l.gate,l.decision,l.reviewer,l.at,l.reasonCategory,l.reasonText,l.note,l.uploadUrl])]), "text/csv");
+  $("#xJson").onclick = () => download(f.tab === "plans" ? "content_plans.json" : "review_logs.json", JSON.stringify(f.tab === "plans" ? plans : logs, null, 2));
+}
+function planDetail(p){
+  const d = $("#dlg"), c = Sh.candOf(p.cand), t = Sh.templates().find(x => x.id === p.templateId);
+  const logs = DB.logs.filter(l => l.planId === p.id).sort((a,b) => a.at < b.at ? -1 : 1);
+  const th = DB.threads[p.chatThreadId];
+  d.innerHTML = `<div class="dlg"><div class="dlg-h"><div><div class="eyebrow">${esc(p.id)} · ${esc(regionTitle(p.region))}</div><h2>${esc(p.title)}</h2></div><button class="x" data-close aria-label="닫기">×</button></div>
+    <div class="dlg-b" style="display:grid;gap:18px">
+      <dl class="dl"><dt>상태</dt><dd>${STATUS[p.status]}</dd><dt>형식</dt><dd>${t?esc(t.name):esc(p.templateId)}</dd><dt>트렌드 · 자산</dt><dd>${c?`${esc(c.trend)} × ${esc(c.asset)} (${c.cat} × ${c.age}, 적합도 ${c.fit.toFixed(2)} 참고값)`:"—"}</dd><dt>요청</dt><dd>${esc(p.requestedBy)} · ${fmt(p.createdAt)}</dd>${p.parentId?`<dt>이전 요청</dt><dd>${esc(p.parentId)}</dd>`:""}${p.uploadUrl?`<dt>올린 주소</dt><dd>${esc(p.uploadUrl)}</dd>`:""}</dl>
+      <div><b>결정 기록</b><ol class="tl2" style="margin-top:10px">${logs.map(l => `<li><span class="av ${l.kind==="system"?"sys":l.decision||""}">${esc(l.reviewer.slice(0,2))}</span><div><div class="w"><b>${esc(l.reviewer)}</b><time datetime="${l.at}">${fmt(l.at)}</time></div><div class="m">${l.kind==="decision"?`${l.gate}차 ${l.decision==="pass"?"통과":"반려"}`:esc(l.note)}</div>${l.reasonText?`<div class="r">${esc(l.reasonCategory)} — ${esc(l.reasonText)}</div>`:""}</div></li>`).join("")}</ol></div>
+      ${th ? `<div><b>대화 근거</b><ol class="tl2" style="margin-top:10px">${th.map(m => `<li><span class="av ${m.who==="me"?"pass":"sys"}">${m.who==="me"?"요청":"AI"}</span><div><div class="m">${esc(m.text)}</div></div></li>`).join("")}</ol></div>` : ""}
+    </div></div>`;
+  d.querySelector("[data-close]").onclick = () => d.close();
+  d.className = "mid"; d.onclose = () => { d.className = ""; };
+  d.showModal();
+}
+
+/* =========================================================
+   저장 · 백업
+   ========================================================= */
+function viewStorage(){
+  const keys = Object.entries(Sh.KEY);
+  const size = k => { try { const v = localStorage.getItem(k); return v ? new Blob([v]).size : 0; } catch { return 0; } };
+  const label = {db:"콘텐츠·결정 기록·대화", tpl:"관리자가 고친 템플릿", off:"사용 중지한 템플릿", regions:"지역 설정(담당자·색·교차 확인)", region:"사용자가 고른 지역"};
+  const SCHEMA = [
+    ["regions","지역(시·군·구) 계정","id, sido, name, active, manager, cross_check, color, color2, mood"],
+    ["users","담당자·관리자","id, region_id, name, role(manager|admin)"],
+    ["local_assets","지역 관광자료 (관광공사)","id, region_id, name, categories, photo_license, source_url"],
+    ["trend_logs","트렌드 수집 (데이터랩·유튜브)","id, keyword, category, age, source, score, collected_at"],
+    ["templates","숏폼 형식","id, name, categories, ages, hook, scenes(json), references, enabled"],
+    ["content_plans","콘텐츠 (확인 대상)","id, region_id, title, template_id, trend_id, asset_id, status, requested_by, chat_thread_id, parent_id, scenes(json), upload_url"],
+    ["review_logs","결정 기록 — 수정·삭제 없음","id, plan_id, kind, gate, decision, reviewer, at, reason_category, reason_text, checklist(json), scene_picks(json)"],
+    ["chat_threads","대화 근거","id, plan_id, messages(json)"],
+    ["performance_data","게시 뒤 반응","id, plan_id, platform, views, likes, measured_at"]
+  ];
+  $("#view").innerHTML = `${phead("관리자 · 저장", "저장 · 백업", Sh.REMOTE ? `공용 DB(Supabase)에 저장 중이에요 — ${esc(Sh.CFG.supabaseUrl)}. 사용자 페이지와 같은 데이터를 봐요.` : "공용 DB가 연결되지 않아 이 관리자 주소(도메인)의 브라우저에만 저장돼요. 사용자 페이지는 다른 도메인이라 이 데이터를 볼 수 없어요 — docs/deploy.md 순서대로 Supabase를 연결하세요.")}
+  <!-- 백업·시연 도구는 버튼 몇 개뿐이라 큰 상자 대신 한 줄짜리 동작 막대로 -->
+  <section class="card actbar" aria-label="백업과 시연 도구">
+    <div class="ag"><div class="at"><b>백업</b><small>불러오기는 없는 기록만 더해요 (지우거나 덮지 않음)</small></div>
+      <div class="ab"><button class="btn" id="bOut">전체 백업 내려받기</button><label class="btn ghost filebtn">백업 불러오기<input type="file" id="bIn" accept="application/json,.json"></label></div></div>
+    <div class="ag"><div class="at"><b>시연 도구</b><small>발표 리허설 전에 처음 상태로 돌릴 때만</small></div>
+      <div class="ab"><button class="btn red" id="rDb" ${Sh.REMOTE ? "disabled title=\"공용 DB의 기록은 지울 수 없어요\"" : ""}>시연 기록 처음으로</button><button class="btn red" id="rCfg">템플릿·지역 기본값으로</button></div></div>
+  </section>
+  <section class="card panel"><h2>지금 저장된 것</h2><p class="note">저장 위치: ${Sh.REMOTE ? "공용 DB (Supabase) — 아래 크기는 이 브라우저에 남은 값" : "이 브라우저 (localStorage)"} · 콘텐츠 ${DB.plans.length}건 · 결정 기록 ${DB.logs.length}건 · 대화 ${Object.keys(DB.threads).length}건</p>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>내용</th><th>키</th><th class="num">크기</th></tr></thead><tbody>
+    ${keys.map(([k,v]) => `<tr><td>${label[k]||k}</td><td><code>${v}</code></td><td class="num">${size(v) ? (size(v)/1024).toFixed(1)+" KB" : '<span class="note">기본값</span>'}</td></tr>`).join("")}
+    </tbody></table></div>
+  </section>
+  <section class="card panel" style="margin-top:18px"><h2>서버 DB 구조 (안)</h2><p class="note">운영 때 옮길 표. 자세한 설명은 docs/data-model.md</p>
+    <div class="tbl-wrap"><table class="tbl schema"><thead><tr><th>표</th><th>내용</th><th>주요 칸</th></tr></thead><tbody>${SCHEMA.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td class="note">${r[2]}</td></tr>`).join("")}</tbody></table></div>
+  </section>`;
+  $("#bOut").onclick = () => {
+    const all = {exportedAt:new Date().toISOString(), db:DB, templates:Sh.read(Sh.KEY.tpl,null), templatesOff:Sh.disabledIds(), regions:Sh.read(Sh.KEY.regions,{})};
+    download(`ai-ieum-backup-${new Date().toISOString().slice(0,10)}.json`, JSON.stringify(all, null, 2));
+  };
+  $("#bIn").onchange = async e => {
+    const file = e.target.files[0]; if (!file) return;
+    try {
+      const inc = JSON.parse(await file.text());
+      const add = Sh.mergeDB(DB, inc.db || inc); Sh.saveDB(DB);
+      if (inc.regions) { const cur = Sh.read(Sh.KEY.regions, {}); for (const [k,v] of Object.entries(inc.regions)) if (!cur[k]) cur[k] = v; Sh.write(Sh.KEY.regions, cur); }
+      if (inc.templates && confirm("백업에 템플릿도 있어요. 지금 템플릿을 백업 것으로 바꿀까요? (취소하면 기록만 불러와요)")) Sh.write(Sh.KEY.tpl, inc.templates);
+      toast(`불러왔어요 — 콘텐츠 ${add.plans} · 기록 ${add.logs} · 대화 ${add.threads}건 추가`); viewStorage();
+    } catch { toast("백업 파일을 읽지 못했어요"); }
+  };
+  $("#rDb").onclick = () => { if (!confirm("이 브라우저의 시연 콘텐츠·결정 기록을 지우고 예시 데이터로 되돌릴까요? (시연 전용)")) return; Sh.remove(Sh.KEY.db); DB = Sh.loadDB(); Sh.saveDB(DB); toast("시연 기록을 처음 상태로 되돌렸어요"); viewStorage(); };
+  $("#rCfg").onclick = () => { if (!confirm("고친 템플릿, 사용 중지 목록, 지역 설정(담당자·색)을 모두 기본값으로 되돌릴까요?")) return; [Sh.KEY.tpl, Sh.KEY.off, Sh.KEY.regions].forEach(Sh.remove); toast("기본값으로 되돌렸어요"); viewStorage(); };
+}
+
+/* 팝업 바깥 클릭으로 닫기 (편집 중인 템플릿 팝업은 제외 — 저장 안 한 내용 보호) */
+(() => { const d = $("#dlg"); let down = false;
+  const outside = e => { const r = d.getBoundingClientRect(); return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom; };
+  d.addEventListener("pointerdown", e => { down = e.target === d && outside(e); });
+  d.addEventListener("click", e => { if (down && e.target === d && outside(e) && !d.querySelector("#tf")) d.close(); down = false; });
+  d.addEventListener("cancel", e => { if (d.querySelector("#tf")) e.preventDefault(); });
+})();
+/* 공용 DB — 창으로 돌아올 때와 30초마다 새로 읽기 (사용자 페이지의 확인 결과 반영) */
+const sync = async () => {
+  if ($("#dlg").open) return;
+  try { if (await Sh.refresh()) { DB = Sh.loadDB(); route(); } } catch (e) { console.warn(e); }
+};
+window.addEventListener("focus", sync);
+setInterval(sync, 30000);
+window.addEventListener("aiieum:sync-error", e => toast("공용 DB 저장 실패 — " + e.detail));
+$("#view").innerHTML = `<p class="empty">불러오는 중…</p>`;
+Sh.init().then(() => { DB = Sh.loadDB(); route(); })
+  .catch(e => { $("#view").innerHTML = `<div class="miss">공용 DB에 연결하지 못했어요. 잠시 뒤 새로고침해 주세요.<br>${esc(e.message)}</div>`; });
+</script>
+</body>
+</html>

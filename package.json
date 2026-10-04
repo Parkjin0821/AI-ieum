@@ -1,0 +1,14 @@
+{
+  "name": "ai-ieum",
+  "private": true,
+  "description": "AI-이음 — 사용자 사이트(apps/user)와 관리자 사이트(apps/admin)를 서로 다른 도메인으로, 공용 DB는 Supabase",
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "dev:local": "node scripts/serve.mjs --local",
+    "build": "node scripts/build.mjs",
+    "sync": "node scripts/sync-templates.mjs",
+    "validate": "node scripts/validate-templates.mjs",
+    "test": "node --test tests/workflow.test.cjs tests/mock-db.test.mjs",
+    "check": "npm run validate && npm test"
+  }
+}

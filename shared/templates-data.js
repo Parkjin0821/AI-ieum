@@ -1,0 +1,740 @@
+/* 자동 생성 — 직접 고치지 말고 data/templates.json을 고친 뒤 node scripts/sync-templates.mjs */
+(function (root) {
+  const T = [
+ {
+  "id": "festival-countdown",
+  "name": "축제 D-카운트다운",
+  "description": "개막까지 남은 날짜로 시작해 대표 볼거리 3개를 빠르게 넘기고 일정으로 끝낸다. 4초 컷 20초.",
+  "categories": [
+   "축제"
+  ],
+  "ages": [
+   "20대"
+  ],
+  "hook": {
+   "type": "countdown",
+   "example": "D-7, 이번 주말 어디 가?"
+  },
+  "scenes": [
+   {
+    "seconds": 4,
+    "role": "hook",
+    "source": "ai",
+    "text": "D-7, 이번 주말 어디 가?",
+    "note": "불꽃·조명 보케 같은 추상 무드만 — 실제 장소·인물 아님"
+   },
+   {
+    "seconds": 4,
+    "role": "highlight",
+    "source": "photo",
+    "text": "{대표 프로그램 1}",
+    "note": "축제 공식 사진"
+   },
+   {
+    "seconds": 4,
+    "role": "highlight",
+    "source": "photo",
+    "text": "{대표 프로그램 2}"
+   },
+   {
+    "seconds": 4,
+    "role": "highlight",
+    "source": "photo",
+    "text": "놓치면 내년까지 기다려야 해요"
+   },
+   {
+    "seconds": 4,
+    "role": "info",
+    "source": "text",
+    "text": "{축제명} · {기간} · {장소} · {운영시간}"
+   }
+  ],
+  "references": [
+   "docs/references.md#tiktok-travel-guide-1",
+   "docs/references.md#tiktok-creative-bp-1",
+   "docs/references.md#tiktok-topview-1",
+   "docs/references.md#meta-video-value-1"
+  ],
+  "inspiredBy": [
+   "TikTok 여행 광고 가이드 — 축제 카운트다운",
+   "TikTok Creative Best Practices — 3초·6초 훅",
+   "TikTok TopView — 짧은 길이 권장",
+   "Meta — 처음 3초의 가치·무음 자막"
+  ]
+ },
+ {
+  "id": "festival-pov",
+  "name": "POV 축제 입장",
+  "description": "1인칭 시점으로 입장 → 먹거리 → 공연 동선을 따라간다. 사람 얼굴 없이 일반 무드 컷과 공식 사진으로 구성.",
+  "categories": [
+   "축제",
+   "음식"
+  ],
+  "ages": [
+   "20대",
+   "30~40대"
+  ],
+  "hook": {
+   "type": "pov",
+   "example": "POV: 축제 입장 3분 전"
+  },
+  "scenes": [
+   {
+    "seconds": 4,
+    "role": "hook",
+    "source": "ai",
+    "text": "POV: 축제 입장 3분 전",
+    "note": "손목 팔찌·티켓 같은 일반 클로즈업 — 실제 장소·인물(얼굴) 아님"
+   },
+   {
+    "seconds": 4,
+    "role": "entrance",
+    "source": "photo",
+    "text": "입구부터 이 분위기"
+   },
+   {
+    "seconds": 4,
+    "role": "food",
+    "source": "photo",
+    "text": "먼저 {대표 먹거리}부터"
+   },
+   {
+    "seconds": 4,
+    "role": "stage",
+    "source": "photo",
+    "text": "해 지면 {메인 공연}"
+   },
+   {
+    "seconds": 6,
+    "role": "peak",
+    "source": "photo",
+    "text": "오늘의 하이라이트"
+   },
+   {
+    "seconds": 6,
+    "role": "info",
+    "source": "text",
+    "text": "{기간} · {장소} · {운영시간} · {교통 팁}"
+   }
+  ],
+  "references": [
+   "docs/references.md#youtube-shorts-abcd-1",
+   "docs/references.md#visit-abu-dhabi-1",
+   "docs/references.md#skift-1",
+   "docs/references.md#tiktok-travel-guide-1"
+  ],
+  "inspiredBy": [
+   "YouTube Shorts ABCDs — 사람 POV",
+   "Experience Abu Dhabi — 실여행자 시점",
+   "Skift — DMO 숏폼 1인칭 몰입",
+   "TikTok 여행 광고 가이드"
+  ]
+ },
+ {
+  "id": "dream-reveal",
+  "name": "꿈 같은 풍경 → 실제 공개",
+  "description": "AI 무드 장면으로 '이런 풍경 꿈에서만 봤죠?'라고 묻고, 공식 사진으로 실제 장소를 공개하는 반전형.",
+  "categories": [
+   "관광지"
+  ],
+  "ages": [
+   "20대",
+   "30~40대"
+  ],
+  "hook": {
+   "type": "reveal",
+   "example": "이런 풍경, 꿈에서만 봤죠?"
+  },
+  "scenes": [
+   {
+    "seconds": 6,
+    "role": "hook",
+    "source": "ai",
+    "text": "이런 풍경, 꿈에서만 봤죠?",
+    "note": "일반 풍경 일러스트 무드 — 실제 장소의 지형·랜드마크를 그리지 않음, 실제 장소·인물 아님"
+   },
+   {
+    "seconds": 4,
+    "role": "reveal",
+    "source": "photo",
+    "text": "{지역}에 진짜 있어요",
+    "note": "공식 사진으로 하드컷 전환"
+   },
+   {
+    "seconds": 4,
+    "role": "detail",
+    "source": "photo",
+    "text": "{포인트 1}"
+   },
+   {
+    "seconds": 4,
+    "role": "detail",
+    "source": "photo",
+    "text": "{포인트 2}"
+   },
+   {
+    "seconds": 6,
+    "role": "info",
+    "source": "text",
+    "text": "{관광지명} · {주소} · {운영시간} · {입장료}"
+   }
+  ],
+  "references": [
+   "docs/references.md#travel-oregon-1",
+   "docs/references.md#visit-california-1",
+   "docs/references.md#singapore-tb-1"
+  ],
+  "inspiredBy": [
+   "Travel Oregon — 애니메이션 무드",
+   "Visit California — 비현실 훅 → 실제 명소",
+   "Singapore Tourism Board — 기대 vs 반전"
+  ]
+ },
+ {
+  "id": "course-list",
+  "name": "당일치기 3곳 코스",
+  "description": "번호를 붙여 오전·점심·오후 코스를 제안하는 실용형. TikTok 여행 광고 권장 21~34초 안의 32초.",
+  "categories": [
+   "관광지",
+   "음식"
+  ],
+  "ages": [
+   "30~40대"
+  ],
+  "hook": {
+   "type": "list",
+   "example": "당일치기, 이 3곳이면 끝"
+  },
+  "scenes": [
+   {
+    "seconds": 4,
+    "role": "hook",
+    "source": "ai",
+    "text": "{지역} 당일치기 3곳",
+    "note": "지도 핀·길 같은 추상 그래픽 — 실제 지도·장소·인물 아님"
+   },
+   {
+    "seconds": 6,
+    "role": "step",
+    "source": "photo",
+    "text": "① {장소1} · 오전"
+   },
+   {
+    "seconds": 6,
+    "role": "step",
+    "source": "photo",
+    "text": "② {맛집·시장} · 점심"
+   },
+   {
+    "seconds": 6,
+    "role": "step",
+    "source": "photo",
+    "text": "③ {장소3} · 오후"
+   },
+   {
+    "seconds": 4,
+    "role": "recap",
+    "source": "text",
+    "text": "①→②→③ {총 소요시간}"
+   },
+   {
+    "seconds": 6,
+    "role": "info",
+    "source": "text",
+    "text": "운영시간 · 주차 · 휴무일"
+   }
+  ],
+  "references": [
+   "docs/references.md#tiktok-travel-specs-1",
+   "docs/references.md#jnto-1",
+   "docs/references.md#expedia-1",
+   "docs/references.md#tiktok-travel-guide-1"
+  ],
+  "inspiredBy": [
+   "TikTok 여행 광고 스펙 — 권장 21~34초",
+   "JNTO — 장소·식당·거리 산책 나열",
+   "Expedia — 장면당 2~9초",
+   "TikTok 여행 광고 가이드 — 일정 제안"
+  ]
+ },
+ {
+  "id": "four-seasons",
+  "name": "사계절 엽서",
+  "description": "한 장소를 계절별로 8초씩 보여주는 느린 템포. 큰 자막과 긴 장면으로 50대 이상의 읽기 편함을 우선한다.",
+  "categories": [
+   "관광지",
+   "문화"
+  ],
+  "ages": [
+   "50대 이상"
+  ],
+  "hook": {
+   "type": "seasonal",
+   "example": "언제 가도 좋은 곳 — 봄"
+  },
+  "scenes": [
+   {
+    "seconds": 8,
+    "role": "hook",
+    "source": "photo",
+    "text": "봄 · {특징}"
+   },
+   {
+    "seconds": 8,
+    "role": "season",
+    "source": "photo",
+    "text": "여름 · {특징}"
+   },
+   {
+    "seconds": 8,
+    "role": "season",
+    "source": "photo",
+    "text": "가을 · {특징}"
+   },
+   {
+    "seconds": 8,
+    "role": "season",
+    "source": "photo",
+    "text": "겨울 · {특징}",
+    "note": "계절 사진이 없으면 이 장면을 빼고 32초로"
+   },
+   {
+    "seconds": 8,
+    "role": "info",
+    "source": "text",
+    "text": "{장소} · {주소} · {운영시간} · 문의 {전화}",
+    "note": "큰 글씨, 한 화면 최대 3줄"
+   }
+  ],
+  "references": [
+   "docs/references.md#jnto-1",
+   "docs/references.md#tourism-wa-1",
+   "docs/references.md#expedia-1",
+   "docs/references.md#meta-video-value-1"
+  ],
+  "inspiredBy": [
+   "JNTO — 계절별 에디션",
+   "Tourism Western Australia — 경관 나열 무드",
+   "Expedia — 세대별 선호",
+   "Meta — 무음 시청 자막"
+  ]
+ },
+ {
+  "id": "sensory-bite",
+  "name": "한 입 감각 클로즈업",
+  "description": "소리와 클로즈업으로 시작하는 20초 음식 템플릿. 대표 메뉴 → 곁들임 → 가게 위치 순.",
+  "categories": [
+   "음식"
+  ],
+  "ages": [
+   "20대"
+  ],
+  "hook": {
+   "type": "sensory",
+   "example": "이 소리 듣고 안 갈 수 있어?"
+  },
+  "scenes": [
+   {
+    "seconds": 4,
+    "role": "hook",
+    "source": "ai",
+    "text": "치익— 이 소리",
+    "note": "김·지글거림 같은 일반 매크로 무드 — 실제 가게·상호·인물 아님"
+   },
+   {
+    "seconds": 4,
+    "role": "food",
+    "source": "photo",
+    "text": "{대표 메뉴}"
+   },
+   {
+    "seconds": 4,
+    "role": "food",
+    "source": "photo",
+    "text": "{곁들임·디저트}"
+   },
+   {
+    "seconds": 4,
+    "role": "place",
+    "source": "photo",
+    "text": "{시장·거리} 안쪽에 있어요"
+   },
+   {
+    "seconds": 4,
+    "role": "info",
+    "source": "text",
+    "text": "{가게·시장명} · {위치} · {영업시간} · {휴무}"
+   }
+  ],
+  "references": [
+   "docs/references.md#youtube-shorts-abcd-1",
+   "docs/references.md#tiktok-travel-guide-1",
+   "docs/references.md#tiktok-topview-1"
+  ],
+  "inspiredBy": [
+   "YouTube Shorts ABCDs — 소리로 알리기·타이트한 프레이밍",
+   "TikTok 여행 광고 가이드 — 감각 디테일·시장 음식",
+   "TikTok TopView — 짧은 길이"
+  ]
+ },
+ {
+  "id": "family-meal",
+  "name": "아이랑 한 끼 가이드",
+  "description": "아이 동반 가족에게 필요한 메뉴·좌석·주차 정보를 6초 장면으로 정리하는 36초 실용형.",
+  "categories": [
+   "음식"
+  ],
+  "ages": [
+   "30~40대"
+  ],
+  "hook": {
+   "type": "question",
+   "example": "아이랑 가면 뭐 먹지?"
+  },
+  "scenes": [
+   {
+    "seconds": 6,
+    "role": "hook",
+    "source": "ai",
+    "text": "아이랑 {지역}, 뭐 먹지?",
+    "note": "일반 식탁·수저 무드 — 실제 장소·인물(얼굴) 아님"
+   },
+   {
+    "seconds": 6,
+    "role": "food",
+    "source": "photo",
+    "text": "{향토음식} · 맵지 않아요"
+   },
+   {
+    "seconds": 6,
+    "role": "food",
+    "source": "photo",
+    "text": "{간식·디저트}"
+   },
+   {
+    "seconds": 6,
+    "role": "place",
+    "source": "photo",
+    "text": "{식당가·시장} 전경"
+   },
+   {
+    "seconds": 6,
+    "role": "tip",
+    "source": "text",
+    "text": "유아의자 · 주차 · 웨이팅"
+   },
+   {
+    "seconds": 6,
+    "role": "info",
+    "source": "text",
+    "text": "{위치} · {영업시간} · {휴무일}"
+   }
+  ],
+  "references": [
+   "docs/references.md#jnto-1",
+   "docs/references.md#tiktok-travel-specs-1",
+   "docs/references.md#expedia-1"
+  ],
+  "inspiredBy": [
+   "JNTO — 동행 유형별(가족) 장면",
+   "TikTok 여행 광고 스펙 — 권장 길이",
+   "Expedia — 시작·중간·CTA 구조"
+  ]
+ },
+ {
+  "id": "seasonal-story",
+  "name": "제철 향토 이야기",
+  "description": "기록 사진으로 음식의 유래를 소개한 뒤 공식 사진으로 지금을 보여주는 이야기형. 8초 장면 32초.",
+  "categories": [
+   "음식"
+  ],
+  "ages": [
+   "50대 이상"
+  ],
+  "hook": {
+   "type": "story",
+   "example": "이 계절이면 늘 이 맛이었죠"
+  },
+  "scenes": [
+   {
+    "seconds": 8,
+    "role": "hook",
+    "source": "archive",
+    "text": "{연도}년, {음식}의 시작",
+    "note": "지자체·박물관 공개 기록만 — 이용 허락 확인 필수"
+   },
+   {
+    "seconds": 8,
+    "role": "now",
+    "source": "photo",
+    "text": "지금도 {제철}이면"
+   },
+   {
+    "seconds": 8,
+    "role": "detail",
+    "source": "photo",
+    "text": "{재료·조리 특징}"
+   },
+   {
+    "seconds": 8,
+    "role": "info",
+    "source": "text",
+    "text": "{판매처·거리} · {제철 기간} · {영업시간}"
+   }
+  ],
+  "references": [
+   "docs/references.md#thinkwithgoogle-2",
+   "docs/references.md#tourism-australia-2",
+   "docs/references.md#meta-video-value-1"
+  ],
+  "inspiredBy": [
+   "Think with Google — 관광 캠페인의 이야기·사람",
+   "Tourism Australia — 회상 + 기록 영상 교차",
+   "Meta — 무음 시청 자막"
+  ]
+ },
+ {
+  "id": "culture-quiz",
+  "name": "몰랐던 사실 3가지",
+  "description": "질문 카드로 시작해 사진으로 하나씩 답하는 문화 상식형. 정보 직전에 댓글을 묻는 장면을 둔다.",
+  "categories": [
+   "문화"
+  ],
+  "ages": [
+   "20대"
+  ],
+  "hook": {
+   "type": "quiz",
+   "example": "Q. 이곳의 비밀 3가지"
+  },
+  "scenes": [
+   {
+    "seconds": 4,
+    "role": "hook",
+    "source": "text",
+    "text": "Q. {문화재·전통}의 비밀 3가지"
+   },
+   {
+    "seconds": 4,
+    "role": "fact",
+    "source": "photo",
+    "text": "① {사실 1}",
+    "note": "사실은 관광공사·문화재청 자료로만"
+   },
+   {
+    "seconds": 4,
+    "role": "fact",
+    "source": "photo",
+    "text": "② {사실 2}"
+   },
+   {
+    "seconds": 4,
+    "role": "fact",
+    "source": "photo",
+    "text": "③ {사실 3}"
+   },
+   {
+    "seconds": 4,
+    "role": "engage",
+    "source": "text",
+    "text": "몇 개 알고 있었어? 댓글로"
+   },
+   {
+    "seconds": 4,
+    "role": "info",
+    "source": "text",
+    "text": "{장소} · {관람시간} · {관람료}"
+   }
+  ],
+  "references": [
+   "docs/references.md#tiktok-travel-guide-1",
+   "docs/references.md#tiktok-creative-bp-1",
+   "docs/references.md#youtube-shorts-abcd-1"
+  ],
+  "inspiredBy": [
+   "TikTok 여행 광고 가이드 — 질문·투표형 CTA",
+   "TikTok Creative Best Practices — 초당 5~10단어",
+   "YouTube Shorts ABCDs — 자막 고정"
+  ]
+ },
+ {
+  "id": "craft-howto",
+  "name": "체험 3단계 따라 하기",
+  "description": "공예·전통 체험을 3단계로 보여주는 레슨형. '이 지역 사람처럼 해보기' 구조.",
+  "categories": [
+   "문화"
+  ],
+  "ages": [
+   "30~40대"
+  ],
+  "hook": {
+   "type": "howto",
+   "example": "3단계면 나도 할 수 있어요"
+  },
+  "scenes": [
+   {
+    "seconds": 6,
+    "role": "hook",
+    "source": "ai",
+    "text": "{체험}, 3단계면 돼요",
+    "note": "재료·도구의 일반 무드 — 실제 공방·장소·인물 아님"
+   },
+   {
+    "seconds": 6,
+    "role": "step",
+    "source": "photo",
+    "text": "1단계 · {과정}"
+   },
+   {
+    "seconds": 6,
+    "role": "step",
+    "source": "photo",
+    "text": "2단계 · {과정}"
+   },
+   {
+    "seconds": 6,
+    "role": "step",
+    "source": "photo",
+    "text": "3단계 · 완성"
+   },
+   {
+    "seconds": 8,
+    "role": "info",
+    "source": "text",
+    "text": "{체험관} · {예약 방법} · {소요시간} · {운영시간}"
+   }
+  ],
+  "references": [
+   "docs/references.md#visit-finland-1",
+   "docs/references.md#visitscotland-2",
+   "docs/references.md#jnto-1"
+  ],
+  "inspiredBy": [
+   "Visit Finland — '~처럼 하는 법' 레슨형",
+   "VisitScotland — how-to·교육형, 3초 안에 시선",
+   "JNTO — 공예 체험 장면"
+  ]
+ },
+ {
+  "id": "then-now",
+  "name": "그때와 지금",
+  "description": "축제·마을의 옛 기록 사진과 올해 공식 사진을 교차하는 회상형. 50대 이상을 위한 느린 이야기.",
+  "categories": [
+   "축제",
+   "문화"
+  ],
+  "ages": [
+   "50대 이상"
+  ],
+  "hook": {
+   "type": "nostalgia",
+   "example": "{연도}년 그 축제, 기억하세요?"
+  },
+  "scenes": [
+   {
+    "seconds": 8,
+    "role": "hook",
+    "source": "archive",
+    "text": "{연도}년의 {축제·마을}",
+    "note": "공개 기록 사진 — 알아볼 수 있는 인물이 있으면 초상권 확인"
+   },
+   {
+    "seconds": 8,
+    "role": "then",
+    "source": "archive",
+    "text": "그때도 사람들은 {풍경}"
+   },
+   {
+    "seconds": 8,
+    "role": "now",
+    "source": "photo",
+    "text": "그리고 올해"
+   },
+   {
+    "seconds": 8,
+    "role": "now",
+    "source": "photo",
+    "text": "{올해 새로운 점}"
+   },
+   {
+    "seconds": 8,
+    "role": "info",
+    "source": "text",
+    "text": "{축제명} · {기간} · {장소} · {운영시간}"
+   }
+  ],
+  "references": [
+   "docs/references.md#tourism-australia-2",
+   "docs/references.md#thinkwithgoogle-2",
+   "docs/references.md#expedia-1"
+  ],
+  "inspiredBy": [
+   "Tourism Australia — 회상 + 기록 영상 교차",
+   "Think with Google — 이야기 중심",
+   "Expedia — 장면 길이·세대별 선호"
+  ]
+ },
+ {
+  "id": "local-quote",
+  "name": "주민 추천 한마디",
+  "description": "주민의 추천 문구(글자 화면)와 공식 사진을 번갈아 보여주는 의견형. 인물 영상 없이 인용문만 쓴다.",
+  "categories": [
+   "축제",
+   "관광지",
+   "음식"
+  ],
+  "ages": [
+   "30~40대",
+   "50대 이상"
+  ],
+  "hook": {
+   "type": "quote",
+   "example": "\"해 질 때 가야 해요\" — 주민"
+  },
+  "scenes": [
+   {
+    "seconds": 6,
+    "role": "hook",
+    "source": "text",
+    "text": "\"{추천 문구 1}\" — {지역} 주민",
+    "note": "서면 동의를 받은 문구만 — 인물 사진·AI 인물은 쓰지 않음"
+   },
+   {
+    "seconds": 6,
+    "role": "place",
+    "source": "photo",
+    "text": "{장소} 현장"
+   },
+   {
+    "seconds": 6,
+    "role": "quote",
+    "source": "text",
+    "text": "\"{추천 문구 2}\""
+   },
+   {
+    "seconds": 6,
+    "role": "place",
+    "source": "photo",
+    "text": "{장소} 현장"
+   },
+   {
+    "seconds": 6,
+    "role": "info",
+    "source": "text",
+    "text": "{장소·축제} · {기간·운영시간} · {위치}"
+   }
+  ],
+  "references": [
+   "docs/references.md#nyc-tourism-1",
+   "docs/references.md#visit-abu-dhabi-1",
+   "docs/references.md#visitscotland-1"
+  ],
+  "inspiredBy": [
+   "NYC Tourism — #WhatsGoodNYC 시민 한마디",
+   "Experience Abu Dhabi — 실여행자 목소리",
+   "VisitScotland — 꾸미지 않은 진정성"
+  ]
+ }
+];
+  if (typeof module === "object" && module.exports) module.exports = T; else root.AIIEUM_TEMPLATES = T;
+})(typeof window !== "undefined" ? window : globalThis);

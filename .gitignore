@@ -1,0 +1,16 @@
+# 빌드 결과 · 배포 연결 정보 · 토큰 (절대 올리지 않음)
+dist/
+.vercel/
+.env*
+node_modules/
+
+# 개인 작업 설정
+.claude/
+desktop.ini
+
+# 발표 자료 · 초안 (코드 저장소에는 넣지 않음)
+*.pptx
+*.pdf
+*.png
+AI이음_*.md
+ai-ieum-prototype 초안.html
