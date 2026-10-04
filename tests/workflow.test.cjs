@@ -5,62 +5,62 @@ const fs = require("node:fs");
 const path = require("node:path");
 const W = require("../shared/workflow.js");
 
-const base = () => ({ id: "p1", title: "가을 축제 × 김제", templateId: "festival-countdown", requestedBy: "박진영", status: "gate1_wait" });
+const base = () => ({ id: "p1", title: "가을 축제 × 김제", templateId: "festival-countdown", requestedBy: "요청 담당자", status: "gate1_wait" });
 const scenes = [{ idx: 1, label: "여는 장면" }, { idx: 2, label: "볼거리" }, { idx: 3, label: "일정·위치" }];
 const allChecks = Object.fromEntries(W.CHECKS2.map(c => [c.key, true]));
 const allPicks = { 1: "veo", 2: "kling", 3: "regen" };
 const code = c => err => err instanceof W.WorkflowError && err.code === c;
 
 function toGate2() {
-  let p = W.transition(base(), { type: "pass" }, { reviewer: "이경준" }).plan;
+  let p = W.transition(base(), { type: "pass" }, { reviewer: "확인 담당자" }).plan;
   return W.transition(p, { type: "draftReady", scenes }, { reviewer: "시스템" }).plan;
 }
 
 test("정상 경로: 1차 → 제작 → 2차 → 3차 → 게시", () => {
   const p2 = toGate2();
   assert.equal(p2.status, "gate2_wait");
-  const r2 = W.transition(p2, { type: "pass" }, { reviewer: "이경준", checklist: allChecks, scenePicks: allPicks });
+  const r2 = W.transition(p2, { type: "pass" }, { reviewer: "확인 담당자", checklist: allChecks, scenePicks: allPicks });
   assert.equal(r2.plan.status, "gate3_wait");
   assert.deepEqual(r2.log.scenePicks, allPicks);
-  const r3 = W.transition(r2.plan, { type: "pass" }, { reviewer: "박진", checklist: { final: true, caption: true }, uploadUrl: "https://youtube.com/shorts/x" });
+  const r3 = W.transition(r2.plan, { type: "pass" }, { reviewer: "게시 담당자", checklist: { final: true, caption: true }, uploadUrl: "https://youtube.com/shorts/x" });
   assert.equal(r3.plan.status, "published");
-  assert.equal(r3.log.reviewer, "박진");
+  assert.equal(r3.log.reviewer, "게시 담당자");
   assert.ok(r3.log.at);
 });
 
 test("1차를 건너뛸 수 없다", () => {
-  assert.throws(() => W.transition(base(), { type: "pass", gate: 2 }, { reviewer: "이경준" }), code("GATE_SKIP"));
+  assert.throws(() => W.transition(base(), { type: "pass", gate: 2 }, { reviewer: "확인 담당자" }), code("GATE_SKIP"));
   assert.throws(() => W.transition(base(), { type: "draftReady", scenes }, { reviewer: "시스템" }), code("BAD_TRANSITION"));
-  const making = W.transition(base(), { type: "pass" }, { reviewer: "이경준" }).plan;
-  assert.throws(() => W.transition(making, { type: "pass" }, { reviewer: "이경준" }), code("BAD_TRANSITION"));
+  const making = W.transition(base(), { type: "pass" }, { reviewer: "확인 담당자" }).plan;
+  assert.throws(() => W.transition(making, { type: "pass" }, { reviewer: "확인 담당자" }), code("BAD_TRANSITION"));
 });
 
 test("2차: 점검표 하나라도 빠지면 통과 불가", () => {
   const p2 = toGate2();
   for (const c of W.CHECKS2) {
     const cl = Object.assign({}, allChecks, { [c.key]: false });
-    assert.throws(() => W.transition(p2, { type: "pass" }, { reviewer: "이경준", checklist: cl, scenePicks: allPicks }), code("CHECKLIST_MISSING"));
+    assert.throws(() => W.transition(p2, { type: "pass" }, { reviewer: "확인 담당자", checklist: cl, scenePicks: allPicks }), code("CHECKLIST_MISSING"));
   }
 });
 
 test("2차: 장면 하나라도 미선택이면 통과 불가", () => {
   const p2 = toGate2();
-  assert.throws(() => W.transition(p2, { type: "pass" }, { reviewer: "이경준", checklist: allChecks, scenePicks: { 1: "veo", 2: "kling" } }), code("SCENES_MISSING"));
-  assert.throws(() => W.transition(p2, { type: "pass" }, { reviewer: "이경준", checklist: allChecks, scenePicks: { 1: "veo", 2: "kling", 3: "both" } }), code("SCENES_MISSING"));
+  assert.throws(() => W.transition(p2, { type: "pass" }, { reviewer: "확인 담당자", checklist: allChecks, scenePicks: { 1: "veo", 2: "kling" } }), code("SCENES_MISSING"));
+  assert.throws(() => W.transition(p2, { type: "pass" }, { reviewer: "확인 담당자", checklist: allChecks, scenePicks: { 1: "veo", 2: "kling", 3: "both" } }), code("SCENES_MISSING"));
 });
 
 test("2차: 요청자 본인은 통과 불가 (기본 켬), 설정으로 끌 수 있다", () => {
   const p2 = toGate2();
-  const ctx = { reviewer: "박진영", checklist: allChecks, scenePicks: allPicks };
+  const ctx = { reviewer: "요청 담당자", checklist: allChecks, scenePicks: allPicks };
   assert.throws(() => W.transition(p2, { type: "pass" }, ctx), code("SELF_REVIEW"));
   const ok = W.transition(p2, { type: "pass" }, Object.assign({}, ctx, { settings: { forbidSelfReview: false } }));
   assert.equal(ok.plan.status, "gate3_wait");
 });
 
 test("반려: 상세 사유가 비면 저장되지 않는다", () => {
-  assert.throws(() => W.transition(base(), { type: "reject" }, { reviewer: "이경준", reasonCategory: "사실 오류", reasonText: "   " }), code("NO_REASON_TEXT"));
-  assert.throws(() => W.transition(base(), { type: "reject" }, { reviewer: "이경준", reasonText: "날짜 틀림" }), code("NO_REASON_CATEGORY"));
-  const r = W.transition(base(), { type: "reject" }, { reviewer: "이경준", reasonCategory: "사실 오류", reasonText: "개막일이 10.3이 아니라 10.2" });
+  assert.throws(() => W.transition(base(), { type: "reject" }, { reviewer: "확인 담당자", reasonCategory: "사실 오류", reasonText: "   " }), code("NO_REASON_TEXT"));
+  assert.throws(() => W.transition(base(), { type: "reject" }, { reviewer: "확인 담당자", reasonText: "날짜 틀림" }), code("NO_REASON_CATEGORY"));
+  const r = W.transition(base(), { type: "reject" }, { reviewer: "확인 담당자", reasonCategory: "사실 오류", reasonText: "개막일이 10.3이 아니라 10.2" });
   assert.equal(r.plan.status, "rejected");
   assert.equal(r.log.decision, "reject");
   assert.equal(r.log.reasonText, "개막일이 10.3이 아니라 10.2");
@@ -68,17 +68,17 @@ test("반려: 상세 사유가 비면 저장되지 않는다", () => {
 
 test("3차: 확인 2개 전에는 게시 결정 불가", () => {
   const p2 = toGate2();
-  const p3 = W.transition(p2, { type: "pass" }, { reviewer: "이경준", checklist: allChecks, scenePicks: allPicks }).plan;
-  assert.throws(() => W.transition(p3, { type: "pass" }, { reviewer: "박진", checklist: { final: true } }), code("CHECKLIST_MISSING"));
+  const p3 = W.transition(p2, { type: "pass" }, { reviewer: "확인 담당자", checklist: allChecks, scenePicks: allPicks }).plan;
+  assert.throws(() => W.transition(p3, { type: "pass" }, { reviewer: "게시 담당자", checklist: { final: true } }), code("CHECKLIST_MISSING"));
 });
 
 test("반려 후 다시 요청하면 새 id로 1차부터, 원본은 그대로", () => {
-  const rej = W.transition(base(), { type: "reject" }, { reviewer: "이경준", reasonCategory: "타깃 불일치", reasonText: "50대 대상으로 바꿔주세요" }).plan;
-  const again = W.transition(rej, { type: "resubmit", newId: "p2" }, { reviewer: "박진영" });
+  const rej = W.transition(base(), { type: "reject" }, { reviewer: "확인 담당자", reasonCategory: "타깃 불일치", reasonText: "50대 대상으로 바꿔주세요" }).plan;
+  const again = W.transition(rej, { type: "resubmit", newId: "p2" }, { reviewer: "요청 담당자" });
   assert.equal(again.plan.status, "gate1_wait");
   assert.equal(again.plan.parentId, "p1");
   assert.equal(rej.status, "rejected");
-  assert.throws(() => W.transition(base(), { type: "resubmit" }, { reviewer: "박진영" }), code("BAD_TRANSITION"));
+  assert.throws(() => W.transition(base(), { type: "resubmit" }, { reviewer: "요청 담당자" }), code("BAD_TRANSITION"));
 });
 
 test("결정자 없는 결정은 받지 않는다", () => {

@@ -7,7 +7,7 @@
 | 사용자 | https://ai-ieum.vercel.app | `ai-ieum` |
 | 관리자 | https://ai-ieum-admin.vercel.app | `ai-ieum-admin` |
 
-- Vercel 계정: parkjin8326@gmail.com (팀 `parkjin8326-dots-projects`)
+- Vercel 팀: `parkjin8326-dots-projects` (계정 소유자만 배포 가능)
 - 공용 DB는 아직 **미연결**입니다. 그래서 두 사이트는 각자 그 브라우저에만 저장합니다.
 
 **다시 올리기**: 아래 명령 한 줄로 빌드 → 연결 → 토큰 파일 삭제 → 두 사이트 배포까지 합니다.
