@@ -246,11 +246,12 @@ main.center{flex:1;display:grid;align-content:center;padding-bottom:clamp(16px,1
 .gorg .chg{font-size:.75rem;color:var(--accent-fg);font-weight:700;white-space:nowrap;border:1px solid var(--accent-line);border-radius:4px;padding:2px 7px;margin-left:4px}
 .gorg:hover b{color:var(--accent-fg)}
 .rnav{display:flex;gap:clamp(8px,1.2vw,22px);margin-left:auto} /* 오른쪽 끝(마지막 메뉴) 기준으로 붙여 정렬 */
-.rnav a{display:flex;align-items:center;gap:8px;padding:0 4px;color:var(--text);text-decoration:none;font-weight:700;font-size:1.0625rem;position:relative;white-space:nowrap}
-.rnav a svg{width:20px;height:20px;flex:none;color:var(--faint)}
+.rnav a{display:flex;align-items:center;gap:6px;padding:0 4px;color:var(--text);text-decoration:none;font-weight:600;font-size:.875rem;position:relative;white-space:nowrap}
+.rnav a svg{width:16px;height:16px;flex:none;color:var(--faint)}
 .rnav a::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:3px;background:var(--accent);transform:scaleX(0);transition:transform .2s}
 .rnav a:hover::after{transform:scaleX(.5)}
 .rnav a[aria-current="page"],.rnav a[aria-current="page"] svg{color:var(--accent-fg)}
+.rnav a[aria-current="page"]{font-weight:700}
 .rnav a[aria-current="page"]::after{transform:none}
 .count{margin-left:2px;background:#C2352C;color:#fff;border-radius:10px;font-size:.72rem;padding:0 7px;font-weight:800;min-width:20px;text-align:center;line-height:1.6}
 .av{width:38px;height:38px;border-radius:50%;background:var(--accent-soft);color:var(--accent-ink);display:grid;place-items:center;font-weight:800;font-size:.8rem}
