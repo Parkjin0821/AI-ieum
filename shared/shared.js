@@ -472,7 +472,7 @@
       const back = front === imgs[0] ? imgs[1] : imgs[0], k = ++i;
       back.onload = () => { back.classList.add("on"); front.classList.remove("on"); front = back; caption(k); };
       back.src = list[k % list.length].src; // 못 받으면 onload가 없으니 지금 사진 그대로
-    }, ms || 4000);
+    }, ms || 6000);
   }
 
   /* ---------- 로그인 · 회원가입 (시연용) ----------

@@ -72,7 +72,7 @@ a{color:var(--accent-fg)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}
   /* 사진 슬라이드는 확대 없이 서서히 겹쳐 바뀌기만 (움직임 없는 페이드) */
-  .auth-side .slides img,.hero .slides img{transition:opacity 1.2s ease!important;transform:none!important}}
+  .auth-side .slides img,.hero .slides img{transition:opacity 2.5s ease-in-out!important;transform:none!important}}
 
 /* ---------- 기본 부품 ---------- */
 /* 버튼 한 벌: 기본(지역색 채움) · ghost(테두리) · soft(옅은 지역색) · red(테두리 빨강) · danger(빨강 채움) · sm(작게) · wide(꽉 차게)
@@ -340,7 +340,7 @@ main{padding:clamp(16px,1.8vw,28px) var(--gutter) 40px;max-width:var(--max-w);ma
 .auth{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(340px,440px);gap:clamp(20px,3vw,40px);width:100%;max-width:1080px;margin:0 auto} /* 가운데 정렬 grid 안에서도 내용 길이와 상관없이 같은 폭 */
 .auth-side{position:relative;overflow:hidden;isolation:isolate;border-radius:var(--r-lg);color:#fff;padding:clamp(24px,3vw,44px);display:flex;flex-direction:column;justify-content:flex-end;min-height:0;background:#1D2B3F}
 .auth-side .slides,.hero .slides{position:absolute;inset:0;z-index:-2;background:#1D2B3F}
-.auth-side .slides img,.hero .slides img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.06);transition:opacity 1s ease,transform 5s linear}
+.auth-side .slides img,.hero .slides img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.06);transition:opacity 2.5s ease-in-out,transform 8s linear} /* 천천히 겹쳐 바뀌게 (간격 6초) */
 .auth-side .slides img.on,.hero .slides img.on{opacity:1;transform:scale(1)}
 /* 사진 출처: 장소 / 출처 두 줄, 자르지 않음 */
 .auth-side .slide-cap,.hero .slide-cap{position:absolute;right:14px;top:12px;max-width:70%;font-size:.68rem;font-weight:600;line-height:1.45;opacity:.9;white-space:pre-line;text-align:right;text-shadow:0 1px 3px rgba(0,0,0,.55)}

@@ -379,7 +379,7 @@ function viewLogin(){
       <div class="auth-demo"><button class="btn ghost wide" type="button" id="ldemo">시연 관리자로 들어가기</button>
       <p class="demo-note">${Sh.auth.TEST_LOGIN ? "아무 아이디·비밀번호로 들어갈 수 있어요." : "시연 계정: <code>admin</code> / <code>aiieum-demo</code>"} 관리자 계정은 회원가입을 받지 않아요.</p></div>
     </form></div>`;
-  Sh.slideshow($(".auth-side .slides"), $(".auth-side .slide-cap"), 4000);
+  Sh.slideshow($(".auth-side .slides"), $(".auth-side .slide-cap"), 6000);
   $("#le").focus({preventScroll:true});
   $("#lpeek").onclick = e => { const i = $("#lp"), show = i.type === "password"; i.type = show ? "text" : "password"; e.target.textContent = show ? "숨기기" : "보기"; e.target.setAttribute("aria-pressed", show); };
   const enter = () => { if (location.hash === "#/" || location.hash === "") route(); else location.hash = "#/"; };
@@ -455,7 +455,7 @@ function viewHome(){
   };
   board("all");
   $$("[data-bt]").forEach(b => b.onclick = () => { $$("[data-bt]").forEach(x => x.setAttribute("aria-selected", x === b)); board(b.dataset.bt); });
-  Sh.slideshow($(".hero .slides"), $(".hero .slide-cap"), 4000);
+  Sh.slideshow($(".hero .slides"), $(".hero .slide-cap"), 6000);
 }
 
 /* =========================================================
