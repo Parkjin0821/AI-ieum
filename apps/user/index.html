@@ -638,7 +638,7 @@ const QICON = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" s
 function hero(){
   const r = Sh.regionOf(S.region), s = rs(), n = Sh.assetsIn(r.id).length, w = waiting(), photos = Sh.regionPhotoList(r.id).length;
   return `<section class="hero${photos ? " has-slides" : ""}" aria-label="${esc(r.name)} 소개">${photos ? `<span class="slides" aria-hidden="true" data-region="${esc(r.id)}"></span><span class="slide-cap"></span>` : ""}
-    <div><small>${esc(r.sidoName)} ${esc(r.name)}${s.slogan && s.mood ? ` · ${esc(s.mood)}` : ""}</small><h2>${esc(s.slogan || s.mood || r.name)}</h2><p>${esc(r.name)} 관광자료 ${n}건으로 숏폼을 기획하고, ${esc(me())}가 1·2·3차로 확인해요.</p></div>
+    <div><small>${esc(r.sidoName)} ${esc(r.name)}</small><h2>${esc(s.slogan || s.mood || r.name)}</h2><p>${esc(r.name)} 관광자료 ${n}건으로 숏폼을 기획하고, ${esc(me())}가 1·2·3차로 확인해요.</p></div>
     <nav class="quick" aria-label="자주 찾는 메뉴">
       <a href="#/studio"><span>${QICON('<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.6A8 8 0 1 1 21 12z"/>')}</span>대화로 만들기<small>주제 찾기</small></a>
       <a href="#/review"><span>${QICON('<circle cx="12" cy="12" r="8"/><path d="M8.5 12l2.3 2.3L15.5 9.5"/>')}</span>확인함<small>${w ? `대기 ${w}건` : "대기 없음"}</small></a>
