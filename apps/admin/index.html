@@ -20,6 +20,60 @@
 .dbs.off::before{background:#E0A43A}
 
 
+/* ---------- 지자체 누리집식 개요 ---------- */
+/* 위치 표시 + 제목 아래 선 */
+.phead.gov{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;border-bottom:2px solid var(--text);padding-bottom:12px;margin-bottom:18px}
+.phead.gov .crumb{grid-column:1/-1;justify-self:end;display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--sub);margin-bottom:6px}
+.phead.gov .crumb a{display:inline-flex;align-items:center;gap:4px;color:var(--sub);text-decoration:none}
+.phead.gov .crumb a:hover{color:var(--accent-fg);text-decoration:underline}
+.phead.gov .crumb svg{width:15px;height:15px}
+.phead.gov .crumb i{font-style:normal;color:var(--faint)}
+.phead.gov .crumb b{color:var(--text)}
+.phead.gov h1{margin:0}
+/* 자주 찾는 메뉴: 원형 아이콘 6칸 */
+.qmenu{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);margin:0 0 26px;overflow:hidden}
+.qmenu a{display:grid;justify-items:center;gap:6px;padding:18px 8px 16px;text-decoration:none;color:var(--text);border-left:1px solid var(--line-2);transition:background-color .15s}
+.qmenu a:first-child{border-left:0}
+.qmenu a:hover{background:var(--accent-soft)}
+.qmenu a>span{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent-fg);transition:transform .2s}
+.qmenu a:hover>span{transform:translateY(-3px)}
+.qmenu svg{width:28px;height:28px}
+.qmenu b{font-size:.95rem}
+.qmenu small{font-size:.75rem;color:var(--sub);margin-top:-4px}
+/* 구역 제목: 굵은 제목 + 오른쪽 기준일·더보기 */
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 10px}
+.sec-h h2{margin:0;font-size:1.15rem;letter-spacing:-.02em;display:flex;align-items:center;gap:7px}
+.sec-h.in h2{font-size:1.05rem}
+.sec-h h2 svg{width:20px;height:20px;color:var(--accent-fg)}
+.sec-h .asof{font-size:.8rem;color:var(--sub)}
+.sec-h .more{font-size:.84rem;font-weight:700;color:var(--sub);text-decoration:none}
+.sec-h .more:hover{color:var(--accent-fg)}
+/* 현황판 카드 */
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(10px,1vw,16px);margin-bottom:18px}
+.stat{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"ic lab" "ic num" "bar bar" "sub sub";column-gap:14px;row-gap:2px;align-items:center;padding:18px 20px;color:inherit;text-decoration:none;border-top:3px solid var(--line);transition:box-shadow .15s,border-color .15s}
+.stat:hover{box-shadow:var(--sh-2)}
+.stat .si{grid-area:ic;width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent-fg)}
+.stat .si svg{width:28px;height:28px}
+.stat .si.ok{background:var(--ok-bg);color:var(--ok)}.stat .si.warn{background:var(--warn-bg);color:var(--warn)}.stat .si.red{background:var(--seal-bg);color:var(--seal)}
+.stat:has(.si.ok){border-top-color:var(--ok)}.stat:has(.si.warn){border-top-color:#E0A43A}.stat:has(.si.red){border-top-color:var(--seal)}.stat:has(.si:not(.ok):not(.warn):not(.red)){border-top-color:var(--accent)}
+.stat .sl{grid-area:lab;font-size:.875rem;font-weight:700;color:var(--sub)}
+.stat>b{grid-area:num;font-size:clamp(1.9rem,2.1vw,2.4rem);letter-spacing:-.035em;line-height:1.05;font-variant-numeric:tabular-nums}
+.stat>b small{font-size:.95rem;color:var(--sub);font-weight:700;letter-spacing:0;margin-left:2px}
+.stat .bar{grid-area:bar;margin-top:10px}
+.stat .note{grid-area:sub;margin-top:8px;padding-top:8px;border-top:1px solid var(--line-2)}
+/* 최근 결정 기록: 공지 게시판 */
+.board .btabs{display:flex;border-bottom:1px solid var(--line);margin:4px 0 2px}
+.board .btabs button{border:0;background:none;padding:8px 14px;font-weight:700;font-size:.875rem;color:var(--sub);border-bottom:2px solid transparent;margin-bottom:-1px}
+.board .btabs button[aria-selected="true"]{color:var(--accent-fg);border-bottom-color:var(--accent)}
+.blist{list-style:none;margin:0;padding:0;flex:1}
+.blist li a{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:10px 4px;border-bottom:1px solid var(--line-2);color:inherit;text-decoration:none;font-size:.9rem}
+.blist li a:hover .bt{color:var(--accent-fg);text-decoration:underline}
+.blist .bt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.blist .bm{color:var(--sub);font-size:.8rem;white-space:nowrap}
+.blist time{color:var(--faint);font-size:.8rem;font-variant-numeric:tabular-nums}
+.bnote{margin:10px 0 0}
+@media (max-width:1100px){ .qmenu{grid-template-columns:repeat(3,minmax(0,1fr))} .qmenu a:nth-child(4){border-left:0} .qmenu a:nth-child(n+4){border-top:1px solid var(--line-2)} .stats{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:860px){ .blist .bm{display:none} .phead.gov .crumb{justify-self:start} }
 /* 개요 */
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(200px,15vw,260px),1fr));gap:clamp(10px,1vw,16px);margin-bottom:18px}
 .kpi{padding:16px 18px;display:grid;gap:8px;align-content:start}
@@ -239,8 +293,21 @@ function renderShell(){
   const n = DB.plans.filter(p => /gate\d_wait/.test(p.status)).length;
   $$("[data-cnt]").forEach(c => { c.textContent = n; c.hidden = !n; });
 }
-const icon = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">${d}</svg>`;
-const ICON = { pub: icon("<path d=\"M5 12l5 5L20 7\"/>"), wait: icon("<circle cx=\"12\" cy=\"12\" r=\"8\"/><path d=\"M12 8v4l3 2\"/>"), rej: icon("<path d=\"M6 6l12 12M18 6L6 18\"/>"), map: icon("<path d=\"M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z\"/><circle cx=\"12\" cy=\"9.5\" r=\"2.5\"/>") };
+const icon = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+/* 공공 행정 화면에서 익숙한 그림: 서류(게시·반려), 결재판(확인 대기), 접힌 지도(지역), 결재 도장(결정 기록) */
+const DOC = '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/>';
+const ICON = {
+  pub: icon(DOC + '<path d="M9 14.5l2 2 4-4"/>'),
+  wait: icon('<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2.8h6V4"/><circle cx="12" cy="13" r="3.6"/><path d="M12 11.3V13l1.2.9"/>'),
+  rej: icon(DOC + '<path d="M9.5 12.5l5 5M14.5 12.5l-5 5"/>'),
+  map: icon('<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>'),
+  stamp: icon('<path d="M9.5 3h5l-.8 7h-3.4z"/><path d="M5 13h14v3.5H5z"/><path d="M4 20h16"/>'),
+  people: icon('<circle cx="9" cy="8" r="3"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0"/><circle cx="17" cy="9" r="2.4"/><path d="M15.6 14.3A4.6 4.6 0 0 1 20.5 19"/>'),
+  tpl: icon('<rect x="3.5" y="3" width="7" height="12" rx="1.5"/><rect x="13.5" y="3" width="7" height="12" rx="1.5"/><path d="M3.5 19.5h17"/>'),
+  backup: icon('<path d="M12 4v10M8 10l4 4 4-4"/><path d="M4 16.5V19a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-2.5"/>'),
+  link: icon('<rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 8h18M8 21h8M12 18v3"/>'),
+  goal: icon('<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r=".8"/>')
+};
 const pill = (n, cls) => n ? `<span class="pill ${cls||""}">${n}</span>` : `<span class="z">·</span>`;
 const freshA = () => ({ rg:{sido:"all", q:"", activeOnly:false}, data:{tab:"plans", region:"", status:"", q:""} });
 let A = freshA();
@@ -266,7 +333,11 @@ function download(name, text, type){
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
 const csv = rows => "﻿" + rows.map(r => r.map(v => `"${String(v == null ? "" : v).replace(/"/g, '""')}"`).join(",")).join("\r\n");
-const phead = (eyebrow, title, lead, right) => `<div class="phead"><div><div class="eyebrow">${eyebrow}</div><h1>${title}</h1>${lead?`<p class="lead">${lead}</p>`:""}</div>${right||""}</div>`;
+const phead = (eyebrow, title, lead, right) => {
+  const trail = eyebrow.split(" · "); // "관리자 · 개요" → 홈 › 관리자 › 개요
+  return `<div class="phead gov"><nav class="crumb" aria-label="현재 위치"><a href="#/">${icon('<path d="M4 11l8-7 8 7"/><path d="M6 9.5V20h12V9.5"/>')}홈</a>${trail.map((x, i) => `<i aria-hidden="true">›</i>${i === trail.length - 1 ? `<b aria-current="page">${x}</b>` : `<span>${x}</span>`}`).join("")}</nav>
+    <div><h1>${title}</h1>${lead?`<p class="lead">${lead}</p>`:""}</div>${right||""}</div>`;
+};
 
 function route(){
   const r = location.hash.replace(/^#\/?/, "").split("/")[0] || "home";
@@ -330,36 +401,56 @@ function viewHome(){
   const per = (c,a) => pub.filter(p => { const k = Sh.candOf(p.cand); return k && k.cat === c && k.age === a; }).length;
   const filled = R.CATS.reduce((sum, c) => sum + R.AGES.filter(a => per(c,a) >= 3).length, 0);
   const regions = [...new Set(P.map(p => p.region))];
-  const recent = DB.logs.slice().sort((a,b) => a.at < b.at ? 1 : -1).slice(0, 30);
-  const what = l => l.kind === "request" ? "1차 확인 요청" : l.kind === "system" ? l.note : `${l.gate}차 ${l.decision === "pass" ? "통과" : "반려"}`;
-  const waitAll = wait(1) + wait(2) + wait(3), on = Sh.enabledTemplates().length;
-  $("#view").innerHTML = `<section class="hero has-slides" aria-label="광역 운영 현황"><span class="slides" aria-hidden="true"></span><span class="slide-cap"></span>
-    <div><small>광역 운영 · ${Sh.SIDO_LABEL}</small><h2>관광 숏폼 광역 관리</h2><p>지역 ${active}곳에서 11월 1일까지 40편 게시를 목표로 해요. 지금 ${pub.length}편 게시, ${waitAll}건이 확인을 기다려요.</p></div>
-    <nav class="quick" aria-label="자주 찾는 메뉴">
-      <a href="#/data"><span>${ICON.wait}</span>확인 대기<small>${waitAll}건</small></a>
-      <a href="#/regions"><span>${ICON.map}</span>지역 · 담당자<small>${active}곳 사용</small></a>
-      <a href="#/templates"><span>${icon('<rect x="3" y="3" width="7" height="12" rx="2"/><rect x="14" y="3" width="7" height="12" rx="2"/><path d="M3 20h18"/>')}</span>템플릿<small>${on}개 사용</small></a>
-    </nav></section>
-  ${phead("관리자 · 개요", "전체 현황", "모든 지역의 콘텐츠와 확인 상황을 한눈에 봐요. 수치는 이 브라우저에 저장된 시연 데이터 기준이에요.")}
-  <div class="kpis">
-    <div class="card kpi"><span class="kh"><span class="ki ok">${ICON.pub}</span>게시 완료 · 11/1까지 40편</span><b>${pub.length}<span> / 40</span></b><div class="bar" role="img" aria-label="40편 중 ${pub.length}편"><i style="width:${Math.min(100, pub.length/40*100)}%"></i></div></div>
-    <a class="card kpi link" href="#/data" title="콘텐츠 · 기록에서 확인 대기 보기"><span class="kh"><span class="ki warn">${ICON.wait}</span>확인 대기</span><b>${wait(1)+wait(2)+wait(3)}<span> 건</span></b><span class="note">1차 ${wait(1)} · 2차 ${wait(2)} · 3차 ${wait(3)} · 제작 중 ${P.filter(p=>p.status==="making").length}</span></a>
-    <div class="card kpi"><span class="kh"><span class="ki red">${ICON.rej}</span>반려</span><b>${P.filter(p=>p.status==="rejected").length}<span> 건</span></b><span class="note">사유는 <a href="#/data">콘텐츠 · 기록</a>에서</span></div>
-    <div class="card kpi"><span class="kh"><span class="ki">${ICON.map}</span>사용 중인 지역</span><b>${active}<span> / ${Sh.REGIONS.length}</span></b><span class="note">관광자료가 있는 지역 ${withData}곳 (시연)</span></div>
+  const logs = DB.logs.slice().sort((a,b) => a.at < b.at ? 1 : -1);
+  const waitAll = wait(1) + wait(2) + wait(3), on = Sh.enabledTemplates().length, rej = P.filter(p => p.status === "rejected").length;
+  const now = new Date(), asOf = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,"0")}.${String(now.getDate()).padStart(2,"0")} ${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
+  const stat = (href, cls, ic, label, num, unit, sub, extra) => `<a class="card stat" href="${href}"><span class="si ${cls}">${ic}</span><span class="sl">${label}</span><b>${num}<small>${unit}</small></b>${extra || ""}<span class="note">${sub}</span></a>`;
+  const qm = (href, ic, label, sub, ext) => `<a href="${href}"${ext ? ' target="_blank" rel="noopener"' : ""}><span>${ic}</span><b>${label}</b><small>${sub}</small></a>`;
+  $("#view").innerHTML = `<section class="hero has-slides" aria-label="광역 운영 소개"><span class="slides" aria-hidden="true"></span><span class="slide-cap"></span>
+    <div><small>광역 운영 · ${Sh.SIDO_LABEL}</small><h2>관광 숏폼 광역 관리</h2><p>지역 ${active}곳에서 11월 1일까지 40편 게시를 목표로 해요. 지금 ${pub.length}편 게시, ${waitAll}건이 확인을 기다려요.</p></div></section>
+  <nav class="qmenu" aria-label="자주 찾는 메뉴">
+    ${qm("#/data", ICON.wait, "확인 대기", `${waitAll}건`)}
+    ${qm("#/regions", ICON.people, "지역 · 담당자", `${active}곳 사용`)}
+    ${qm("#/templates", ICON.tpl, "템플릿 관리", `${on}개 사용`)}
+    ${qm("#/data", ICON.stamp, "결정 기록", `${logs.length}건`)}
+    ${qm("#/storage", ICON.backup, "저장 · 백업", Sh.REMOTE ? "공용 DB" : "이 주소만")}
+    ${qm(esc(Sh.CFG.userAppUrl || "#"), ICON.link, "사용자 사이트", "새 창", true)}
+  </nav>
+  ${phead("관리자 · 개요", "전체 현황", "")}
+  <div class="sec-h"><h2>운영 현황</h2><span class="asof">${asOf} 기준 · 이 브라우저의 시연 데이터</span></div>
+  <div class="stats">
+    ${stat("#/data", "ok", ICON.pub, "게시 완료", pub.length, " / 40편", "11월 1일까지 목표 40편", `<span class="bar" role="img" aria-label="40편 중 ${pub.length}편"><i style="width:${Math.min(100, pub.length/40*100)}%"></i></span>`)}
+    ${stat("#/data", "warn", ICON.wait, "확인 대기", waitAll, "건", `1차 ${wait(1)} · 2차 ${wait(2)} · 3차 ${wait(3)} · 제작 중 ${P.filter(p=>p.status==="making").length}`)}
+    ${stat("#/data", "red", ICON.rej, "반려", rej, "건", "사유는 콘텐츠 · 기록에서")}
+    ${stat("#/regions", "", ICON.map, "사용 중인 지역", active, ` / ${Sh.REGIONS.length}곳`, `관광자료가 있는 지역 ${withData}곳 (시연)`)}
   </div>
   <div class="cols">
-    <section class="card panel fill"><h2>합격선 — 12유형마다 3편 <span class="pill ${filled===12?"ok":""}">${filled} / 12</span></h2><p class="note">게시 완료 기준. 점 하나가 1편, 3편을 채우면 초록색이에요.</p>
+    <section class="card panel fill"><div class="sec-h in"><h2>${ICON.goal}합격선 <span class="pill ${filled===12?"ok":""}">${filled} / 12</span></h2><span class="asof">12유형마다 게시 3편</span></div><p class="note">점 하나가 1편, 3편을 채우면 초록색이에요.</p>
       <div class="goal"><span></span>${R.CATS.map(c => `<span class="h">${c}</span>`).join("")}
       ${R.AGES.map(a => `<span class="rh">${a}</span>${R.CATS.map(c => { const n = per(c,a); return `<span class="g ${n>=3?"full":n?"part":"zero"}" aria-label="${c} ${a} ${n}편"><b>${n}</b><span class="dots">${[0,1,2].map(i => `<i class="${i<n?"on":""}"></i>`).join("")}</span></span>`; }).join("")}`).join("")}</div>
     </section>
-    <section class="card panel fill"><h2>최근 기록</h2><p class="note">결정 기록은 지울 수 없어요. 박스 안에서 스크롤돼요.</p>
-      <div class="scroll"><ol class="tl2">${recent.map(l => { const p = DB.plans.find(x => x.id === l.planId), cls = l.kind === "system" ? "sys" : l.decision || ""; return `<li><span class="av ${cls}">${esc(l.reviewer.slice(0,2))}</span><div><div class="w"><b>${esc(l.reviewer)}</b><time datetime="${l.at}">${fmt(l.at)}</time></div><div class="m">${esc(what(l))}</div><span class="note">${esc(l.planId)} ${p?esc(p.title):""}</span></div></li>`; }).join("")}</ol></div>
+    <section class="card panel fill board"><div class="sec-h in"><h2>${ICON.stamp}최근 결정 기록</h2><a class="more" href="#/data">더보기 <span aria-hidden="true">+</span></a></div>
+      <div class="btabs" role="tablist" aria-label="기록 종류">${[["all","전체"],["request","확인 요청"],["pass","통과"],["reject","반려"]].map(([k,l],i) => `<button role="tab" data-bt="${k}" aria-selected="${i===0}">${l}</button>`).join("")}</div>
+      <ul class="blist" id="blist"></ul>
+      <p class="note bnote">결정 기록은 지울 수 없어요.</p>
     </section>
   </div>
-  <section class="card panel" style="margin-top:18px"><h2>지역별 현황</h2><p class="note">콘텐츠가 하나 이상 있는 지역</p>
+  <section class="card panel" style="margin-top:18px"><div class="sec-h in"><h2>${ICON.map}지역별 현황</h2><span class="asof">콘텐츠가 하나 이상 있는 지역</span></div>
     <div class="tbl-wrap"><table class="tbl"><thead><tr><th>지역</th><th>담당자</th><th class="num">1차</th><th class="num">2차</th><th class="num">3차</th><th class="num">제작 중</th><th class="num">게시</th><th class="num">반려</th></tr></thead>
     <tbody>${regions.map(id => { const L = P.filter(p => p.region === id), n = s => L.filter(p => p.status === s).length; return `<tr><td>${regionCell(id)}</td><td>${esc(Sh.regionSettings(id).manager)}</td><td class="num">${pill(n("gate1_wait"),"warn")}</td><td class="num">${pill(n("gate2_wait"),"warn")}</td><td class="num">${pill(n("gate3_wait"),"warn")}</td><td class="num">${pill(n("making"))}</td><td class="num">${pill(n("published"),"ok")}</td><td class="num">${pill(n("rejected"),"red")}</td></tr>`; }).join("")}</tbody></table></div>
   </section>`;
+  /* 최근 결정 기록: 지자체 공지 게시판처럼 [분류] 제목 ······ 담당자 · 날짜, 7줄 */
+  const kind = l => l.kind === "request" ? "request" : l.kind === "system" ? "system" : l.decision === "pass" ? "pass" : "reject";
+  const KL = { request: ["확인 요청", "warn"], pass: ["통과", "ok"], reject: ["반려", "red"], system: ["시스템", ""] };
+  const board = k => {
+    const rows = logs.filter(l => k === "all" || kind(l) === k).slice(0, 7);
+    $("#blist").innerHTML = rows.map(l => { const p = DB.plans.find(x => x.id === l.planId), [lab, cls] = KL[kind(l)];
+      const head = l.kind === "system" ? l.note : l.kind === "request" ? "1차 확인 요청" : `${l.gate}차 ${l.decision === "pass" ? "통과" : "반려"}`;
+      return `<li><a href="#/data"><span class="tag ${cls}">${lab}</span><span class="bt">${esc(head)}${p ? ` — ${esc(p.title)}` : ""}</span><span class="bm">${esc(l.reviewer)}</span><time datetime="${l.at}">${day(l.at)}</time></a></li>`; }).join("")
+      || `<li class="empty">기록이 없어요.</li>`;
+  };
+  board("all");
+  $$("[data-bt]").forEach(b => b.onclick = () => { $$("[data-bt]").forEach(x => x.setAttribute("aria-selected", x === b)); board(b.dataset.bt); });
   Sh.slideshow($(".hero .slides"), $(".hero .slide-cap"), 4000);
 }
 

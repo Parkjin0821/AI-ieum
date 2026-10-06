@@ -38,5 +38,8 @@ rejected → 다시 요청 → 새 id로 gate1_wait (parent_id = 이전 id, 이�
 | `aiieum-db-v3` | content_plans · review_logs · chat_threads |
 | `aiieum-templates-v1` | 관리자가 고친 템플릿 (없으면 `data/templates.json`) |
 | `aiieum-template-off-v1` | 사용 중지한 템플릿 id |
-| `aiieum-regions-v1` | 지역 설정 (담당자·색·교차 확인·사용 여부) |
+| `aiieum-regions-v1` | 지역 설정 (담당자·색·분위기 문구·슬로건·사진·교차 확인·사용 여부) |
 | `aiieum-region` | 사용자가 고른 지역 |
+| `aiieum-accounts-v1` | 시연용 가입 계정 (비밀번호는 SHA-256 해시만) — 공용 DB로 보내지 않음 |
+| `aiieum-session` | 로그인 상태 (사용자 · 관리자 · 테스트 · 시연) |
+| `aiieum-theme` | 화면 모드 (비어 있으면 시스템 · `light` · `dark`) |
