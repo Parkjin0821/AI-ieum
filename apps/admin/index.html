@@ -53,8 +53,8 @@
 /* 현황판 카드 */
 /* 운영 현황: 한 상자 안 4칸 (칸마다 상태 점 · 숫자 · 한 줄 설명), 칸을 누르면 그 화면으로 */
 .kstrip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;margin-bottom:18px}
-.kstrip a{display:grid;align-content:start;gap:6px;padding:16px 20px;color:inherit;text-decoration:none;border-left:1px solid var(--line-2);transition:background-color .15s}
-.kstrip a:first-child{border-left:0}
+.kstrip>*{display:grid;align-content:start;gap:6px;padding:16px 20px;color:inherit;text-decoration:none;border-left:1px solid var(--line-2);transition:background-color .15s}
+.kstrip>:first-child{border-left:0}
 .kstrip a:hover{background:var(--accent-soft)}
 .kstrip .kl{display:flex;align-items:center;gap:7px;font-size:.78rem;font-weight:600;color:var(--sub)}
 .kstrip .kl i{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none}
@@ -72,6 +72,16 @@
 .box .goal{flex:1;grid-template-rows:auto repeat(3,minmax(46px,1fr))}
 .box .goal .g{border-radius:8px;padding:8px 6px 7px;gap:5px} .box .goal .g b{font-size:.95rem} .box .goal .g.zero{border-width:1px}
 .box .btabs{margin-top:0} .box .bnote{margin:auto 0 0;padding-top:10px;font-size:.72rem;color:var(--faint)}
+/* 지역·템플릿·콘텐츠·저장 화면도 같은 모양: 얇은 제목 선, 짧은 설명, 표·상자는 테두리만 */
+.phead.gov{border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:16px}
+.phead.gov .lead{font-size:.82rem;max-width:72ch;margin-top:2px}
+.tbl-wrap{border-radius:var(--r-lg)}
+.secnote{font-size:.72rem;color:var(--faint);margin:8px 2px 0}
+.tbl .nw{white-space:nowrap}
+.kstrip .off i{background:var(--faint)}
+.kstrip.in{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:1fr;border:0;border-radius:0;margin:0;flex:1}
+.kstrip.in>:nth-child(3){border-left:0} .kstrip.in>:nth-child(n+3){border-top:1px solid var(--line-2)}
+.box .cover{flex:1;max-width:none;margin:0;grid-template-rows:auto repeat(3,minmax(36px,1fr))}
 /* 최근 결정 기록: 공지 게시판 */
 .board .btabs{display:flex;border-bottom:1px solid var(--line);margin:4px 0 2px}
 .board .btabs button{border:0;background:none;padding:8px 14px;font-weight:700;font-size:.875rem;color:var(--sub);border-bottom:2px solid transparent;margin-bottom:-1px}
@@ -89,7 +99,7 @@
 .phead.gov h1{font-size:clamp(1.2rem,1.3vw,1.45rem)}
 .sec-h h2{font-size:1rem} .sec-h.in h2{font-size:.95rem} .sec-h h2 svg{width:18px;height:18px} .sec-h .asof{font-size:.74rem} .sec-h .more{font-size:.78rem}
 .board .btabs button{font-size:.8rem;padding:7px 12px} .blist li a{font-size:.84rem;padding:9px 4px} .blist time,.blist .bm{font-size:.74rem}
-@media (max-width:1100px){ .qmenu{grid-template-columns:repeat(3,minmax(0,1fr))} .qmenu a:nth-child(4){border-left:0} .qmenu a:nth-child(n+4){border-top:1px solid var(--line-2)} .kstrip{grid-template-columns:repeat(2,minmax(0,1fr))} .kstrip a:nth-child(3){border-left:0} .kstrip a:nth-child(n+3){border-top:1px solid var(--line-2)} }
+@media (max-width:1100px){ .qmenu{grid-template-columns:repeat(3,minmax(0,1fr))} .qmenu a:nth-child(4){border-left:0} .qmenu a:nth-child(n+4){border-top:1px solid var(--line-2)} .kstrip{grid-template-columns:repeat(2,minmax(0,1fr))} .kstrip>:nth-child(3){border-left:0} .kstrip>:nth-child(n+3){border-top:1px solid var(--line-2)} }
 @media (max-width:860px){ .blist .bm{display:none} .phead.gov .crumb{justify-self:start} .crumb.top{justify-content:flex-start} }
 /* 개요 */
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(200px,15vw,260px),1fr));gap:clamp(10px,1vw,16px);margin-bottom:18px}
@@ -106,16 +116,8 @@ a.kpi.link .kh::after{content:"보기 ›";margin-left:auto;color:var(--accent-f
 .bar{height:7px;background:var(--line-2);border-radius:4px;overflow:hidden}
 .bar i{display:block;height:100%;background:var(--accent);border-radius:4px}
 .cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(12px,1.2vw,20px);align-items:stretch} /* 나란한 박스는 너비·높이를 같게 */
-.panel.fill{display:flex;flex-direction:column}
-/* 내용이 길어도 옆 박스 높이에 맞추고 안에서 스크롤 — contain:size로 이 칸의 내용이 줄 높이를 늘리지 않게 */
-.panel .scroll{flex:1 1 auto;contain:size;overflow:auto;min-height:260px;margin-right:-10px;padding-right:10px;scrollbar-width:thin}
-.panel .push{margin-top:auto}
-.panel{padding:18px 20px}
-.panel h2{font-size:1rem;margin:0 0 2px;letter-spacing:-.01em}
-.panel>.note{margin:0 0 14px}
 /* 합격선: 칸마다 숫자 + 점 3개 (채운 만큼 색) */
 .goal{display:grid;grid-template-columns:76px repeat(4,1fr);gap:6px}
-.panel.fill .goal{flex:1;grid-template-rows:auto repeat(3,minmax(54px,1fr))} /* 박스 높이만큼 칸이 늘어남 */
 .goal .g{align-content:center}
 .tbl th.num,.tbl td.num{text-align:center;width:9%}
 .goal .h{font-size:.75rem;font-weight:700;color:var(--sub);text-align:center;padding-bottom:2px}
@@ -142,24 +144,17 @@ a.kpi.link .kh::after{content:"보기 ›";margin-left:auto;color:var(--accent-f
 .z{color:var(--off)}
 
 /* 도구 줄 */
-.tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
 .tools .sp{flex:1}
 /* 도구 줄의 선택·검색·스위치·분절형은 모두 같은 높이(44px), 입력칸은 같은 너비 */
-.tools .inp,.tools select.inp{height:44px;min-height:44px;width:clamp(170px,13vw,230px);max-width:none;flex:none;padding-top:0;padding-bottom:0}
-.tools .seg,.tools .switch{min-height:44px}
+.tools .inp,.tools select.inp{height:38px;min-height:38px;width:clamp(160px,12vw,210px);max-width:none;flex:none;padding-top:0;padding-bottom:0;font-size:.84rem}
+.tools .seg,.tools .switch{min-height:38px} .tools .seg button{min-height:30px;font-size:.8rem} .hb .btn{min-height:36px;font-size:.82rem}
 .tools .seg{align-items:center}
 /* 탭 버튼은 묶음 안에서 모두 같은 폭 (가장 긴 버튼에 맞춤) */
 .tools .seg{display:inline-grid;grid-auto-flow:column;grid-auto-columns:1fr}
 .tools .seg button{justify-content:center}
 @media (max-width:860px){ .tools .seg{display:grid;grid-auto-flow:row;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;overflow:visible} }
 /* 커버 표 · 요약 칸이 박스 높이를 채움 */
-.panel.fill .cover{flex:1;max-width:none;margin:0;grid-template-rows:auto repeat(3,minmax(40px,1fr))}
-.sumgrid{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:minmax(64px,1fr);gap:8px}
-.sumgrid div{background:var(--line-2);border-radius:12px;padding:10px 14px;display:grid;align-content:center;gap:2px}
-.sumgrid b{font-size:1.5rem;letter-spacing:-.03em;line-height:1.1;font-variant-numeric:tabular-nums}
-.sumgrid small{color:var(--sub);font-weight:700;font-size:.78rem}
-.sumgrid .ok{background:var(--ok-bg);color:var(--ok)}.sumgrid .red{background:var(--seal-bg);color:var(--seal)}
-.sumgrid .ok small,.sumgrid .red small{color:inherit}
 .miss{background:var(--warn-bg);color:var(--warn);border-radius:var(--r);padding:9px 12px;font-size:.78rem;font-weight:600;margin-bottom:16px}
 .miss a{color:inherit}
 .miss.red{background:var(--seal-bg);color:var(--seal)}
@@ -183,7 +178,7 @@ a.kpi.link .kh::after{content:"보기 ›";margin-left:auto;color:var(--accent-f
 .cover{display:grid;grid-template-columns:76px repeat(4,1fr);gap:6px;max-width:560px;margin-bottom:16px}
 .cover .h{font-size:.75rem;color:var(--sub);font-weight:700;text-align:center}
 .cover .rh{font-size:.75rem;color:var(--sub);font-weight:700;align-self:center}
-.cover .c{background:var(--line-2);border-radius:10px;min-height:36px;font-weight:800;display:grid;place-items:center;font-variant-numeric:tabular-nums}
+.cover .c{background:var(--line-2);border-radius:8px;min-height:32px;font-size:.9rem;font-weight:800;display:grid;place-items:center;font-variant-numeric:tabular-nums}
 .cover .c.zero{color:var(--seal);background:var(--seal-bg)}
 
 /* 템플릿 편집 */
@@ -216,12 +211,13 @@ a.kpi.link .kh::after{content:"보기 ›";margin-left:auto;color:var(--accent-f
 .dl dt{color:var(--sub)}.dl dd{margin:0;font-weight:600}
 .schema td:first-child{font-family:ui-monospace,Consolas,monospace;font-size:.8rem;white-space:nowrap}
 /* 저장·백업: 한 줄 동작 막대 (왼쪽 백업 | 오른쪽 시연 도구) */
-.actbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));margin-bottom:18px}
+.actbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));margin-bottom:24px}
 .actbar .ag{display:flex;align-items:center;gap:12px;padding:14px 18px;flex-wrap:wrap}
 .actbar .ag+.ag{border-left:1px solid var(--line-2)}
 .actbar .at{flex:1 1 180px;min-width:0}
-.actbar .at b{display:block;font-size:.95rem}
-.actbar .at small{color:var(--sub);font-size:.78rem}
+.actbar .at b{display:block;font-size:.88rem}
+.actbar .at small{color:var(--faint);font-size:.72rem}
+.actbar .btn{min-height:36px;font-size:.82rem}
 .actbar .ab{display:grid;grid-template-columns:repeat(2,11rem);gap:8px} /* 백업·시연 도구 네 버튼 모두 같은 폭 */
 /* 팝업 아래 버튼은 모든 팝업에서 같은 최소 폭 */
 .dlg-f .btn{min-width:7.5rem}
@@ -471,7 +467,7 @@ function viewHome(){
    ========================================================= */
 function viewRegions(){
   const f = A.rg;
-  $("#view").innerHTML = `${phead("관리자 · 지역", "지역 · 담당자", "시·군·구마다 담당자 한 명이 1·2·3차를 확인해요. 색은 사용자 페이지에서 그 지역을 고르면 화면 전체에 입혀져요. 바꾸면 바로 저장돼요.")}
+  $("#view").innerHTML = `${phead("관리자 · 지역", "지역 · 담당자", "시·군·구마다 담당자 한 명이 1·2·3차를 확인해요. 고치면 바로 저장돼요.")}
   <div class="tools">
     <div class="seg" role="group" aria-label="광역">${[{id:"all",name:"전체",list:Sh.REGIONS}].concat(Sh.SIDO).map(s => `<button data-sido="${s.id}" aria-pressed="${f.sido===s.id}">${s.name}<i>${s.list.length}</i></button>`).join("")}</div>
     <span class="sp"></span>
@@ -479,7 +475,7 @@ function viewRegions(){
     <input class="inp" id="rq" type="search" placeholder="지역·담당자 찾기" aria-label="지역 찾기" value="${esc(f.q)}">
   </div>
   <div class="tbl-wrap"><table class="tbl"><thead><tr><th>사진</th><th>색 (진한 · 밝은)</th><th>지역</th><th>분위기 문구</th><th>슬로건</th><th>담당자</th><th>교차 확인</th><th>사용</th><th class="num">관광자료</th><th></th></tr></thead><tbody id="rbody"></tbody></table></div>
-  <p class="note" style="margin-top:10px">교차 확인을 켜면 요청한 사람은 2차를 통과시킬 수 없어요. 담당자가 한 명인 지역은 끄고 쓰세요 (기본 꺼짐). · 기본 색은 각 지자체 누리집의 대표색(공식 CI 아님), 슬로건은 누리집·언론에서 확인한 것 — 출처는 docs/region-brand.md.</p>`;
+  <p class="secnote">교차 확인을 켜면 요청한 사람은 2차를 통과시킬 수 없어요. 담당자가 한 명인 지역은 끄고 쓰세요 (기본 꺼짐). · 기본 색은 각 지자체 누리집의 대표색(공식 CI 아님), 슬로건은 누리집·언론에서 확인한 것 — 출처는 docs/region-brand.md.</p>`;
   const body = () => {
     const list = Sh.REGIONS.filter(r => (f.sido === "all" || r.sido === f.sido) && (!f.activeOnly || Sh.regionSettings(r.id).active) && (!f.q || (r.name + r.sidoName + Sh.regionSettings(r.id).manager).includes(f.q)));
     $("#rbody").innerHTML = list.map(r => { const s = Sh.regionSettings(r.id), id = esc(r.id), ph = Sh.photoUrl(s, 330); return `<tr data-id="${id}">
@@ -555,23 +551,24 @@ function viewTemplates(){
   const list = Sh.templates(), off = Sh.disabledIds(), on = list.filter(t => !off.includes(t.id));
   const missing = R.missingTypes(on), customized = !!Sh.read(Sh.KEY.tpl, null);
   const n = (c,a) => on.filter(t => t.categories.includes(c) && t.ages.includes(a)).length;
-  $("#view").innerHTML = `${phead("관리자 · 템플릿", "템플릿 관리", `사용 중 ${on.length}개 / 전체 ${list.length}개. 고치면 사용자 페이지에 바로 반영돼요. 규칙(장면 4·6·8초, 15~45초, 마지막은 정보 장면, AI 장면은 실제 장소 아님)을 어기면 저장되지 않아요.`,
+  $("#view").innerHTML = `${phead("관리자 · 템플릿", "템플릿 관리", `사용 중 ${on.length}개 / 전체 ${list.length}개 · 고치면 사용자 페이지에 바로 반영되고, 규칙을 어기면 저장되지 않아요.`,
     `<div class="hb"><button class="btn" id="tNew">+ 새 템플릿</button><button class="btn ghost" id="tDl">templates.json 내려받기</button>${customized?`<button class="btn red" id="tReset">기본값으로</button>`:""}</div>`)}
   ${missing.length ? `<div class="miss">사용 중인 템플릿이 없는 유형: ${missing.join(", ")} — 사용자 화면에서 이 유형은 고를 형식이 없어요.</div>` : ""}
-  <div class="cols" style="margin-bottom:18px">
-    <section class="card panel fill"><h2>분야 × 연령 커버</h2><p class="note">사용 중인 템플릿 수. 빨간 칸은 사용자가 고를 형식이 없는 유형이에요.</p>
-      <div class="cover" aria-label="사용 중 템플릿의 분야×연령 커버"><span></span>${R.CATS.map(c => `<span class="h">${c}</span>`).join("")}
-      ${R.AGES.map(a => `<span class="rh">${a}</span>${R.CATS.map(c => { const k = n(c,a); return `<span class="c${k?"":" zero"}">${k}</span>`; }).join("")}`).join("")}</div>
+  <div class="cols" style="margin-bottom:24px">
+    <section class="colsec"><div class="sec-h"><h2>분야 × 연령 커버</h2><span class="asof">사용 중인 템플릿 수 · 빨간 칸은 고를 형식 없음</span></div>
+      <div class="box"><div class="cover" aria-label="사용 중 템플릿의 분야×연령 커버"><span></span>${R.CATS.map(c => `<span class="h">${c}</span>`).join("")}
+      ${R.AGES.map(a => `<span class="rh">${a}</span>${R.CATS.map(c => { const k = n(c,a); return `<span class="c${k?"":" zero"}">${k}</span>`; }).join("")}`).join("")}</div></div>
     </section>
-    <section class="card panel fill"><h2>규칙 검사</h2><p class="note">장면 4·6·8초 · 15~45초 · 마지막은 정보 장면 · AI 장면은 실제 장소 아님</p>
-      <div class="sumgrid">
-        <div><b>${on.length}</b><small>사용 중</small></div>
-        <div><b>${list.length - on.length}</b><small>사용 중지</small></div>
-        <div class="ok"><b>${list.filter(t => !R.validateTemplate(t).length).length}</b><small>규칙 통과</small></div>
-        <div class="${list.some(t => R.validateTemplate(t).length) ? "red" : ""}"><b>${list.filter(t => R.validateTemplate(t).length).length}</b><small>오류 있음</small></div>
-      </div>
+    <section class="colsec"><div class="sec-h"><h2>규칙 검사</h2><span class="asof">장면 4·6·8초 · 15~45초 · 마지막은 정보 장면</span></div>
+      <div class="box flush"><div class="kstrip in">
+        <div><span class="kl"><i></i>사용 중</span><b>${on.length}<small>개</small></b></div>
+        <div><span class="kl off"><i></i>사용 중지</span><b>${list.length - on.length}<small>개</small></b></div>
+        <div><span class="kl ok"><i></i>규칙 통과</span><b>${list.filter(t => !R.validateTemplate(t).length).length}<small>개</small></b></div>
+        <div><span class="kl ${list.some(t => R.validateTemplate(t).length) ? "red" : "off"}"><i></i>오류 있음</span><b>${list.filter(t => R.validateTemplate(t).length).length}<small>개</small></b></div>
+      </div></div>
     </section>
   </div>
+  <div class="sec-h"><h2>템플릿 목록</h2><span class="asof">사용을 끄면 사용자 화면에서 빠져요</span></div>
   <div class="tbl-wrap"><table class="tbl"><thead><tr><th>사용</th><th></th><th>이름</th><th>분야 · 연령</th><th>훅</th><th class="num">장면 · 길이</th><th>규칙 검사</th><th></th></tr></thead>
   <tbody>${list.map(t => { const e = R.validateTemplate(t), used = !off.includes(t.id); return `<tr>
     <td><label class="switch"><input type="checkbox" data-on="${t.id}" ${used?"checked":""}><span class="sr">${esc(t.name)} 사용</span></label></td>
@@ -694,7 +691,7 @@ function viewData(){
   const ids = new Set(DB.plans.filter(p => !f.region || p.region === f.region).map(p => p.id));
   const logs = DB.logs.filter(l => ids.has(l.planId) && (!f.q || (l.planId + l.reviewer + (l.reasonText||"") + (l.note||"")).includes(f.q))).sort((a,b) => a.at < b.at ? 1 : -1);
   const kind = l => l.kind === "request" ? "요청" : l.kind === "system" ? "시스템" : l.decision === "pass" ? "통과" : "반려";
-  $("#view").innerHTML = `${phead("관리자 · DB", "콘텐츠 · 기록", "모든 지역의 콘텐츠(content_plans)와 결정 기록(review_logs)이에요. 기록은 지울 수 없고, 고칠 때는 새 기록이 붙어요.",
+  $("#view").innerHTML = `${phead("관리자 · 기록", "콘텐츠 · 기록", "모든 지역의 콘텐츠와 결정 기록이에요. 기록은 지울 수 없고, 고칠 때는 새 기록이 붙어요.",
     `<div class="hb"><button class="btn ghost" id="xCsv">CSV 내려받기</button><button class="btn ghost" id="xJson">JSON 내려받기</button></div>`)}
   <div class="tools">
     <div class="seg" role="group" aria-label="표"><button data-tab="plans" aria-pressed="${f.tab==="plans"}">콘텐츠<i>${plans.length}</i></button><button data-tab="logs" aria-pressed="${f.tab==="logs"}">결정 기록<i>${logs.length}</i></button></div>
@@ -704,9 +701,9 @@ function viewData(){
     <input class="inp" id="fq" type="search" placeholder="ID·제목·사람·사유" aria-label="찾기" value="${esc(f.q)}">
   </div>
   ${f.tab === "plans" ? `<div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>지역</th><th>제목</th><th>형식</th><th>상태</th><th>요청</th><th>요청일</th></tr></thead>
-    <tbody>${plans.map(p => { const t = Sh.templates().find(x => x.id === p.templateId); return `<tr class="clickable" data-p="${p.id}" tabindex="0"><td>${esc(p.id)}</td><td>${regionCell(p.region)}</td><td>${esc(p.title)}</td><td>${t?esc(t.name):esc(p.templateId)}</td><td><span class="tag ${p.status==="published"?"ok":p.status==="rejected"?"red":/wait/.test(p.status)?"warn":""}">${STATUS[p.status]}</span></td><td>${esc(p.requestedBy)}</td><td>${fmt(p.createdAt)}</td></tr>`; }).join("") || `<tr><td colspan="7" class="empty">없어요</td></tr>`}</tbody></table></div>`
+    <tbody>${plans.map(p => { const t = Sh.templates().find(x => x.id === p.templateId); return `<tr class="clickable" data-p="${p.id}" tabindex="0"><td class="nw">${esc(p.id)}</td><td>${regionCell(p.region)}</td><td>${esc(p.title)}</td><td>${t?esc(t.name):esc(p.templateId)}</td><td><span class="tag ${p.status==="published"?"ok":p.status==="rejected"?"red":/wait/.test(p.status)?"warn":""}">${STATUS[p.status]}</span></td><td>${esc(p.requestedBy)}</td><td class="nw">${fmt(p.createdAt)}</td></tr>`; }).join("") || `<tr><td colspan="7" class="empty">없어요</td></tr>`}</tbody></table></div>`
   : `<div class="tbl-wrap"><table class="tbl"><thead><tr><th>시각</th><th>콘텐츠</th><th>지역</th><th>누가</th><th>단계</th><th>결정</th><th>사유 · 내용</th></tr></thead>
-    <tbody>${logs.map(l => { const p = DB.plans.find(x => x.id === l.planId); return `<tr><td>${fmt(l.at)}</td><td>${esc(l.planId)}</td><td>${p?esc(regionTitle(p.region)):""}</td><td>${esc(l.reviewer)}</td><td>${l.gate?l.gate+"차":"—"}</td><td><span class="tag ${l.decision==="pass"?"ok":l.decision==="reject"?"red":""}">${kind(l)}</span></td><td>${l.decision==="reject"?esc(`${l.reasonCategory} — ${l.reasonText}`):esc(l.note||"")}${l.gate===2&&l.decision==="pass"?`점검표 ${Object.values(l.checklist||{}).filter(Boolean).length}/6`:""}${l.uploadUrl?esc(l.uploadUrl):""}</td></tr>`; }).join("") || `<tr><td colspan="7" class="empty">없어요</td></tr>`}</tbody></table></div>`}`;
+    <tbody>${logs.map(l => { const p = DB.plans.find(x => x.id === l.planId); return `<tr><td class="nw">${fmt(l.at)}</td><td class="nw">${esc(l.planId)}</td><td>${p?esc(regionTitle(p.region)):""}</td><td>${esc(l.reviewer)}</td><td>${l.gate?l.gate+"차":"—"}</td><td><span class="tag ${l.decision==="pass"?"ok":l.decision==="reject"?"red":""}">${kind(l)}</span></td><td>${l.decision==="reject"?esc(`${l.reasonCategory} — ${l.reasonText}`):esc(l.note||"")}${l.gate===2&&l.decision==="pass"?`점검표 ${Object.values(l.checklist||{}).filter(Boolean).length}/6`:""}${l.uploadUrl?esc(l.uploadUrl):""}</td></tr>`; }).join("") || `<tr><td colspan="7" class="empty">없어요</td></tr>`}</tbody></table></div>`}`;
   $$("[data-tab]").forEach(b => b.onclick = () => { f.tab = b.dataset.tab; viewData(); });
   $("#fRegion").onchange = e => { f.region = e.target.value; viewData(); };
   const st = $("#fStatus"); if (st) st.onchange = e => { f.status = e.target.value; viewData(); };
@@ -750,20 +747,20 @@ function viewStorage(){
     ["chat_threads","대화 근거","id, plan_id, messages(json)"],
     ["performance_data","게시 뒤 반응","id, plan_id, platform, views, likes, measured_at"]
   ];
-  $("#view").innerHTML = `${phead("관리자 · 저장", "저장 · 백업", Sh.REMOTE ? `공용 DB(Supabase)에 저장 중이에요 — ${esc(Sh.CFG.supabaseUrl)}. 사용자 페이지와 같은 데이터를 봐요.` : "공용 DB가 연결되지 않아 이 관리자 주소(도메인)의 브라우저에만 저장돼요. 사용자 페이지는 다른 도메인이라 이 데이터를 볼 수 없어요 — docs/deploy.md 순서대로 Supabase를 연결하세요.")}
+  $("#view").innerHTML = `${phead("관리자 · 저장", "저장 · 백업", Sh.REMOTE ? "공용 DB(Supabase)에 저장 중이에요. 사용자 페이지와 같은 데이터를 봐요." : "공용 DB 미연결 — 이 관리자 주소의 브라우저에만 저장돼요. 연결 방법은 docs/deploy.md.")}
   <!-- 백업·시연 도구는 버튼 몇 개뿐이라 큰 상자 대신 한 줄짜리 동작 막대로 -->
-  <section class="card actbar" aria-label="백업과 시연 도구">
+  <section class="box flush actbar" aria-label="백업과 시연 도구">
     <div class="ag"><div class="at"><b>백업</b><small>불러오기는 없는 기록만 더해요 (지우거나 덮지 않음)</small></div>
       <div class="ab"><button class="btn" id="bOut">전체 백업 내려받기</button><label class="btn ghost filebtn">백업 불러오기<input type="file" id="bIn" accept="application/json,.json"></label></div></div>
     <div class="ag"><div class="at"><b>시연 도구</b><small>발표 리허설 전에 처음 상태로 돌릴 때만</small></div>
       <div class="ab"><button class="btn red" id="rDb" ${Sh.REMOTE ? "disabled title=\"공용 DB의 기록은 지울 수 없어요\"" : ""}>시연 기록 처음으로</button><button class="btn red" id="rCfg">템플릿·지역 기본값으로</button></div></div>
   </section>
-  <section class="card panel"><h2>지금 저장된 것</h2><p class="note">저장 위치: ${Sh.REMOTE ? "공용 DB (Supabase) — 아래 크기는 이 브라우저에 남은 값" : "이 브라우저 (localStorage)"} · 콘텐츠 ${DB.plans.length}건 · 결정 기록 ${DB.logs.length}건 · 대화 ${Object.keys(DB.threads).length}건</p>
+  <section class="colsec"><div class="sec-h"><h2>지금 저장된 것</h2><span class="asof">${Sh.REMOTE ? "공용 DB (크기는 이 브라우저에 남은 값)" : "이 브라우저"} · 콘텐츠 ${DB.plans.length} · 기록 ${DB.logs.length} · 대화 ${Object.keys(DB.threads).length}건</span></div>
     <div class="tbl-wrap"><table class="tbl"><thead><tr><th>내용</th><th>키</th><th class="num">크기</th></tr></thead><tbody>
     ${keys.map(([k,v]) => `<tr><td>${label[k]||k}</td><td><code>${v}</code></td><td class="num">${size(v) ? (size(v)/1024).toFixed(1)+" KB" : '<span class="note">기본값</span>'}</td></tr>`).join("")}
     </tbody></table></div>
   </section>
-  <section class="card panel" style="margin-top:18px"><h2>서버 DB 구조 (안)</h2><p class="note">운영 때 옮길 표. 자세한 설명은 docs/data-model.md</p>
+  <section class="colsec" style="margin-top:24px"><div class="sec-h"><h2>서버 DB 구조 (안)</h2><span class="asof">운영 때 옮길 표 · docs/data-model.md</span></div>
     <div class="tbl-wrap"><table class="tbl schema"><thead><tr><th>표</th><th>내용</th><th>주요 칸</th></tr></thead><tbody>${SCHEMA.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td><td class="note">${r[2]}</td></tr>`).join("")}</tbody></table></div>
   </section>`;
   $("#bOut").onclick = () => {
