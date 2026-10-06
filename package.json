@@ -9,6 +9,7 @@
     "sync": "node scripts/sync-templates.mjs",
     "validate": "node scripts/validate-templates.mjs",
     "test": "node --test tests/workflow.test.cjs tests/mock-db.test.mjs",
-    "check": "npm run validate && npm test"
+    "syntax": "node scripts/check-syntax.mjs",
+    "check": "npm run syntax && npm run validate && npm test"
   }
 }
