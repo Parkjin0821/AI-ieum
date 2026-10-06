@@ -21,8 +21,8 @@
   const SIDO_LABEL = "전남광주·전북";
   const regionOf = id => REGIONS.find(r => r.id === id);
 
-  /* 지역 고유 색 — 그 지역 하면 떠오르는 느낌 (공식 상징색이 아님, 관리자 페이지에서 바꿀 수 있음)
-     c: 버튼·강조(흰 글자가 읽히는 진한 색), c2: 그라데이션용 밝은 색 */
+  /* 지역 기본 색 — 각 지자체 누리집의 대표색(공식 CI 색 아님, 출처 docs/region-brand.md, 관리자 페이지에서 바꿀 수 있음)
+     c: 버튼·강조(흰 글자 대비 4.5:1 이상으로 보정), c2: 밝은 색. mood: 지역 대표 명소·풍경 (공식 슬로건 아님) */
   const THEME = {
     "광주 동구": { c: "#0066B3", c2: "#9EC5E2", mood: "무등산 증심사" },
     "광주 남구": { c: "#0079B8", c2: "#9ECEE7", mood: "향교와 옛 골목" },
@@ -33,7 +33,7 @@
     "전남 순천시": { c: "#5670C5", c2: "#C0CBEC", mood: "갈대 물결" },
     "전남 나주시": { c: "#027BC2", c2: "#9FCDE8", mood: "영산강 물길" },
     "전남 광양시": { c: "#363C5A", c2: "#B3B5C0", mood: "이순신대교 바다" },
-    "전남 담양군": { c: "#2F6A2F", c2: "#A9D59A", mood: "대숲 바람" },
+    "전남 담양군": { c: "#1A826C", c2: "#AADBD0", mood: "대숲 바람" },
     "전남 곡성군": { c: "#1774D1", c2: "#A8CEF4", mood: "기차마을 장미" },
     "전남 구례군": { c: "#06599E", c2: "#A0C0DA", mood: "산수유 노랑" },
     "전남 고흥군": { c: "#203D89", c2: "#AAB5D2", mood: "우주로 가는 바다" },
@@ -50,17 +50,21 @@
     "전남 완도군": { c: "#225E95", c2: "#ABC2D7", mood: "청정 바다" },
     "전남 진도군": { c: "#2E499F", c2: "#B0BADB", mood: "신비의 바닷길" },
     "전남 신안군": { c: "#1D56BC", c2: "#A9BFE6", mood: "퍼플섬" },
-    "전북 전주시": { c: "#6E4529", c2: "#E3C3A8", mood: "한옥 기와" },
+    "전북 전주시": { c: "#005BAC", c2: "#9EC1DF", mood: "한옥 기와" },
     "전북 김제시": { c: "#0074A9", c2: "#9ECADE", mood: "지평선 황금 들녘" },
-    "전북 진안군": { c: "#3357AC", c2: "#B1BFDF", mood: "" },
-    "전북 정읍시": { c: "#0044A2", c2: "#9EB8DC", mood: "" },
-    "전북 장수군": { c: "#4979AA", c2: "#BDD2E7", mood: "" },
-    "전북 임실군": { c: "#382D70", c2: "#B3AFC9", mood: "" },
-    "전북 완주군": { c: "#0F1477", c2: "#A4A6CB", mood: "" },
-    "전북 부안군": { c: "#3D48A1", c2: "#B5B9DB", mood: "" },
-    "전북 무주군": { c: "#0D8845", c2: "#A4D9BC", mood: "" },
-    "전북 군산시": { c: "#1A6CBF", c2: "#A8C7E7", mood: "" },
-    "광주 서구": { c: "#02346B", c2: "#9FB2C7", mood: "" }
+    "전북 익산시": { c: "#005BAC", c2: "#9EC1DF", mood: "미륵사지 석탑" },
+    "전북 순창군": { c: "#0E7CA1", c2: "#A3CDDB", mood: "고추장 익는 마을" },
+    "전북 남원시": { c: "#2277C6", c2: "#ACCFF0", mood: "광한루 달빛" },
+    "전북 고창군": { c: "#0071B9", c2: "#9EC9E4", mood: "선운사 꽃무릇" },
+    "전북 진안군": { c: "#3357AC", c2: "#B1BFDF", mood: "마이산 돌탑" },
+    "전북 정읍시": { c: "#0044A2", c2: "#9EB8DC", mood: "내장산 단풍" },
+    "전북 장수군": { c: "#4979AA", c2: "#BDD2E7", mood: "장안산 억새" },
+    "전북 임실군": { c: "#382D70", c2: "#B3AFC9", mood: "임실 치즈마을" },
+    "전북 완주군": { c: "#0F1477", c2: "#A4A6CB", mood: "대둔산 구름다리" },
+    "전북 부안군": { c: "#3D48A1", c2: "#B5B9DB", mood: "변산 채석강" },
+    "전북 무주군": { c: "#0D8845", c2: "#A4D9BC", mood: "덕유산 설경" },
+    "전북 군산시": { c: "#1A6CBF", c2: "#A8C7E7", mood: "근대 골목" },
+    "광주 서구": { c: "#02346B", c2: "#9FB2C7", mood: "풍암호수 산책" }
   };
   /* 지역 대표 사진 — 위키미디어 공용의 CC·퍼블릭 도메인 사진 (2026-10-04 확인, 저작자·라이선스 표시 필수)
      운영 때는 관광공사 사진(TourAPI)으로 바꾸고, 관리자 페이지에서 지역별로 바꿀 수 있다.
@@ -253,37 +257,38 @@
 
   /* 지역 설정 (관리자 페이지에서 바꿈) */
   /* 지자체 공식 브랜드 슬로건 — 출처를 확인한 것만. 없으면 빈 칸(화면은 분위기 문구로 대신) */
-  /* 2026-10 조사: 각 누리집·상징 페이지·언론 (출처 전체는 docs/region-brand.md). 미확인 지역은 비워 둠 */
+  /* 2026-10 조사(2차 보완 포함): 각 누리집·상징 페이지·언론 (출처 전체는 docs/region-brand.md). 미확인·신뢰도 낮음은 비워 둠 */
   const BRAND = {
     "광주 광산구": { slogan: "지속가능 광산", src: "https://www.gwangsan.go.kr/contentsView.do?pageId=www487" },
+    "광주 동구": { slogan: "인문도시 광주 동구", src: "https://donggu.kr/board.es?act=view&bid=0249&list_no=7698&mid=a50103000000" },
     "광주 북구": { slogan: "You Are Bukgu", src: "https://bukgu.gwangju.kr/brand/" },
     "광주 서구": { slogan: "#착한도시 서구", src: "https://www.seogu.gwangju.kr/menu.es?mid=a10101020100" },
     "전남 강진군": { slogan: "A로의 초대, Again 남도답사 1번지 강진", src: "https://v.daum.net/v/20221006114653770?f=p" },
-    "전남 고흥군": { slogan: "지붕없는 미술관 고흥", src: "https://goheung.go.kr/home/www/down/www453/2023/2023%EB%85%84_%EC%A3%BC%EC%9A%94%EC%97%85%EB%AC%B4_%EA%B3%84%ED%9A%8D.pdf" },
+    "전남 고흥군": { slogan: "우주항공 중심도시 고흥", src: "https://www.goheung.go.kr/contentsView.do?pageId=www159" },
     "전남 곡성군": { slogan: "자연속의 가족마을 곡성", src: "https://www.gokseong.go.kr/kr/subPage.do?menuNo=101002006000" },
     "전남 광양시": { slogan: "Sunshine Gwangyang", src: "https://gwangyang.go.kr/menu.es?mid=a11303010000" },
     "전남 구례군": { slogan: "자연으로 가는 길 구례", src: "https://www.gurye.go.kr/kr/subPage.do?menuNo=116007001002" },
     "전남 나주시": { slogan: "살기좋은 행복나주 앞서가는 으뜸나주", src: "https://www.naju.go.kr/www/introduction/symbol" },
     "전남 담양군": { slogan: "대숲맑은 생태도시 담양", src: "http://www.newsdy.co.kr/news/articleView.html?idxno=410456" },
     "전남 목포시": { slogan: "낭만항구 목포", src: "https://www.mokpo.go.kr/www/introduce/mokpo_symbol/brand" },
+    "전남 무안군": { slogan: "전남의 수도, 플랫폼 무안", src: "https://www.muan.go.kr/www/abountmuan/symbol/brand/city" },
     "전남 보성군": { slogan: "녹차수도 보성", src: "https://www.boseong.go.kr/www/introduce/intro/represent/brand_slogan" },
     "전남 순천시": { slogan: "人(in) Suncheon", src: "https://www.aitimes.com/news/articleView.html?idxno=127206" },
     "전남 신안군": { slogan: "천사섬 신안", src: "https://www.shinan.go.kr/home/www/about/typifier/typifier_02/page.wscms" },
     "전남 여수시": { slogan: "섬섬여수", src: "https://www.yeosu.go.kr/www/yeosu/symbol/slogan" },
     "전남 영광군": { slogan: "천년의 빛 영광", src: "https://www.yeonggwang.go.kr/subpage/?site=headquarter_new&mn=9480" },
     "전남 영암군": { slogan: "기(氣)의 고장 영암", src: "https://www.yeongam.go.kr/home/www/new_plus/introduce/introduce_11/introduce_11_02/yeongam.go" },
-    "전남 완도군": { slogan: "해양치유완도", src: "https://www.wando.go.kr/wando/sub.cs?m=652" },
+    "전남 완도군": { slogan: "해양치유 완도", src: "https://go.seoul.co.kr/news/newsView.php?id=20241014500043" },
     "전남 장성군": { slogan: "성장장성", src: "https://www.jangseong.go.kr/home/www/healing/healing_08" },
     "전남 장흥군": { slogan: "정남진 장흥", src: "https://www.jangheung.go.kr/www/jeongnamjin/jangheung_intro/symbol" },
     "전남 진도군": { slogan: "보배섬 진도", src: "https://www.jindo.go.kr/home/sub.cs?m=174" },
     "전남 해남군": { slogan: "땅끝해남, 한반도의 시작", src: "https://www.haenam.go.kr/index.9is?contentUid=18e3368f5d745106015e557d4034348b" },
     "전남 화순군": { slogan: "Therapy 화순", src: "https://www.hwasun.go.kr/contents.do?S=S01&M=070402020000" },
-    "전북 고창군": { slogan: "한반도 첫수도 고창", src: "https://localsegye.co.kr/news/view/1065579541578773" },
     "전북 군산시": { slogan: "물빛희망", src: "https://www.gunsan.go.kr/main/m1429" },
     "전북 김제시": { slogan: "지평선 생명도시 김제", src: "https://www.gimje.go.kr/index.gimje?menuCd=DOM_000000101004002007" },
     "전북 남원시": { slogan: "피어나다 남원", src: "https://www.namwon.go.kr/index.do?menuUid=ff8080818e3beff0018e40e6223502b6" },
     "전북 무주군": { slogan: "자연특별시 무주", src: "https://www.muju.go.kr/index.9is?contentUid=ff8080816c5f9d47016cbd6357b90179" },
-    "전북 익산시": { slogan: "Amazing Iksan", src: "https://www.jjan.kr/article/20090325304483" },
+    "전북 익산시": { slogan: "위대한 도시, 그레이트 익산", src: "https://www.newsis.com/view/NISX20241007_0002910939" },
     "전북 장수군": { slogan: "장수만세", src: "https://www.jangsu.go.kr/index.jangsu?menuCd=DOM_000000103002006008" },
     "전북 전주시": { slogan: "한바탕 전주 세계를 비빈다", src: "https://www.jjan.kr/news/articleView.html?idxno=317370" },
     "전북 진안군": { slogan: "진안고원", src: "https://www.jinan.go.kr/index.jinan?menuCd=DOM_000000104002002003" }
