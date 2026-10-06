@@ -225,7 +225,7 @@ $("#userBtn").onclick = () => { if (Sh.CFG.userAppUrl) window.open(Sh.CFG.userAp
 function renderShell(){
   const sess = Sh.auth.session(), admin = sess && sess.role === "admin";
   const userLink = `<a href="${esc(Sh.CFG.userAppUrl || "#")}" target="_blank" rel="noopener">사용자 사이트 열기 ↗</a>`;
-  const db = `<span class="dbs ${Sh.REMOTE ? "ok" : "off"}">${Sh.REMOTE ? "공용 DB 연결됨" : "이 주소에만 저장 중"}</span><i></i>`;
+  const db = Sh.REMOTE ? `<span class="dbs ok">공용 DB 연결됨</span><i></i>` : `<a class="dbs off" href="#/storage" title="저장 · 백업 안내 보기">이 주소에만 저장 중</a><i></i>`;
   $("#acct").innerHTML = db + (admin
     ? `<b>${esc(sess.name)}</b><small>${sess.demo ? "시연 계정" : esc(sess.email)}</small><i></i>${userLink}<i></i>${Sh.themeBtn("gu")}<i></i><button type="button" data-logout>로그아웃</button>`
     : `${userLink}<i></i>${Sh.themeBtn("gu")}`);
@@ -273,7 +273,8 @@ function route(){
   ({login:viewLogin, home:viewHome, regions:viewRegions, templates:viewTemplates, data:viewData, storage:viewStorage})[name]();
   /* 공용 DB가 없으면 사용자 페이지(다른 도메인)와 데이터를 공유하지 못한다는 걸 늘 보여준다 */
   renderShell();
-  if (!Sh.REMOTE && name !== "login") $("#view").insertAdjacentHTML("afterbegin", `<div class="miss">공용 DB 미연결 — 지금 바꾸는 내용은 이 관리자 주소에만 저장돼요. 사용자 페이지(다른 도메인)에 반영하려면 config.js에 Supabase를 연결하세요. <a href="#/storage">자세히</a></div>`);
+  // 노란 안내는 개요에만 — 다른 화면은 위 안내 띠의 "● 이 주소에만 저장 중"(누르면 저장 · 백업)으로 충분
+  if (!Sh.REMOTE && name === "home") $("#view").insertAdjacentHTML("afterbegin", `<div class="miss">공용 DB 미연결 — 지금 바꾸는 내용은 이 관리자 주소에만 저장돼요. 사용자 페이지(다른 도메인)에 반영하려면 config.js에 Supabase를 연결하세요. <a href="#/storage">자세히</a></div>`);
 }
 window.addEventListener("hashchange", () => { route(); window.scrollTo(0,0); });
 window.addEventListener("storage", () => { DB = Sh.loadDB(); route(); });
