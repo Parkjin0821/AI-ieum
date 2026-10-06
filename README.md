@@ -124,7 +124,8 @@ node scripts/deploy-vercel.mjs
 > **테스트 로그인** — 지금은 사용자·관리자 모두 아무 메일·비밀번호로 들어갈 수 있어요 (`shared/shared.js`의 `TEST_LOGIN = true`). 사용자 사이트에서 가입 신청한 메일이면 그 계정(소속 지역)으로 들어가요. `TEST_LOGIN`을 끄면 관리자는 `admin@ai-ieum.test` / `aiieum-demo`만 통과해요.
 - [ ] 2차 점검표 · 장면 선택을 서버(Edge Function)에서도 검사
 - [ ] 가짜 후보 API를 실제 수집·연결 백엔드로 교체 (`?api=백엔드주소`로 바꿀 수 있게 되어 있음)
-- [ ] 지역 사진을 관광공사 사진(TourAPI)으로 교체
+- [x] 지역 사진 — 한국관광공사 TourAPI 지역마다 5장(공공누리 1유형만), 지역 고르기 타일은 아직 위키미디어 사진
+  - 다시 받기: `.env`에 `TOURAPI_KEY=발급키`(공공데이터포털) 넣고 `npm run photos` → `shared/region-photos.js`
 - [ ] 연령 3구간 경계 팀 확정 (지금은 20대 · 30~40대 · 50대 이상 임시)
 
 ## 사진 출처

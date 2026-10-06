@@ -8,8 +8,9 @@
     "build": "node scripts/build.mjs",
     "sync": "node scripts/sync-templates.mjs",
     "validate": "node scripts/validate-templates.mjs",
-    "test": "node --test tests/workflow.test.cjs tests/mock-db.test.mjs",
+    "test": "node --test tests/workflow.test.cjs tests/mock-db.test.mjs tests/sync-photos.test.mjs",
     "syntax": "node scripts/check-syntax.mjs",
+    "photos": "node scripts/sync-photos.mjs",
     "check": "npm run syntax && npm run validate && npm test"
   }
 }

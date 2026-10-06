@@ -18,7 +18,7 @@ const config = {
   userAppUrl: env.USER_URL || "",
   adminAppUrl: env.ADMIN_URL || ""
 };
-const SHARED = ["ai-ieum.css", "workflow.js", "template-rules.js", "templates-data.js", "shared.js"];
+const SHARED = ["ai-ieum.css", "workflow.js", "template-rules.js", "templates-data.js", "region-photos.js", "shared.js"];
 
 fs.rmSync(path.join(root, "dist"), { recursive: true, force: true });
 for (const app of ["user", "admin"]) {

@@ -216,6 +216,7 @@ a.kpi.link .kh::after{content:"보기 ›";margin-left:auto;color:var(--accent-f
 <script src="shared/workflow.js"></script>
 <script src="shared/template-rules.js"></script>
 <script src="shared/templates-data.js"></script>
+<script src="shared/region-photos.js"></script>
 <script src="shared/shared.js"></script>
 <script>
 "use strict";
@@ -332,7 +333,7 @@ function viewHome(){
   const recent = DB.logs.slice().sort((a,b) => a.at < b.at ? 1 : -1).slice(0, 30);
   const what = l => l.kind === "request" ? "1차 확인 요청" : l.kind === "system" ? l.note : `${l.gate}차 ${l.decision === "pass" ? "통과" : "반려"}`;
   const waitAll = wait(1) + wait(2) + wait(3), on = Sh.enabledTemplates().length;
-  $("#view").innerHTML = `<section class="hero has-mosaic" aria-label="광역 운영 현황"><span class="slides" aria-hidden="true"></span><span class="slide-cap"></span>
+  $("#view").innerHTML = `<section class="hero has-slides" aria-label="광역 운영 현황"><span class="slides" aria-hidden="true"></span><span class="slide-cap"></span>
     <div><small>광역 운영 · ${Sh.SIDO_LABEL}</small><h2>관광 숏폼 광역 관리</h2><p>지역 ${active}곳에서 11월 1일까지 40편 게시를 목표로 해요. 지금 ${pub.length}편 게시, ${waitAll}건이 확인을 기다려요.</p></div>
     <nav class="quick" aria-label="자주 찾는 메뉴">
       <a href="#/data"><span>${ICON.wait}</span>확인 대기<small>${waitAll}건</small></a>
