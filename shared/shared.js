@@ -436,6 +436,7 @@
      계정은 이 브라우저(localStorage)에만 두고 공용 DB로 보내지 않는다. 비밀번호는 SHA-256 해시만 저장.
      운영 전환 때 이 묶음을 Supabase Auth(signUp · signInWithPassword · signOut)로 바꾸고 schema.sql 정책을 로그인 기준으로 바꾼다. */
   const AUTH = { accounts: "aiieum-accounts-v1", session: "aiieum-session" };
+  const TEST_LOGIN = true; // 테스트판: 아무 메일·비밀번호로 로그인. 운영 전환 때 false로
   const DEMO_ADMIN = { email: "admin@ai-ieum.test", pw: "aiieum-demo", name: "광역 관리자" }; // README '시연 계정'과 같게
   async function pwHash(email, pw) {
     const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`aiieum:${email.toLowerCase()}:${pw}`));
@@ -443,6 +444,7 @@
   }
   const publicAcct = a => { const { pw, ...rest } = a; return rest; };
   const auth = {
+    TEST_LOGIN,
     session: () => lsRead(AUTH.session, null),
     accounts: () => (lsRead(AUTH.accounts, []) || []).map(publicAcct),
     /** 비밀번호 규칙: 8자 이상, 영문·숫자 모두 */
@@ -459,11 +461,15 @@
     async signIn(email, pw, role) {
       email = email.trim().toLowerCase();
       if (role === "admin") {
-        if (email !== DEMO_ADMIN.email || pw !== DEMO_ADMIN.pw) throw new Error("메일 또는 비밀번호가 맞지 않아요");
-        const s = { email, name: DEMO_ADMIN.name, role: "admin", at: new Date().toISOString() };
+        if (!TEST_LOGIN && (email !== DEMO_ADMIN.email || pw !== DEMO_ADMIN.pw)) throw new Error("메일 또는 비밀번호가 맞지 않아요");
+        const s = { email, name: DEMO_ADMIN.name, role: "admin", test: TEST_LOGIN || undefined, at: new Date().toISOString() };
         lsWrite(AUTH.session, s); return s;
       }
       const a = (lsRead(AUTH.accounts, []) || []).find(x => x.email === email);
+      if (TEST_LOGIN && !a) { // 가입하지 않은 메일 → 테스트 계정 (지역은 직접 고름)
+        const s = { email, name: email.split("@")[0] || "테스트", role: "manager", test: true, at: new Date().toISOString() };
+        lsWrite(AUTH.session, s); return s;
+      }
       if (!a || a.pw !== await pwHash(email, pw)) throw new Error("메일 또는 비밀번호가 맞지 않아요");
       if (a.status !== "approved") throw new Error("광역 관리자 승인을 기다리고 있어요");
       const s = { email, name: a.name, region: a.region, dept: a.dept, role: a.role, at: new Date().toISOString() };

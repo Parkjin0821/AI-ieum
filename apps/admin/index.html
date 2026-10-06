@@ -231,6 +231,7 @@ function renderShell(){
     : `${userLink}<i></i>${Sh.themeBtn("gu")}`);
   $$("[data-logout]").forEach(b => b.onclick = logout);
   $(".tabs").hidden = !admin;
+  $(".gbar .rnav").hidden = !admin; // 메뉴는 로그인한 뒤에
   const n = DB.plans.filter(p => /gate\d_wait/.test(p.status)).length;
   $$("[data-cnt]").forEach(c => { c.textContent = n; c.hidden = !n; });
 }
@@ -296,7 +297,7 @@ function viewLogin(){
       <div class="auth-links"><button type="button" id="lfind">비밀번호 찾기</button><i></i><button type="button" id="lask">계정 발급 문의</button></div>
       <div class="or">또는</div>
       <button class="btn ghost wide" type="button" id="ldemo">시연 관리자로 들어가기</button>
-      <p class="demo-note">시연 계정: <code>admin@ai-ieum.test</code> / <code>aiieum-demo</code> · 관리자 계정은 가입 신청을 받지 않아요.</p>
+      <p class="demo-note">${Sh.auth.TEST_LOGIN ? "테스트판: 아무 메일·비밀번호로 들어갈 수 있어요." : "시연 계정: <code>admin@ai-ieum.test</code> / <code>aiieum-demo</code>"} 관리자 계정은 가입 신청을 받지 않아요.</p>
     </form></div>`;
   $("#le").focus({preventScroll:true});
   $("#lpeek").onclick = e => { const i = $("#lp"), show = i.type === "password"; i.type = show ? "text" : "password"; e.target.textContent = show ? "숨기기" : "보기"; e.target.setAttribute("aria-pressed", show); };

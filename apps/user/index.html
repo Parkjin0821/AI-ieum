@@ -361,7 +361,8 @@ const S = {
   rv: {tab:"g1", input:{}}
 };
 const rs = () => Sh.regionSettings(S.region);
-const me = () => { const a = Sh.auth.session(); return a && !a.demo && a.region === S.region ? a.name : rs().manager; };
+// 테스트 계정은 어느 지역이든 입력한 이름으로
+const me = () => { const a = Sh.auth.session(); return a && !a.demo && (a.region === S.region || a.test) ? a.name : rs().manager; };
 const regionName = () => { const r = Sh.regionOf(S.region); return r ? r.name : "지역 미선택"; };
 const mine = () => DB.plans.filter(p => p.region === S.region);
 const waiting = () => mine().filter(p => /gate\d_wait/.test(p.status)).length;
@@ -394,6 +395,7 @@ function renderShell(){
     ? `<a href="#/login">로그인</a><i></i><a href="#/signup">가입 신청</a><i></i>${Sh.themeBtn("gu")}`
     : `<b>${esc(r ? me() : sess.name)}</b><small>${sess.demo ? "시연 계정" : esc(sess.dept || "")}${r ? " · 1·2·3차 확인 담당" : ""}</small><i></i><button type="button" data-open-settings>설정 · 시연 도구</button><i></i>${Sh.themeBtn("gu")}<i></i><button type="button" data-logout>로그아웃</button>`;
   $("#rcard").hidden = !sess; // 로그인 전에는 로고와 같은 곳(로그인)으로 가므로 숨김
+  $(".gbar .rnav").hidden = !sess; // 메뉴는 로그인한 뒤에
   $("#topbar").innerHTML = !sess ? `<a href="#/login"><span class="emb"></span><b>AI-이음</b><small>담당자 로그인</small></a>${Sh.themeBtn("gu")}` : `<a href="#/region"><span class="emb"${emb}></span><b>${r ? esc(r.name) : "지역 고르기"}</b><small>${r ? esc(s.mood || r.sidoName) : "AI-이음"}</small></a>${r ? `<button type="button" onclick="location.hash='#/region'">바꾸기</button>` : ""}<button type="button" data-open-settings aria-label="설정">⚙</button>`;
   $$("[data-cnt]").forEach(c => { const n = S.region ? waiting() : 0; c.textContent = n; c.hidden = !n; });
   $$("[data-open-settings]").forEach(b => b.onclick = openSettings);
@@ -492,7 +494,7 @@ function viewLogin(){
       <div class="auth-links"><a href="#/signup">가입 신청</a><i></i><button type="button" id="lfind">비밀번호 찾기</button></div>
       <div class="or">또는</div>
       <button class="btn ghost wide" type="button" id="ldemo">계정 없이 시연으로 둘러보기</button>
-      <p class="demo-note">시연판이에요. 계정은 이 브라우저에만 저장되고, 가입 신청은 바로 승인돼요.</p>
+      <p class="demo-note">${Sh.auth.TEST_LOGIN ? "테스트판: 아무 메일·비밀번호로 들어갈 수 있어요. 가입 신청한 메일이면 그 계정으로 들어가요." : "시연판이에요. 계정은 이 브라우저에만 저장되고, 가입 신청은 바로 승인돼요."}</p>
     </form></div>`;
   peek();
   $(S.lastEmail ? "#lp" : "#le").focus({preventScroll:true});
@@ -502,7 +504,7 @@ function viewLogin(){
     e.preventDefault();
     const em = $("#le").value, pw = $("#lp").value, err = $("#lerr");
     if (!em.trim() || !pw) { err.textContent = "업무 메일과 비밀번호를 입력하세요"; return; }
-    try { const a = await Sh.auth.signIn(em, pw); toast(`${a.name}님, 반가워요`); enterRegion(a.region); }
+    try { const a = await Sh.auth.signIn(em, pw); toast(a.region ? `${a.name}님, 반가워요` : `${a.name}님, 반가워요 — 지역을 고르세요`); if (a.region) enterRegion(a.region); else location.hash = "#/region"; }
     catch (x) { err.textContent = x.message; $("#lp").select(); }
   };
 }
