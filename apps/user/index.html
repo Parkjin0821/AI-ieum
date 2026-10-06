@@ -487,16 +487,14 @@ function logout(){
 function viewLogin(){
   $("#view").innerHTML = `<div class="auth">${authSide("AI-이음 담당자 로그인", "우리 지역 관광 숏폼을 기획하고, 1·2·3차로 확인하는 담당자 전용 공간이에요.",
       ["지역 관광자료로 숏폼 주제 찾기", "검증된 형식 12개로 빠르게 기획", "확인 기록이 남는 결재"])}
-    <form class="card auth-card" id="lf" novalidate>
-      <h2>로그인</h2>
+    <form class="card auth-card" id="lf" novalidate aria-label="로그인">
       <div><label class="lbl2" for="le">업무 메일</label><input class="inp" id="le" type="email" autocomplete="username" placeholder="name@○○.go.kr" value="${esc(S.lastEmail || "")}"></div>
       <div><label class="lbl2" for="lp">비밀번호</label><div class="pw"><input class="inp" id="lp" type="password" autocomplete="current-password"><button type="button" data-peek="lp" aria-pressed="false">보기</button></div></div>
       <p class="err-t" id="lerr" role="alert"></p>
       <button class="btn wide" type="submit">로그인</button>
       <div class="auth-links"><a href="#/signup">회원가입</a><i></i><button type="button" id="lfind">비밀번호 찾기</button></div>
-      <div class="or">또는</div>
-      <button class="btn ghost wide" type="button" id="ldemo">계정 없이 시연으로 둘러보기</button>
-      <p class="demo-note">${Sh.auth.TEST_LOGIN ? "테스트판: 아무 메일·비밀번호로 들어갈 수 있어요. 회원가입한 메일이면 그 계정으로 들어가요." : "시연판이에요. 계정은 이 브라우저에만 저장되고, 회원가입은 바로 승인돼요."}</p>
+      <div class="auth-demo"><button class="btn ghost wide" type="button" id="ldemo">계정 없이 시연으로 둘러보기</button>
+      <p class="demo-note">${Sh.auth.TEST_LOGIN ? "테스트판: 아무 메일·비밀번호로 들어갈 수 있어요. 회원가입한 메일이면 그 계정으로 들어가요." : "시연판이에요. 계정은 이 브라우저에만 저장되고, 회원가입은 바로 승인돼요."}</p></div>
     </form></div>`;
   peek();
   Sh.slideshow($(".auth-side .slides"), $(".auth-side .slide-cap"), 4000);
