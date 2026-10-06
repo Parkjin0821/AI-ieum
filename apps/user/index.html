@@ -18,7 +18,7 @@
 .rtools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
 .rtools .sp{flex:1}
 .rtools .inp{max-width:260px}
-.rtools .seg{min-height:44px;align-items:center;display:inline-grid;grid-auto-flow:column;grid-auto-columns:1fr}
+.rtools .seg{min-height:40px;align-items:center;display:inline-grid;grid-auto-flow:column;grid-auto-columns:1fr}
 .rtools .seg button{justify-content:center}
 .rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(150px,11vw,210px),1fr));gap:clamp(10px,1vw,16px)}
 .rtile{all:unset;box-sizing:border-box;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;display:flex;flex-direction:column;transition:transform .15s,box-shadow .15s}
@@ -113,7 +113,7 @@ main.fit>.studio{flex:1;min-height:0}
 .crow{display:flex;gap:6px;align-items:center;overflow-x:auto;scrollbar-width:none}
 .crow::-webkit-scrollbar{display:none}
 .crow .lbl{font-size:.75rem;font-weight:700;color:var(--faint);width:30px;flex:none}
-.crow .chip{flex:none;padding:.3rem .5rem;min-height:34px;font-size:.84rem;width:5.75rem;text-align:center}
+.crow .chip{flex:none;padding:.3rem .5rem;min-height:32px;font-size:.8rem;width:5.75rem;text-align:center}
 .compose{display:flex;gap:8px;padding:10px 16px 14px}
 .compose input{flex:1;min-width:0}
 .side{padding:18px;overflow:auto;display:flex;flex-direction:column;gap:14px}
@@ -140,7 +140,7 @@ main.fit>.studio{flex:1;min-height:0}
 .qtabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;background:var(--line-2);border-radius:var(--r);padding:4px;margin-bottom:12px}
 .qtabs button{border:0;background:transparent;border-radius:10px;min-height:54px;padding:6px 2px;display:grid;justify-items:center;align-content:center;gap:3px;font-weight:700;font-size:.75rem;color:var(--sub);white-space:nowrap;transition:background-color .2s,color .2s,box-shadow .2s}
 .qtabs button b{font-size:1.05rem;line-height:1;color:var(--text);font-variant-numeric:tabular-nums}
-.qtabs button:hover{background:rgba(255,255,255,.6)}
+.qtabs button:hover{background:color-mix(in oklab,var(--surface) 60%,transparent)}
 .qtabs button:active{transform:translateY(1px)}
 .qtabs button[aria-pressed="true"]{background:var(--surface);color:var(--accent-ink);box-shadow:0 1px 2px rgba(16,24,40,.08),0 0 0 1px var(--accent-line)}
 .qtabs button[aria-pressed="true"] b{color:var(--accent-fg)}
@@ -207,7 +207,7 @@ details.thread .tl div.me{background:var(--accent-soft)}
 .final{display:grid;grid-template-columns:clamp(220px,18vw,300px) 1fr;gap:22px;align-items:stretch}
 .postinfo{background:var(--line-2);border-radius:var(--r);padding:12px 14px;font-size:.84rem;display:grid;gap:6px}
 .postinfo pre{margin:0;white-space:pre-wrap;font-family:inherit;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
-.actionbar{position:sticky;bottom:0;background:rgba(255,255,255,.95);backdrop-filter:blur(6px);border-top:1px solid var(--line);margin:0 -24px;padding:12px 24px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;z-index:2;border-radius:0 0 var(--r-lg) var(--r-lg)}
+.actionbar{position:sticky;bottom:0;background:color-mix(in oklab,var(--surface) 94%,transparent);backdrop-filter:blur(6px);border-top:1px solid var(--line);margin:0 -24px;padding:12px 24px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;z-index:2;border-radius:0 0 var(--r-lg) var(--r-lg)}
 .actionbar .why{font-size:.8rem;color:var(--warn);font-weight:600;flex:1 1 220px}
 .actionbar .why.ok{color:var(--ok)}
 .rcats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-bottom:12px}

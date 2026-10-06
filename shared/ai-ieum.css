@@ -75,20 +75,25 @@ a{color:var(--accent-fg)}
   .auth-side .slides img,.hero .slides img{transition:opacity 1.2s ease!important;transform:none!important}}
 
 /* ---------- 기본 부품 ---------- */
-.btn{border:1px solid transparent;border-radius:var(--r-sm);padding:0 1.05rem;font-weight:700;background:var(--accent);color:#fff;min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;transition:background-color .15s,box-shadow .15s;white-space:nowrap}
+/* 버튼 한 벌: 기본(지역색 채움) · ghost(테두리) · soft(옅은 지역색) · red(테두리 빨강) · danger(빨강 채움) · sm(작게) · wide(꽉 차게)
+   높이 40px = 한 줄 입력칸과 같음, 누르면 1px 내려감 */
+.btn{border:1px solid transparent;border-radius:8px;padding:0 16px;font-weight:600;font-size:.875rem;letter-spacing:-.01em;background:var(--accent);color:#fff;min-height:40px;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;transition:background-color .15s,border-color .15s,color .15s,transform .1s;white-space:nowrap}
+.btn:active:not(:disabled){transform:translateY(1px)}
 .btn:hover{background:var(--accent-ink)}
-.btn.ghost{background:var(--surface);color:var(--text);border:1px solid var(--line)}
-.btn.ghost:hover{border-color:var(--accent-line);background:var(--accent-soft)}
+.btn.ghost{background:transparent;color:var(--text);border-color:var(--line)}
+.btn.ghost:hover{background:var(--line-2);color:var(--accent-fg)}
 .btn.soft{background:var(--accent-soft);color:var(--accent-ink)}
 .btn.soft:hover{background:var(--accent-line)}
-.btn.red{background:var(--surface);color:var(--seal);border:1px solid color-mix(in oklab,var(--seal) 35%,var(--surface))}
+.btn.red{background:transparent;color:var(--seal);border-color:color-mix(in oklab,var(--seal) 40%,transparent)}
 .btn.red:hover{background:var(--seal-bg)}
-.btn.danger{background:#C2352C}
-.btn.sm{min-height:36px;padding:0 .8rem;font-size:.875rem;border-radius:var(--r-sm)}
+.btn.danger{background:var(--seal);color:#fff}
+.btn.danger:hover{background:color-mix(in oklab,var(--seal) 85%,#000)}
+.btn.sm{min-height:32px;padding:0 10px;font-size:.8rem;border-radius:6px}
 /* 나란한 버튼 묶음(결정 · 팝업 아래)은 가장 긴 버튼 폭으로 모두 같게 */
 .btns{display:inline-grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:8px}
-.btn:disabled{background:var(--off);color:#fff;border-color:transparent;cursor:not-allowed;box-shadow:none}
-.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:.4rem .9rem;font-size:.875rem;min-height:36px;font-weight:600;color:var(--sub);transition:.15s}
+.btn:disabled{background:var(--line-2);color:var(--faint);border-color:transparent;cursor:not-allowed;box-shadow:none}
+.btn.ghost:disabled,.btn.red:disabled{background:transparent;border-color:var(--line-2)}
+.chip{border:1px solid var(--line);background:transparent;border-radius:999px;padding:.3rem .85rem;font-size:.8rem;min-height:32px;font-weight:600;color:var(--sub);transition:.15s}
 .chip:hover{border-color:var(--accent-line);color:var(--text)}
 .chip[aria-pressed="true"]{background:var(--accent);color:#fff;border-color:var(--accent)}
 .chip[aria-pressed="true"] .note{color:rgba(255,255,255,.75)}
@@ -98,7 +103,7 @@ a{color:var(--accent-fg)}
 .tag.info{background:var(--info-bg);color:var(--info)}
 .tag.warn{background:var(--warn-bg);color:var(--warn)}
 .tag.red{background:var(--seal-bg);color:var(--seal)}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--sh-1)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg)}
 .note{font-size:.8rem;color:var(--sub)}
 .eyebrow{font-size:.75rem;font-weight:800;color:var(--accent-fg);letter-spacing:.04em}
 .switch{display:inline-flex;align-items:center;gap:8px;font-size:.875rem;font-weight:600;color:var(--sub);cursor:pointer;min-height:36px}
@@ -106,8 +111,8 @@ a{color:var(--accent-fg)}
 .switch input::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .15s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
 .switch input:checked{background:var(--accent)}
 .switch input:checked::after{left:19px}
-.inp{width:100%;border:1px solid var(--line);border-radius:var(--r-sm);padding:.6rem .8rem;min-height:44px;background:var(--surface)}
-input.inp,select.inp{height:44px;padding-top:0;padding-bottom:0} /* 한 줄 입력칸은 버튼과 같은 44px */
+.inp{width:100%;border:1px solid var(--line);border-radius:var(--r-sm);padding:.55rem .8rem;min-height:40px;background:var(--surface);font-size:.9rem}
+input.inp,select.inp{height:40px;padding-top:0;padding-bottom:0} /* 한 줄 입력칸은 버튼과 같은 40px */
 /* 폰: 입력칸 글자 16px — 그보다 작으면 아이폰 사파리가 칸을 누를 때마다 화면을 확대함 */
 @media (max-width:860px){ .inp{font-size:16px} }
 .inp:focus{border-color:var(--accent-mid);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
@@ -122,8 +127,8 @@ textarea.inp{min-height:96px;resize:vertical}
 
 /* ---------- 페이지 머리 ---------- */
 .phead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:clamp(14px,1.6vw,24px)}
-.phead h1{font-size:clamp(1.4rem,1.5vw,1.85rem);margin:2px 0 4px;letter-spacing:-.025em;line-height:1.25}
-.phead .lead{color:var(--sub);margin:0;max-width:60ch}
+.phead h1{font-size:clamp(1.2rem,1.3vw,1.45rem);margin:2px 0 4px;letter-spacing:-.025em;line-height:1.25}
+.phead .lead{color:var(--sub);margin:0;max-width:64ch;font-size:.84rem}
 
 /* 진행 단계: 지역 → 형식 → 주제 → 확인 */
 .stepper{display:flex;gap:4px;list-style:none;margin:0 0 clamp(16px,1.8vw,26px);padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:999px;width:max-content;max-width:100%;overflow-x:auto;scrollbar-width:none}
@@ -184,7 +189,7 @@ dialog::backdrop{background:rgba(12,18,30,.5);backdrop-filter:blur(2px)}
 .dlg-h h2{margin:0;font-size:1.15rem;letter-spacing:-.01em}
 .dlg-b{padding:1.1rem 1.25rem;overflow:auto}
 .dlg-f{padding:.8rem 1.25rem;border-top:1px solid var(--line-2);display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;align-items:center}
-.x{border:0;background:var(--line-2);width:36px;height:36px;border-radius:50%;font-size:18px;line-height:1;flex:none}
+.x{border:0;background:var(--line-2);width:32px;height:32px;border-radius:50%;font-size:16px;line-height:1;flex:none}
 .x:hover{background:var(--line)}
 .setrow{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:.8rem 0;border-top:1px solid var(--line-2)}
 .setrow:first-child{border-top:0}
