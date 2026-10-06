@@ -6,19 +6,13 @@
 <meta name="theme-color" content="#2F5D8A">
 <title>AI-이음 · 관리자</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<script>try{var m=localStorage.getItem("aiieum-theme");if(m)document.documentElement.dataset.theme=m}catch(e){}</script>
 <link rel="stylesheet" href="shared/ai-ieum.css">
 <style>
 /* 관리자 페이지 — 사용자 페이지와 같은 틀(shared/ai-ieum.css). 특정 지역 색 대신 기본 남색 하나만 쓰고,
    지역 사진·색은 관리 대상으로만 보여준다. */
 
-/* 관리 카드: 지역 사진 6장 모자이크 위에 남색 */
-.rcard.admin{min-height:164px;background:#1D2B3F}
-.rcard.admin::before{inset:0;width:auto;height:auto;border-radius:0;z-index:1;background:linear-gradient(180deg,color-mix(in oklab,var(--accent) 62%,transparent) 0%,color-mix(in oklab,var(--accent) 80%,#000) 55%,color-mix(in oklab,var(--accent) 70%,#000) 100%)}
-.rcard.admin::after{display:none}
-.rcard.admin .mosaic{position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);z-index:0}
-.rcard.admin .mosaic img{width:100%;height:100%;object-fit:cover;display:block}
-.rcard.admin .txt{position:relative;z-index:2}
-.rcard.admin .chg{z-index:2}
+/* 관리 카드: 지역 사진 6장 모자이크(공용 .has-mosaic) 위에 남색 */
 .rcard .mood.ok::before,.rcard .mood.off::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:1px;background:#6EE7B7}
 .rcard .mood.off::before{background:#FCD34D}
 .acct a.btn{grid-column:1/-1}
@@ -27,7 +21,7 @@
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(200px,15vw,260px),1fr));gap:clamp(10px,1vw,16px);margin-bottom:18px}
 .kpi{padding:16px 18px;display:grid;gap:8px;align-content:start}
 .kh{display:flex;align-items:center;gap:9px;color:var(--sub);font-weight:700;font-size:.8rem}
-.ki{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);flex:none}
+.ki{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent-fg);flex:none}
 .ki svg{width:17px;height:17px}
 .ki.warn{background:var(--warn-bg);color:var(--warn)}.ki.red{background:var(--seal-bg);color:var(--seal)}.ki.ok{background:var(--ok-bg);color:var(--ok)}
 .kpi b{font-size:clamp(1.75rem,2vw,2.25rem);letter-spacing:-.035em;line-height:1.05;font-variant-numeric:tabular-nums}
@@ -52,18 +46,23 @@
 .goal .g{background:var(--line-2);border-radius:12px;padding:10px 6px 9px;display:grid;justify-items:center;gap:6px}
 .goal .g b{font-size:1.05rem;font-variant-numeric:tabular-nums;line-height:1}
 .dots{display:flex;gap:4px}
-.dots i{width:7px;height:7px;border-radius:50%;background:#D3D8E0}
+.dots i{width:7px;height:7px;border-radius:50%;background:var(--off)}
 .dots i.on{background:var(--accent)}
+/* 0편 칸은 점선 빈칸으로 가볍게 — 12칸이 모두 0일 때 화면이 무겁지 않게 */
+.goal .g.zero{background:transparent;border:1.5px dashed var(--line)}
+.goal .g.zero b{color:var(--faint);font-weight:600}
+.goal .g.zero .dots{opacity:.6}
+.goal .g.part{background:var(--accent-soft);color:var(--accent-ink)}
 .goal .g.full{background:var(--ok-bg);color:var(--ok)}
 .goal .g.full .dots i{background:var(--ok)}
 /* 표 안의 지역: 사진 썸네일 + 지역 색 테두리 */
 .rth{display:inline-flex;align-items:center;gap:10px;white-space:nowrap}
-.rth img,.rth span.ph{width:46px;height:32px;border-radius:8px;object-fit:cover;box-shadow:0 0 0 2px #fff,0 0 0 3.5px var(--c);display:block;flex:none;background:linear-gradient(135deg,var(--c),#ddd)}
+.rth img,.rth span.ph{width:46px;height:32px;border-radius:8px;object-fit:cover;box-shadow:0 0 0 2px var(--surface),0 0 0 3.5px var(--c);display:block;flex:none;background:linear-gradient(135deg,var(--c),#ddd)}
 .rth b{display:block;font-size:.875rem}
 .rth small{display:block;color:var(--faint);font-size:.72rem}
 .pill{display:inline-grid;place-items:center;min-width:24px;height:22px;padding:0 7px;border-radius:999px;background:var(--accent-soft);color:var(--accent-ink);font-weight:800;font-size:.75rem;font-variant-numeric:tabular-nums}
 .pill.warn{background:var(--warn-bg);color:var(--warn)}.pill.ok{background:var(--ok-bg);color:var(--ok)}.pill.red{background:var(--seal-bg);color:var(--seal)}
-.z{color:#C9CED6}
+.z{color:var(--off)}
 
 /* 도구 줄 */
 .tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
@@ -86,11 +85,11 @@
 .sumgrid .ok small,.sumgrid .red small{color:inherit}
 .miss{background:var(--warn-bg);color:var(--warn);border-radius:14px;padding:11px 14px;font-size:.84rem;font-weight:600;margin-bottom:16px}
 .miss a{color:inherit}
-.miss.red{background:var(--seal-bg);color:#8A2620}
+.miss.red{background:var(--seal-bg);color:var(--seal)}
 
 /* 지역 표 */
 .colorpair{display:flex;gap:6px;align-items:center}
-.colorpair input[type=color]{width:34px;height:34px;border:1px solid var(--line);border-radius:8px;padding:2px;background:#fff;cursor:pointer}
+.colorpair input[type=color]{width:34px;height:34px;border:1px solid var(--line);border-radius:8px;padding:2px;background:var(--surface);cursor:pointer}
 .grad{width:56px;height:34px;border-radius:8px} /* 표 안 칸은 모두 높이 34 */
 .phbtn{width:76px;height:48px;border-radius:10px;border:1px dashed var(--line);background:var(--line-2);padding:0;overflow:hidden;display:grid;place-items:center;font-size:.72rem;color:var(--sub);font-weight:700;position:relative}
 .phbtn img{width:100%;height:100%;object-fit:cover;display:block}
@@ -101,8 +100,8 @@
 .tbl .inp{height:34px;min-height:34px;padding:0 .55rem;font-size:.84rem}
 .tbl td.name b{display:block}
 .tbl td.name small{color:var(--faint)}
-.thumb{width:36px}
-.thumb .screen{border-radius:7px}
+.thumb{width:clamp(60px,4.2vw,76px)} /* 첫 장면 훅 글자가 읽히는 최소 폭 */
+.thumb .screen{border-radius:9px;box-shadow:var(--sh-1)}
 /* 템플릿 커버 */
 .cover{display:grid;grid-template-columns:76px repeat(4,1fr);gap:6px;max-width:560px;margin-bottom:16px}
 .cover .h{font-size:.75rem;color:var(--sub);font-weight:700;text-align:center}
@@ -126,7 +125,7 @@
 .counter{font-size:.72rem;color:var(--faint);float:right;font-weight:600}
 .counter.over{color:var(--seal)}
 .scn{display:grid;gap:8px}
-.scn-row{display:grid;grid-template-columns:28px 74px 110px 110px minmax(0,1fr) minmax(0,1fr) auto;gap:6px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:6px 8px;background:#fff}
+.scn-row{display:grid;grid-template-columns:28px 74px 110px 110px minmax(0,1fr) minmax(0,1fr) auto;gap:6px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:6px 8px;background:var(--surface)}
 .scn-row .i{font-weight:800;text-align:center;color:var(--sub)}
 .scn-row .inp{height:34px;min-height:34px;padding:0 .5rem;font-size:.84rem} /* 지역 표 작은 칸과 같은 글자 크기 */
 .scn-row .acts{display:flex;gap:2px}
@@ -134,7 +133,7 @@
 .scn-row .acts button:hover{background:var(--line)}
 .scn-row.on{border-color:var(--accent)}
 .side-pv{position:sticky;top:0;display:grid;gap:10px;align-content:start}
-.errs{margin:0;padding:10px 12px 10px 28px;border-radius:12px;background:var(--seal-bg);color:#8A2620;font-size:.8rem;display:grid;gap:3px}
+.errs{margin:0;padding:10px 12px 10px 28px;border-radius:12px;background:var(--seal-bg);color:var(--seal);font-size:.8rem;display:grid;gap:3px}
 .oklist{padding:10px 12px;border-radius:12px;background:var(--ok-bg);color:var(--ok);font-size:.84rem;font-weight:700}
 .dl{display:grid;grid-template-columns:110px 1fr;gap:6px 12px;font-size:.875rem;margin:0}
 .dl dt{color:var(--sub)}.dl dd{margin:0;font-weight:600}
@@ -179,7 +178,7 @@
 <div class="app">
   <aside class="rail" aria-label="관리 메뉴">
     <a class="brand" href="#/" data-home title="처음 화면으로 (필터·검색 초기화)"><i></i>AI-이음<small>관리자</small></a>
-    <a class="rcard admin" href="#/regions" id="acard"></a>
+    <a class="rcard has-mosaic" href="#/regions" id="acard"></a>
     <nav class="rnav" aria-label="관리 화면">
       <a href="#/" data-r="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 13h6V4H4zM14 20h6v-9h-6zM4 20h6v-4H4zM14 4v4h6V4z"/></svg><span>개요</span></a>
       <a href="#/regions" data-r="regions"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span>지역 · 담당자</span></a>
@@ -187,10 +186,10 @@
       <a href="#/data" data-r="data"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg><span>콘텐츠 · 기록</span><span class="count" data-cnt hidden>0</span></a>
       <a href="#/storage" data-r="storage"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg><span>저장 · 백업</span></a>
     </nav>
-    <div class="acct"><span class="av">관리</span><div><b>광역 관리자</b><small>시연 계정 · 운영 땐 로그인 필요</small></div><a class="btn ghost sm" id="userLink" href="#" target="_blank" rel="noopener">사용자 사이트 열기 ↗</a></div>
+    <div class="acct"><span class="av">관리</span><div><b>광역 관리자</b><small>시연 계정 · 운영 땐 로그인 필요</small></div><a class="btn ghost sm" id="userLink" href="#" target="_blank" rel="noopener">사용자 사이트 열기 ↗</a><button type="button" class="btn ghost sm" data-theme-toggle>◐ 화면 · 시스템</button></div>
   </aside>
   <div>
-    <header class="topbar"><a href="#/" data-home><b>AI-이음 관리자</b><small>지역 41곳 · 템플릿 · 기록</small></a><button type="button" id="userBtn">사용자 ↗</button></header>
+    <header class="topbar"><a href="#/" data-home><b>AI-이음 관리자</b><small>지역 41곳 · 템플릿 · 기록</small></a><button type="button" data-theme-toggle="icon" aria-label="화면 모드 바꾸기">◐</button><button type="button" id="userBtn">사용자 ↗</button></header>
     <main id="view" tabindex="-1"></main>
   </div>
 </div>
@@ -277,6 +276,7 @@ function viewHome(){
   const active = Sh.REGIONS.filter(r => Sh.regionSettings(r.id).active).length;
   const withData = new Set(Sh.ASSETS.map(a => a.region)).size;
   const per = (c,a) => pub.filter(p => { const k = Sh.candOf(p.cand); return k && k.cat === c && k.age === a; }).length;
+  const filled = R.CATS.reduce((sum, c) => sum + R.AGES.filter(a => per(c,a) >= 3).length, 0);
   const regions = [...new Set(P.map(p => p.region))];
   const recent = DB.logs.slice().sort((a,b) => a.at < b.at ? 1 : -1).slice(0, 30);
   const what = l => l.kind === "request" ? "1차 확인 요청" : l.kind === "system" ? l.note : `${l.gate}차 ${l.decision === "pass" ? "통과" : "반려"}`;
@@ -288,9 +288,9 @@ function viewHome(){
     <div class="card kpi"><span class="kh"><span class="ki">${ICON.map}</span>사용 중인 지역</span><b>${active}<span> / ${Sh.REGIONS.length}</span></b><span class="note">관광자료가 있는 지역 ${withData}곳 (시연)</span></div>
   </div>
   <div class="cols">
-    <section class="card panel fill"><h2>합격선 — 12유형마다 3편</h2><p class="note">게시 완료 기준. 점 하나가 1편, 3편을 채우면 초록색이에요.</p>
+    <section class="card panel fill"><h2>합격선 — 12유형마다 3편 <span class="pill ${filled===12?"ok":""}">${filled} / 12</span></h2><p class="note">게시 완료 기준. 점 하나가 1편, 3편을 채우면 초록색이에요.</p>
       <div class="goal"><span></span>${R.CATS.map(c => `<span class="h">${c}</span>`).join("")}
-      ${R.AGES.map(a => `<span class="rh">${a}</span>${R.CATS.map(c => { const n = per(c,a); return `<span class="g${n>=3?" full":""}" aria-label="${c} ${a} ${n}편"><b>${n}</b><span class="dots">${[0,1,2].map(i => `<i class="${i<n?"on":""}"></i>`).join("")}</span></span>`; }).join("")}`).join("")}</div>
+      ${R.AGES.map(a => `<span class="rh">${a}</span>${R.CATS.map(c => { const n = per(c,a); return `<span class="g ${n>=3?"full":n?"part":"zero"}" aria-label="${c} ${a} ${n}편"><b>${n}</b><span class="dots">${[0,1,2].map(i => `<i class="${i<n?"on":""}"></i>`).join("")}</span></span>`; }).join("")}`).join("")}</div>
     </section>
     <section class="card panel fill"><h2>최근 기록</h2><p class="note">결정 기록은 지울 수 없어요. 박스 안에서 스크롤돼요.</p>
       <div class="scroll"><ol class="tl2">${recent.map(l => { const p = DB.plans.find(x => x.id === l.planId), cls = l.kind === "system" ? "sys" : l.decision || ""; return `<li><span class="av ${cls}">${esc(l.reviewer.slice(0,2))}</span><div><div class="w"><b>${esc(l.reviewer)}</b><time datetime="${l.at}">${fmt(l.at)}</time></div><div class="m">${esc(what(l))}</div><span class="note">${esc(l.planId)} ${p?esc(p.title):""}</span></div></li>`; }).join("")}</ol></div>

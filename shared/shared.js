@@ -360,7 +360,26 @@
       <i class="sz t"></i><i class="sz b"></i><i class="sz r"></i><i class="sz l"></i></div>`;
   }
 
-  root.Shared = { SIDO, REGIONS, regionOf, THEME, ASSETS, TRENDS, assetsIn, candOf, candidates,
+  /* 화면 모드 — 브라우저마다 따로 저장 (공용 DB에 올리지 않음). 누를 때마다 시스템 → 밝게 → 어둡게.
+     첫 화면 깜빡임을 막으려고 <head>에서도 같은 키를 먼저 읽어 data-theme을 붙인다. */
+  const THEME_KEY = "aiieum-theme", THEME_ORDER = ["", "light", "dark"], THEME_LABEL = { "": "시스템", light: "밝게", dark: "어둡게" };
+  function themeMode() { try { return localStorage.getItem(THEME_KEY) || ""; } catch (e) { return ""; } }
+  const themeText = () => `◐ 화면 · ${THEME_LABEL[themeMode()] || "시스템"}`;
+  const themeBtn = cls => `<button type="button" class="${cls || "btn ghost sm"}" data-theme-toggle aria-label="화면 모드 바꾸기">${themeText()}</button>`;
+  function setThemeMode(m) {
+    try { m ? localStorage.setItem(THEME_KEY, m) : localStorage.removeItem(THEME_KEY); } catch (e) { /* 저장 못 해도 지금 화면엔 적용 */ }
+    if (m) document.documentElement.dataset.theme = m; else delete document.documentElement.dataset.theme;
+    paintThemeButtons();
+  }
+  // 아이콘만 있는 버튼(data-theme-toggle="icon")은 글자를 바꾸지 않음
+  function paintThemeButtons() { document.querySelectorAll("[data-theme-toggle]:not([data-theme-toggle=icon])").forEach(b => { b.textContent = themeText(); }); }
+  paintThemeButtons();
+  document.addEventListener("click", e => {
+    if (!e.target.closest("[data-theme-toggle]")) return;
+    setThemeMode(THEME_ORDER[(THEME_ORDER.indexOf(themeMode()) + 1) % THEME_ORDER.length]);
+  });
+
+  root.Shared = { SIDO, REGIONS, themeBtn, regionOf, THEME, ASSETS, TRENDS, assetsIn, candOf, candidates,
     KEY, read, write, remove, REMOTE, CFG, init, refresh, nextPlanId, PHOTOS, photoUrl, photoCredit, resetRegionPhoto, regionSettings, saveRegionSettings, resetRegionColor,
     defaultTemplates, templates, disabledIds, enabledTemplates, scenesOf, seed, loadDB, saveDB, mergeDB,
     ROLE, SRC, HOOK, STATUS, esc, fmt, day, hash, screen, R };

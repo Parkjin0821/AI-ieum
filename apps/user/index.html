@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#2F5D8A">
 <title>AI-이음 · 사용자</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<script>try{var m=localStorage.getItem("aiieum-theme");if(m)document.documentElement.dataset.theme=m}catch(e){}</script>
 <link rel="stylesheet" href="shared/ai-ieum.css">
 <style>
 
@@ -20,7 +21,7 @@
 .rtools .seg{min-height:44px;align-items:center;display:inline-grid;grid-auto-flow:column;grid-auto-columns:1fr}
 .rtools .seg button{justify-content:center}
 .rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(150px,11vw,210px),1fr));gap:clamp(10px,1vw,16px)}
-.rtile{all:unset;box-sizing:border-box;cursor:pointer;background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:transform .15s,box-shadow .15s}
+.rtile{all:unset;box-sizing:border-box;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:transform .15s,box-shadow .15s}
 .rtile:hover{transform:translateY(-3px);box-shadow:0 14px 30px -10px color-mix(in oklab,var(--c) 55%,transparent)}
 .rtile:active{transform:translateY(-1px) scale(.99)}
 .rtile:focus-visible{outline:2.5px solid var(--c);outline-offset:3px}
@@ -35,8 +36,9 @@
 .rtile b{font-size:1.02rem;letter-spacing:-.02em}
 .rtile small{color:var(--faint);font-size:.75rem}
 .rtile .tag{justify-self:start;margin-top:4px}
+.rtile .tag.rc{background:color-mix(in oklab,var(--c) 12%,var(--surface));color:color-mix(in oklab,var(--c) var(--keep),#fff)}
 .rtile[aria-pressed="true"]{border-color:var(--c);box-shadow:0 0 0 3px color-mix(in oklab,var(--c) 22%,transparent)}
-.rtile[aria-pressed="true"] .band::after{z-index:1;content:"지금 지역";position:absolute;right:8px;top:8px;font-size:.68rem;font-weight:800;background:#fff;color:var(--c);padding:2px 7px;border-radius:999px}
+.rtile[aria-pressed="true"] .band::after{z-index:1;content:"지금 지역";position:absolute;right:8px;top:8px;font-size:.68rem;font-weight:800;background:var(--surface);color:var(--c);padding:2px 7px;border-radius:999px}
 .rtile:disabled{cursor:not-allowed;opacity:.45;transform:none;box-shadow:none}
 
 /* ---------- 1. 템플릿 ---------- */
@@ -82,25 +84,25 @@ main.fit>.studio{flex:1;min-height:0}
 .msg{max-width:82%;padding:.7rem .9rem;border-radius:16px;white-space:pre-line}
 .msg.ai{background:var(--line-2);align-self:flex-start;border-top-left-radius:5px}
 .msg.me{background:var(--accent);color:#fff;align-self:flex-end;border-top-right-radius:5px}
-.msg.err{background:var(--seal-bg);color:#7A1F19;align-self:stretch;max-width:none;border-radius:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.msg.err{background:var(--seal-bg);color:var(--seal);align-self:stretch;max-width:none;border-radius:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .msg.err b{display:block}
 .typing{align-self:flex-start;background:var(--line-2);border-radius:14px;padding:12px 16px;display:flex;gap:4px}
 .typing i{width:6px;height:6px;border-radius:50%;background:var(--faint);animation:blink 1s infinite}
 .typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
 @keyframes blink{0%,100%{opacity:.3}50%{opacity:1}}
 .cands{display:grid;gap:10px;align-self:stretch}
-.cand{all:unset;box-sizing:border-box;cursor:pointer;border:1.5px solid var(--line);border-radius:16px;padding:13px 14px;background:#fff;display:grid;gap:8px}
+.cand{all:unset;box-sizing:border-box;cursor:pointer;border:1.5px solid var(--line);border-radius:16px;padding:13px 14px;background:var(--surface);display:grid;gap:8px}
 .cand:hover{border-color:var(--accent-line)}
 .cand:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px}
 .cand[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
 .cand .top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
 .cand .t{font-weight:800;font-size:.98rem;line-height:1.35}
-.cand .t em{font-style:normal;color:var(--accent)}
+.cand .t em{font-style:normal;color:var(--accent-fg)}
 .ev{display:grid;gap:4px;font-size:.8rem;color:var(--sub)}
 .ev div{display:flex;gap:6px;align-items:baseline}
 .ev .tag{flex:none}
 .fit{display:grid;gap:3px;justify-items:end;flex:none}
-.fit b{color:var(--accent);font-size:1rem}
+.fit b{color:var(--accent-fg);font-size:1rem}
 .fit small{font-size:.66rem;color:var(--faint);font-weight:600}
 .meter{width:64px;height:5px;background:var(--line-2);border-radius:3px;overflow:hidden}
 .meter i{display:block;height:100%;background:var(--accent)}
@@ -137,11 +139,11 @@ main.fit>.studio{flex:1;min-height:0}
 .qtabs button b{font-size:1.05rem;line-height:1;color:var(--text);font-variant-numeric:tabular-nums}
 .qtabs button:hover{background:rgba(255,255,255,.6)}
 .qtabs button:active{transform:translateY(1px)}
-.qtabs button[aria-pressed="true"]{background:#fff;color:var(--accent-ink);box-shadow:0 1px 2px rgba(16,24,40,.08),0 0 0 1px var(--accent-line)}
-.qtabs button[aria-pressed="true"] b{color:var(--accent)}
+.qtabs button[aria-pressed="true"]{background:var(--surface);color:var(--accent-ink);box-shadow:0 1px 2px rgba(16,24,40,.08),0 0 0 1px var(--accent-line)}
+.qtabs button[aria-pressed="true"] b{color:var(--accent-fg)}
 .qtabs button.has b{color:var(--warn)}
 .qlist{display:grid;gap:8px}
-.qi{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:16px;padding:10px 12px}
+.qi{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:10px 12px}
 .qi:hover{border-color:var(--accent-line)}
 .qi:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px}
 .qi[aria-current="true"]{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
@@ -169,7 +171,7 @@ details.thread .tl{display:grid;gap:6px;padding:0 0 12px;font-size:.84rem}
 details.thread .tl div{padding:7px 10px;border-radius:10px;background:var(--line-2)}
 details.thread .tl div.me{background:var(--accent-soft)}
 .warn{background:var(--warn-bg);color:var(--warn);border-radius:14px;padding:11px 14px;font-size:.875rem;margin-bottom:16px;font-weight:600}
-.warn.red{background:var(--seal-bg);color:#8A2620}
+.warn.red{background:var(--seal-bg);color:var(--seal)}
 .tag.warn{padding:2px 8px;margin:0;border-radius:7px;font-size:.75rem} /* 안내 상자(.warn)와 이름이 겹치는 노란 태그는 태그 크기 유지 */
 .warn.ok{background:var(--ok-bg);color:var(--ok)}
 .scenes{display:grid;gap:14px}
@@ -180,7 +182,7 @@ details.thread .tl div.me{background:var(--accent-soft)}
 .srow .num{width:24px;height:24px;border-radius:50%;background:var(--line);color:var(--sub);font-size:.78rem;font-weight:800;display:grid;place-items:center}
 .srow.done .num{background:var(--accent);color:#fff}
 .opts{display:grid;grid-template-columns:repeat(3,minmax(0,150px));gap:10px}
-.opt{position:relative;border:2px solid var(--line);border-radius:14px;padding:6px;cursor:pointer;display:grid;gap:6px;background:#fff}
+.opt{position:relative;border:2px solid var(--line);border-radius:14px;padding:6px;cursor:pointer;display:grid;gap:6px;background:var(--surface)}
 .opt input{position:absolute;opacity:0;pointer-events:none}
 .opt:has(input:focus-visible){outline:2.5px solid var(--accent);outline-offset:2px}
 .opt:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
@@ -201,7 +203,7 @@ details.thread .tl div.me{background:var(--accent-soft)}
 .checks small{display:block;color:var(--sub);font-size:.8rem;margin-top:1px}
 .final{display:grid;grid-template-columns:clamp(220px,18vw,300px) 1fr;gap:22px;align-items:stretch}
 .postinfo{background:var(--line-2);border-radius:14px;padding:12px 14px;font-size:.84rem;display:grid;gap:6px}
-.postinfo pre{margin:0;white-space:pre-wrap;font-family:inherit;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.postinfo pre{margin:0;white-space:pre-wrap;font-family:inherit;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
 .actionbar{position:sticky;bottom:0;background:rgba(255,255,255,.95);backdrop-filter:blur(6px);border-top:1px solid var(--line);margin:0 -24px;padding:12px 24px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;z-index:2;border-radius:0 0 var(--r-lg) var(--r-lg)}
 .actionbar .why{font-size:.8rem;color:var(--warn);font-weight:600;flex:1 1 220px}
 .actionbar .why.ok{color:var(--ok)}
@@ -209,7 +211,7 @@ details.thread .tl div.me{background:var(--accent-soft)}
 .rcats label{position:relative}
 .rcats input{position:absolute;opacity:0}
 .rcats span{display:flex;justify-content:center;width:100%;border:1px solid var(--line);border-radius:999px;padding:.4rem .5rem;font-size:.875rem;font-weight:600;cursor:pointer;min-height:36px;align-items:center;white-space:nowrap}
-.rcats input:checked+span{background:var(--seal);border-color:var(--seal);color:#fff}
+.rcats input:checked+span{background:#C2352C;border-color:#C2352C;color:#fff}
 .rcats input:focus-visible+span{outline:2.5px solid var(--accent);outline-offset:2px}
 .err-t{color:var(--seal);font-size:.8rem;font-weight:600;min-height:18px;margin-top:6px}
 @container (max-width:600px){
@@ -368,7 +370,7 @@ function toast(m){ const t = $("#toast"); t.textContent = m; t.classList.add("sh
 
 /* 지역 색 입히기 */
 function applyTheme(){
-  const s = S.region ? rs() : {color:"#3A4A63", color2:"#B9C4D6"};
+  const s = S.region ? rs() : {color:"#3554D1", color2:"#8FB0FF"}; // 고르기 전: AI-이음 기본 파랑
   document.documentElement.style.setProperty("--accent", s.color);
   document.documentElement.style.setProperty("--accent-2", s.color2);
   $('meta[name="theme-color"]').content = s.color;
@@ -378,12 +380,15 @@ function renderShell(){
   const ph = s ? Sh.photoUrl(s, 960) : "";
   [$("#rcard"), $("#topbar")].forEach(el => { el.style.setProperty("--photo", ph ? `url("${ph}")` : "none"); el.classList.toggle("has-photo", !!ph); });
   $("#rcard").title = ph ? `사진: ${Sh.photoCredit(s)}` : "";
+  // 고르기 전에는 빈 그라데이션 대신 지역 사진 6장 모자이크
+  const mosaic = r ? [] : Sh.REGIONS.map(x => Sh.photoUrl(Sh.regionSettings(x.id), 330)).filter(Boolean).slice(0, 6);
+  $("#rcard").classList.toggle("has-mosaic", mosaic.length > 0);
   $("#rcard").innerHTML = r
     ? `<small>${esc(r.sidoName)}</small><b>${esc(r.name)}</b>${s.mood ? `<span class="mood">${esc(s.mood)}</span>` : ""}<span class="chg">지역 바꾸기 ›</span>${ph ? `<span class="cr">사진 ${esc(Sh.photoCredit(s))}</span>` : ""}`
-    : `<small>시작하기</small><b>지역 고르기</b><span class="chg">고르기 ›</span>`;
+    : `${mosaic.length ? `<span class="mosaic" aria-hidden="true">${mosaic.map(u => `<img src="${esc(u)}" alt="" referrerpolicy="no-referrer">`).join("")}</span>` : ""}<span class="txt"><small>시작하기 · 광주·전남·전북</small><b>지역 고르기</b><span class="mood">${Sh.REGIONS.length}곳 중 하나</span></span><span class="chg">고르기 ›</span>`;
   $("#acct").innerHTML = r
-    ? `<span class="av">${esc(me().slice(0,2))}</span><div><b>${esc(me())}</b><small>1·2·3차 확인 담당</small></div><button class="btn ghost sm" data-open-settings>설정 · 시연 도구</button>`
-    : `<span class="av">?</span><div><b>로그인 전</b><small>지역을 고르면 그 지역 담당자로 들어가요</small></div><button class="btn ghost sm" data-open-settings>설정 · 시연 도구</button>`;
+    ? `<span class="av">${esc(me().slice(0,2))}</span><div><b>${esc(me())}</b><small>1·2·3차 확인 담당</small></div><button class="btn ghost sm" data-open-settings>설정 · 시연 도구</button>${Sh.themeBtn()}`
+    : `<span class="av">?</span><div><b>로그인 전</b><small>지역을 고르면 그 지역 담당자로 들어가요</small></div><button class="btn ghost sm" data-open-settings>설정 · 시연 도구</button>${Sh.themeBtn()}`;
   $("#topbar").innerHTML = `<a href="#/region"><b>${r ? esc(r.name) : "지역 고르기"}</b><small>${r ? esc(s.mood || r.sidoName) : "AI-이음"}</small></a>${r ? `<button type="button" onclick="location.hash='#/region'">바꾸기</button>` : ""}<button type="button" data-open-settings aria-label="설정">⚙</button>`;
   $$("[data-cnt]").forEach(c => { const n = S.region ? waiting() : 0; c.textContent = n; c.hidden = !n; });
   $$("[data-open-settings]").forEach(b => b.onclick = openSettings);
@@ -464,7 +469,7 @@ function viewRegion(){
       return `<button class="rtile${ph?" has-photo":""}" data-region="${esc(r.id)}" style="--c:${s.color};--c2:${s.color2}" aria-pressed="${r.id===S.region}" ${s.active?"":"disabled"} aria-label="${esc(r.sidoName)} ${esc(r.name)}${s.mood?", "+esc(s.mood):""}, ${n?`관광자료 ${n}건`:"자료 준비 중"}">
         <span class="band">${ph?`<img src="${esc(ph)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.parentNode.parentNode.classList.remove('has-photo');this.remove()">`:""}${s.mood?`<span class="mood">${esc(s.mood)}</span>`:""}${ph?`<span class="cr">${esc(Sh.photoCredit(s))}</span>`:""}</span>
         <span class="body"><b>${esc(r.name)}</b><small>${esc(r.sidoName)}</small>
-          <span class="tag ${n?"accent":""}" style="${n?`background:color-mix(in oklab,${s.color} 10%,#fff);color:${s.color}`:""}">${s.active ? (n?`관광자료 ${n}건`:"자료 준비 중") : "사용 중지"}</span></span>
+          <span class="tag${n?" rc":""}">${s.active ? (n?`관광자료 ${n}건`:"자료 준비 중") : "사용 중지"}</span></span>
       </button>`;
     }).join("") || `<p class="empty">'${esc(f.q)}'에 맞는 지역이 없어요.</p>`;
     $$("[data-region]").forEach(b => b.onclick = () => pickRegion(b.dataset.region));
@@ -733,7 +738,7 @@ function facts(p){
   return `<div class="sec"><h3>주제</h3><div class="facts">
     <div class="field"><div class="k">트렌드</div><div class="v">${esc(c.trend)}</div></div>
     <div class="field"><div class="k">지역자산 · 관광공사 자료</div><div class="v">${esc(c.asset)} <span class="note">${esc(c.region)}</span></div></div>
-    <div class="field wide"><div class="k" style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><span>근거</span><span>AI 적합도 <b style="color:var(--accent)">${c.fit.toFixed(2)}</b> · 참고값</span></div>
+    <div class="field wide"><div class="k" style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><span>근거</span><span>AI 적합도 <b style="color:var(--accent-fg)">${c.fit.toFixed(2)}</b> · 참고값</span></div>
       <div class="ev" style="margin-top:6px">${c.ev.map(([s,x]) => `<div><span class="tag ${evTag(s)}">${s}</span><span style="color:var(--text)">${esc(x)}</span></div>`).join("")}</div></div>
     <div class="field wide"><div class="k">형식</div><div class="v">${t?esc(t.name):"미정"} <span class="note">${t?`${t.scenes.length}장면 · ${total(t)}초 · ${HOOK[t.hook.type]||""}`:""}</span></div></div>
   </div></div>`;
@@ -908,6 +913,7 @@ function openSettings(){
     <div class="dlg-h"><h2 id="setDlgT">설정 · 시연 도구</h2><button class="x" data-close aria-label="닫기">×</button></div>
     <div class="dlg-b">
       <div class="setrow"><div><b>지금 지역</b><small>${S.region ? `${esc(Sh.regionOf(S.region).sidoName)} ${esc(regionName())} · ${esc(me())}` : "아직 고르지 않았어요"}</small></div><a class="btn ghost sm" href="#/region" data-close>바꾸기</a></div>
+      <div class="setrow"><div><b>화면 모드</b><small>누를 때마다 시스템 → 밝게 → 어둡게. 이 브라우저에만 저장돼요.</small></div>${Sh.themeBtn()}</div>
       <div class="setrow"><div><b>후보 응답 실패 시연</b><small>켜면 대화 화면에서 후보 API가 실패한 경우를 보여줘요.</small></div><label class="switch"><input type="checkbox" id="sFail" ${S.settings.failDemo?"checked":""}><span class="sr">후보 응답 실패 시연</span></label></div>
       <div class="setrow"><div><b>API</b><small>${API_BASE ? `실제 API: ${esc(API_BASE)}` : "가짜 API (주소 뒤에 ?api=백엔드주소 를 붙이면 실제 API로 바뀌어요)"}</small></div></div>
       <div class="setrow"><div><b>저장 위치</b><small>${Sh.REMOTE ? "공용 DB — 관리자 페이지와 같은 데이터를 봐요" : "이 주소(도메인)에만 저장돼요 — 관리자 페이지와 공유하려면 공용 DB 연결이 필요해요"}</small></div></div>
