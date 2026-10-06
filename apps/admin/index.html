@@ -23,6 +23,9 @@
 /* 개요 */
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(200px,15vw,260px),1fr));gap:clamp(10px,1vw,16px);margin-bottom:18px}
 .kpi{padding:16px 18px;display:grid;gap:8px;align-content:start}
+a.kpi.link{color:inherit;text-decoration:none;transition:border-color .15s,box-shadow .15s}
+a.kpi.link:hover{border-color:var(--accent-line);box-shadow:var(--sh-2)}
+a.kpi.link .kh::after{content:"보기 ›";margin-left:auto;color:var(--accent-fg);font-size:.75rem}
 .kh{display:flex;align-items:center;gap:9px;color:var(--sub);font-weight:700;font-size:.8rem}
 .ki{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent-fg);flex:none}
 .ki svg{width:17px;height:17px}
@@ -188,7 +191,7 @@
       <a href="#/" data-r="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 13h6V4H4zM14 20h6v-9h-6zM4 20h6v-4H4zM14 4v4h6V4z"/></svg><span>개요</span></a>
       <a href="#/regions" data-r="regions"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span>지역 · 담당자</span></a>
       <a href="#/templates" data-r="templates"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="12" rx="2"/><rect x="14" y="3" width="7" height="12" rx="2"/><path d="M3 20h18"/></svg><span>템플릿</span></a>
-      <a href="#/data" data-r="data"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg><span>콘텐츠 · 기록</span><span class="count" data-cnt hidden>0</span></a>
+      <a href="#/data" data-r="data"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg><span>콘텐츠 · 기록</span></a>
       <a href="#/storage" data-r="storage"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg><span>저장 · 백업</span></a>
     </nav>
     </div></div>
@@ -282,7 +285,6 @@ window.addEventListener("storage", () => { DB = Sh.loadDB(); route(); });
 /* =========================================================
    관리자 로그인 (시연용 — 관리자 계정은 가입 신청 없이 발급, shared.js의 Sh.auth)
    ========================================================= */
-const regionPhotos = n => Sh.REGIONS.map(x => Sh.photoUrl(Sh.regionSettings(x.id), 330)).filter(Boolean).slice(0, n);
 function logout(){ Sh.auth.signOut(); if ($("#dlg").open) $("#dlg").close(); toast("로그아웃했어요"); if (location.hash === "#/" || location.hash === "") route(); else location.hash = "#/"; }
 function viewLogin(){
   $("#view").innerHTML = `<div class="auth">
@@ -330,7 +332,7 @@ function viewHome(){
   const recent = DB.logs.slice().sort((a,b) => a.at < b.at ? 1 : -1).slice(0, 30);
   const what = l => l.kind === "request" ? "1차 확인 요청" : l.kind === "system" ? l.note : `${l.gate}차 ${l.decision === "pass" ? "통과" : "반려"}`;
   const waitAll = wait(1) + wait(2) + wait(3), on = Sh.enabledTemplates().length;
-  $("#view").innerHTML = `<section class="hero has-mosaic" aria-label="광역 운영 현황"><span class="mosaic" aria-hidden="true">${regionPhotos(6).map(u => `<img src="${esc(u)}" alt="" referrerpolicy="no-referrer">`).join("")}</span>
+  $("#view").innerHTML = `<section class="hero has-mosaic" aria-label="광역 운영 현황"><span class="slides" aria-hidden="true"></span><span class="slide-cap"></span>
     <div><small>광역 운영 · ${Sh.SIDO_LABEL}</small><h2>관광 숏폼 광역 관리</h2><p>지역 ${active}곳에서 11월 1일까지 40편 게시를 목표로 해요. 지금 ${pub.length}편 게시, ${waitAll}건이 확인을 기다려요.</p></div>
     <nav class="quick" aria-label="자주 찾는 메뉴">
       <a href="#/data"><span>${ICON.wait}</span>확인 대기<small>${waitAll}건</small></a>
@@ -340,7 +342,7 @@ function viewHome(){
   ${phead("관리자 · 개요", "전체 현황", "모든 지역의 콘텐츠와 확인 상황을 한눈에 봐요. 수치는 이 브라우저에 저장된 시연 데이터 기준이에요.")}
   <div class="kpis">
     <div class="card kpi"><span class="kh"><span class="ki ok">${ICON.pub}</span>게시 완료 · 11/1까지 40편</span><b>${pub.length}<span> / 40</span></b><div class="bar" role="img" aria-label="40편 중 ${pub.length}편"><i style="width:${Math.min(100, pub.length/40*100)}%"></i></div></div>
-    <div class="card kpi"><span class="kh"><span class="ki warn">${ICON.wait}</span>확인 대기</span><b>${wait(1)+wait(2)+wait(3)}<span> 건</span></b><span class="note">1차 ${wait(1)} · 2차 ${wait(2)} · 3차 ${wait(3)} · 제작 중 ${P.filter(p=>p.status==="making").length}</span></div>
+    <a class="card kpi link" href="#/data" title="콘텐츠 · 기록에서 확인 대기 보기"><span class="kh"><span class="ki warn">${ICON.wait}</span>확인 대기</span><b>${wait(1)+wait(2)+wait(3)}<span> 건</span></b><span class="note">1차 ${wait(1)} · 2차 ${wait(2)} · 3차 ${wait(3)} · 제작 중 ${P.filter(p=>p.status==="making").length}</span></a>
     <div class="card kpi"><span class="kh"><span class="ki red">${ICON.rej}</span>반려</span><b>${P.filter(p=>p.status==="rejected").length}<span> 건</span></b><span class="note">사유는 <a href="#/data">콘텐츠 · 기록</a>에서</span></div>
     <div class="card kpi"><span class="kh"><span class="ki">${ICON.map}</span>사용 중인 지역</span><b>${active}<span> / ${Sh.REGIONS.length}</span></b><span class="note">관광자료가 있는 지역 ${withData}곳 (시연)</span></div>
   </div>
@@ -357,6 +359,7 @@ function viewHome(){
     <div class="tbl-wrap"><table class="tbl"><thead><tr><th>지역</th><th>담당자</th><th class="num">1차</th><th class="num">2차</th><th class="num">3차</th><th class="num">제작 중</th><th class="num">게시</th><th class="num">반려</th></tr></thead>
     <tbody>${regions.map(id => { const L = P.filter(p => p.region === id), n = s => L.filter(p => p.status === s).length; return `<tr><td>${regionCell(id)}</td><td>${esc(Sh.regionSettings(id).manager)}</td><td class="num">${pill(n("gate1_wait"),"warn")}</td><td class="num">${pill(n("gate2_wait"),"warn")}</td><td class="num">${pill(n("gate3_wait"),"warn")}</td><td class="num">${pill(n("making"))}</td><td class="num">${pill(n("published"),"ok")}</td><td class="num">${pill(n("rejected"),"red")}</td></tr>`; }).join("")}</tbody></table></div>
   </section>`;
+  Sh.slideshow($(".hero .slides"), $(".hero .slide-cap"), 4000);
 }
 
 /* =========================================================
