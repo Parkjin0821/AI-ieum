@@ -383,7 +383,7 @@ function viewLogin(){
       <button class="btn wide" type="submit">로그인</button>
       <div class="auth-links"><button type="button" id="lfind">비밀번호 찾기</button><i></i><button type="button" id="lask">계정 발급 문의</button></div>
       <div class="auth-demo"><button class="btn ghost wide" type="button" id="ldemo">시연 관리자로 들어가기</button>
-      <p class="demo-note">${Sh.auth.TEST_LOGIN ? "테스트판: 아무 아이디·비밀번호로 들어갈 수 있어요." : "시연 계정: <code>admin</code> / <code>aiieum-demo</code>"} 관리자 계정은 회원가입을 받지 않아요.</p></div>
+      <p class="demo-note">${Sh.auth.TEST_LOGIN ? "아무 아이디·비밀번호로 들어갈 수 있어요." : "시연 계정: <code>admin</code> / <code>aiieum-demo</code>"} 관리자 계정은 회원가입을 받지 않아요.</p></div>
     </form></div>`;
   Sh.slideshow($(".auth-side .slides"), $(".auth-side .slide-cap"), 4000);
   $("#le").focus({preventScroll:true});

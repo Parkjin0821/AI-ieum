@@ -500,7 +500,7 @@ function viewLogin(){
       <button class="btn wide" type="submit">로그인</button>
       <div class="auth-links"><a href="#/signup">회원가입</a><i></i><button type="button" id="lfind">비밀번호 찾기</button></div>
       <div class="auth-demo"><button class="btn ghost wide" type="button" id="ldemo">계정 없이 시연으로 둘러보기</button>
-      <p class="demo-note">${Sh.auth.TEST_LOGIN ? "테스트판: 아무 아이디·비밀번호로 들어갈 수 있어요. 회원가입한 아이디면 그 계정으로 들어가요." : "시연판이에요. 계정은 이 브라우저에만 저장되고, 회원가입은 바로 승인돼요."}</p></div>
+      <p class="demo-note">${Sh.auth.TEST_LOGIN ? "아무 아이디·비밀번호로 들어갈 수 있어요. 회원가입한 아이디면 그 계정으로 들어가요." : "시연판이에요. 계정은 이 브라우저에만 저장되고, 회원가입은 바로 승인돼요."}</p></div>
     </form></div>`;
   peek();
   Sh.slideshow($(".auth-side .slides"), $(".auth-side .slide-cap"), 4000);

@@ -333,7 +333,7 @@ main{padding:clamp(16px,1.8vw,28px) var(--gutter) 40px;max-width:var(--max-w);ma
 .auth-demo .demo-note{background:none;padding:0;color:var(--faint)}
 .auth-demo .btn.wide{width:auto;justify-self:center;min-height:0;padding:2px 4px;border:0;background:none;box-shadow:none;font-size:.82rem;font-weight:600;color:var(--sub)} /* 시연 입장은 부수적이라 상자 없이 글자만 */
 .auth-demo .btn.wide:hover{background:none;color:var(--accent-fg);text-decoration:underline}
-.auth-demo .demo-note{font-size:.7rem} /* 테스트판 안내는 시연 입장보다 더 작게 */
+.auth-demo .demo-note{font-size:.7rem;text-align:center;text-wrap:balance} /* 테스트판 안내는 시연 입장보다 더 작게, 줄을 고르게 나눠 가운데 */
 .btn.wide{width:100%;min-height:44px;font-size:.92rem}
 .auth-links{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:2px;font-size:.8rem;line-height:1.4}
 .auth-links a,.auth-links button{color:var(--sub);text-decoration:none;font:inherit;font-weight:600;border:0;background:none;padding:4px 8px}
