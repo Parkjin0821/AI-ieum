@@ -374,7 +374,7 @@ const $$ = s => [...document.querySelectorAll(s)];
 const tplOf = id => Sh.templates().find(t => t.id === id);
 const total = R.totalSeconds;
 const screen = (t, i, o) => Sh.screen(t, i, Object.assign({safe:S.t.safe}, o));
-function toast(m){ const t = $("#toast"); t.textContent = m; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 2400); }
+function toast(m){ const t = $("#toast"), [a, ...b] = String(m).split(" — "); t.innerHTML = `<span>${esc(a)}${b.length ? ` <small>${esc(b.join(" — "))}</small>` : ""}</span>`; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 2400); }
 
 /* 지역 색 입히기 */
 function applyTheme(){

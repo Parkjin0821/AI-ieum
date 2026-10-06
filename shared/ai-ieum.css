@@ -114,8 +114,11 @@ input.inp,select.inp{height:44px;padding-top:0;padding-bottom:0} /* 한 줄 입�
 textarea.inp{min-height:96px;resize:vertical}
 .lbl2{font-size:.8125rem;font-weight:700;color:var(--text);display:block;margin:0 0 6px}
 .empty{color:var(--sub);padding:28px 12px;text-align:center;font-size:.875rem}
-.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(8px);background:#161D29;color:#fff;padding:.7rem 1.1rem;border-radius:12px;opacity:0;transition:.2s;pointer-events:none;z-index:50;font-weight:600;max-width:calc(100% - 32px);box-shadow:var(--sh-2)}
-.toast.show{opacity:1;transform:translateX(-50%)}
+/* 알림: 밝은 카드 + 왼쪽 지역색 점, '앞 — 뒤' 문구는 뒤를 옅게 */
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,8px);display:flex;align-items:center;gap:10px;background:var(--surface);color:var(--text);border:1px solid var(--line);padding:10px 16px 10px 14px;border-radius:14px;width:max-content;opacity:0;transition:opacity .2s ease,transform .2s ease;pointer-events:none;z-index:50;font-size:.84rem;font-weight:700;line-height:1.4;max-width:min(calc(100vw - 32px),520px);box-shadow:0 2px 4px rgba(16,24,40,.06),0 12px 32px rgba(16,24,40,.14)}
+.toast::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.toast small{font-size:.8rem;font-weight:500;color:var(--sub)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
 
 /* ---------- 페이지 머리 ---------- */
 .phead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:clamp(14px,1.6vw,24px)}
