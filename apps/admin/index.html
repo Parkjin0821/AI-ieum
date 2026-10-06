@@ -229,6 +229,7 @@ function renderShell(){
     ? `<b>${esc(sess.name)}</b><small>${sess.demo ? "시연 계정" : esc(sess.email)}</small><i></i>${userLink}<i></i>${Sh.themeBtn("gu")}<i></i><button type="button" data-logout>로그아웃</button>`
     : `${userLink}<i></i>${Sh.themeBtn("gu")}`;
   $$("[data-logout]").forEach(b => b.onclick = logout);
+  $(".tabs").hidden = !admin;
   const active = Sh.REGIONS.filter(r => Sh.regionSettings(r.id).active).length;
   $("#acard").innerHTML = `<span class="emb"></span><span><small>광역 운영 · 광주·전남·전북</small><b>지역 ${active}곳</b></span><span class="chg ${Sh.REMOTE ? "ok" : "off"}">${Sh.REMOTE ? "공용 DB 연결됨" : "이 주소에만 저장 중"}</span>`;
   const n = DB.plans.filter(p => /gate\d_wait/.test(p.status)).length;
@@ -365,7 +366,7 @@ function viewRegions(){
     <input class="inp" id="rq" type="search" placeholder="지역·담당자 찾기" aria-label="지역 찾기" value="${esc(f.q)}">
   </div>
   <div class="tbl-wrap"><table class="tbl"><thead><tr><th>사진</th><th>색 (진한 · 밝은)</th><th>지역</th><th>분위기 문구</th><th>슬로건</th><th>담당자</th><th>교차 확인</th><th>사용</th><th class="num">관광자료</th><th></th></tr></thead><tbody id="rbody"></tbody></table></div>
-  <p class="note" style="margin-top:10px">교차 확인을 켜면 요청한 사람은 2차를 통과시킬 수 없어요. 담당자가 한 명인 지역은 끄고 쓰세요 (기본 꺼짐). · 색은 그 지역 하면 떠오르는 느낌이며 공식 상징색이 아니에요.</p>`;
+  <p class="note" style="margin-top:10px">교차 확인을 켜면 요청한 사람은 2차를 통과시킬 수 없어요. 담당자가 한 명인 지역은 끄고 쓰세요 (기본 꺼짐). · 기본 색은 각 지자체 누리집의 대표색(공식 CI 아님), 슬로건은 누리집·언론에서 확인한 것 — 출처는 docs/region-brand.md.</p>`;
   const body = () => {
     const list = Sh.REGIONS.filter(r => (f.sido === "all" || r.sido === f.sido) && (!f.activeOnly || Sh.regionSettings(r.id).active) && (!f.q || (r.name + r.sidoName + Sh.regionSettings(r.id).manager).includes(f.q)));
     $("#rbody").innerHTML = list.map(r => { const s = Sh.regionSettings(r.id), id = esc(r.id), ph = Sh.photoUrl(s, 330); return `<tr data-id="${id}">

@@ -395,6 +395,7 @@ function renderShell(){
   $$("[data-cnt]").forEach(c => { const n = S.region ? waiting() : 0; c.textContent = n; c.hidden = !n; });
   $$("[data-open-settings]").forEach(b => b.onclick = openSettings);
   $$("[data-logout]").forEach(b => b.onclick = logout);
+  $(".tabs").hidden = !sess;
 }
 function stepper(cur){
   const steps = [["region","지역","#/region"],["templates","형식","#/"],["studio","주제","#/studio"],["review","확인","#/review"]];
@@ -638,8 +639,8 @@ function viewTemplates(){
   const f = S.t;
   const match = t => (!f.cat || t.categories.includes(f.cat)) && (!f.age || t.ages.includes(f.age));
   const list = TEMPLATES.filter(match);
-  $("#view").innerHTML = `${hero()}${stepper("templates")}
-  ${phead("STEP 2 · 형식", "어떤 형식으로 만들까요", `해외 관광청 숏폼의 구조를 분석해 만든 형식 ${TEMPLATES.length}개예요. 고르면 대화창에서 ${esc(regionName())}의 주제를 정합니다.`)}
+  $("#view").innerHTML = `${hero()}
+  ${phead("STEP 2 · 형식", "어떤 형식으로 만들까요", "", stepper("templates"))}
   <section class="facets" aria-label="형식 걸러보기">
     ${[["분야","cat",CATS,c => TEMPLATES.filter(t => t.categories.includes(c) && (!f.age || t.ages.includes(f.age))).length],
        ["연령","age",AGES,a => TEMPLATES.filter(t => t.ages.includes(a) && (!f.cat || t.categories.includes(f.cat))).length]].map(([label,k,opts,count]) => `
