@@ -375,6 +375,8 @@ main{padding:clamp(16px,1.8vw,28px) var(--gutter) 40px;max-width:var(--max-w);ma
   .auth-side{min-height:0;padding:16px 18px}
   .auth-side h1{font-size:1.4rem;margin:2px 0 0}
   .auth-side p,.auth-side ul{display:none}
+  /* 낮은 사진 띠에선 출처를 제목 위 한 줄로 — 오른쪽 위에 띄우면 제목과 겹침 */
+  .auth-side .slide-cap{position:static;align-self:flex-end;max-width:100%;margin:0 0 10px}
   .row2{grid-template-columns:1fr}
   }
 
