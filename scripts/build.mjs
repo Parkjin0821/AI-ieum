@@ -2,7 +2,7 @@
 // 각 폴더에는 그 페이지에 필요한 파일만 들어간다 (발표 자료 pptx·pdf 같은 건 절대 안 들어감).
 //
 //   SUPABASE_URL=https://xxxx.supabase.co SUPABASE_ANON_KEY=eyJ... \
-//   USER_URL=https://ai-ieum.vercel.app ADMIN_URL=https://ai-ieum-admin.vercel.app \
+//   USER_URL=https://ai-ieum.vercel.app ADMIN_URL=https://<관리자 프로젝트>.vercel.app \
 //   node scripts/build.mjs
 //
 // 환경변수가 없으면 공용 DB 없이(각 도메인에만 저장) 빌드된다.
@@ -26,7 +26,9 @@ for (const app of ["user", "admin"]) {
   fs.mkdirSync(path.join(out, "shared"), { recursive: true });
   fs.copyFileSync(path.join(root, "apps", app, "index.html"), path.join(out, "index.html"));
   for (const f of SHARED) fs.copyFileSync(path.join(root, "shared", f), path.join(out, "shared", f));
-  fs.writeFileSync(path.join(out, "config.js"), `window.AIIEUM_CONFIG = ${JSON.stringify(config, null, 2)};\n`);
+  // 관리자 주소는 관리자 사이트에만 — 공개된 사용자 사이트의 config.js로 새지 않게
+  const cfg = app === "admin" ? config : { ...config, adminAppUrl: "" };
+  fs.writeFileSync(path.join(out, "config.js"), `window.AIIEUM_CONFIG = ${JSON.stringify(cfg, null, 2)};\n`);
   const files = fs.readdirSync(out, { recursive: true }).filter(f => fs.statSync(path.join(out, f)).isFile());
   console.log(`✔ dist/${app}  (${files.length}개 파일: ${files.join(", ")})`);
 }

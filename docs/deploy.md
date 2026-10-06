@@ -5,7 +5,7 @@
 | 사이트 | 주소 | Vercel 프로젝트 |
 |---|---|---|
 | 사용자 | https://ai-ieum.vercel.app | `ai-ieum` |
-| 관리자 | https://ai-ieum-admin.vercel.app | `ai-ieum-admin` |
+| 관리자 | 팀원에게만 따로 공유 (아직 로그인 보호 없음) | `scripts/deploy-vercel.mjs` 참고 |
 
 - Vercel 팀: `parkjin8326-dots-projects` (계정 소유자만 배포 가능)
 - 공용 DB는 아직 **미연결**입니다. 그래서 두 사이트는 각자 그 브라우저에만 저장합니다.
@@ -20,7 +20,7 @@ node scripts/deploy-vercel.mjs
 | 무엇 | 어디에 | 예시 주소 |
 |---|---|---|
 | 사용자 사이트 (`dist/user`) | Vercel 프로젝트 ① | `https://ai-ieum.vercel.app` |
-| 관리자 사이트 (`dist/admin`) | Vercel 프로젝트 ② | `https://ai-ieum-admin.vercel.app` |
+| 관리자 사이트 (`dist/admin`) | Vercel 프로젝트 ② | `https://<관리자 프로젝트>.vercel.app` |
 | 공용 DB | Supabase 프로젝트 1개 | `https://xxxx.supabase.co` |
 
 두 사이트는 도메인이 달라서 브라우저 저장소를 공유하지 못합니다. **Supabase가 없으면 관리자에서 바꾼 템플릿·지역 색이 사용자 사이트에 반영되지 않습니다.**
@@ -36,10 +36,11 @@ Vercel 대신 Netlify 사이트 2개를 써도 됩니다. 둘 다 그냥 정적 
 ## 2. 빌드
 
 ```bash
-SUPABASE_URL=https://xxxx.supabase.co SUPABASE_ANON_KEY=eyJ... USER_URL=https://ai-ieum.vercel.app ADMIN_URL=https://ai-ieum-admin.vercel.app node scripts/build.mjs
+SUPABASE_URL=https://xxxx.supabase.co SUPABASE_ANON_KEY=eyJ... USER_URL=https://ai-ieum.vercel.app ADMIN_URL=https://<관리자 프로젝트>.vercel.app node scripts/build.mjs
 ```
 
 `dist/user`와 `dist/admin`이 생깁니다.
+- 관리자 주소는 관리자 사이트의 `config.js`에만 들어가고, 공개되는 사용자 사이트에는 넣지 않습니다.
 - 각 폴더에는 그 사이트에 필요한 파일만 들어갑니다. 발표 자료 pptx·pdf는 들어가지 않습니다.
 - 첫 접속 때 DB가 비어 있으면 시연 데이터가 자동으로 들어갑니다.
 
@@ -49,7 +50,7 @@ SUPABASE_URL=https://xxxx.supabase.co SUPABASE_ANON_KEY=eyJ... USER_URL=https://
 npx vercel deploy dist/user --prod --name ai-ieum
 ```
 ```bash
-npx vercel deploy dist/admin --prod --name ai-ieum-admin
+npx vercel deploy dist/admin --prod --name <관리자 프로젝트>
 ```
 
 처음이면 `npx vercel login`이 먼저 필요합니다. 이건 본인 계정으로 직접 하세요.
