@@ -23,12 +23,14 @@
 /* ---------- 지자체 누리집식 개요 ---------- */
 /* 위치 표시 + 제목 아래 선 */
 .phead.gov{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;border-bottom:2px solid var(--text);padding-bottom:12px;margin-bottom:18px}
-.phead.gov .crumb{grid-column:1/-1;justify-self:end;display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--sub);margin-bottom:6px}
-.phead.gov .crumb a{display:inline-flex;align-items:center;gap:4px;color:var(--sub);text-decoration:none}
-.phead.gov .crumb a:hover{color:var(--accent-fg);text-decoration:underline}
-.phead.gov .crumb svg{width:15px;height:15px}
-.phead.gov .crumb i{font-style:normal;color:var(--faint)}
-.phead.gov .crumb b{color:var(--text)}
+.crumb{display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--sub);margin-bottom:6px}
+.phead.gov .crumb{grid-column:1/-1;justify-self:end}
+.crumb.top{justify-content:flex-end;margin-bottom:10px} /* 개요: 메인 비주얼보다 위, 맨 위에 */
+.crumb a{display:inline-flex;align-items:center;gap:4px;color:var(--sub);text-decoration:none}
+.crumb a:hover{color:var(--accent-fg);text-decoration:underline}
+.crumb svg{width:15px;height:15px}
+.crumb i{font-style:normal;color:var(--faint)}
+.crumb b{color:var(--text)}
 .phead.gov h1{margin:0}
 /* 자주 찾는 메뉴: 원형 아이콘 6칸 */
 .qmenu{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);margin:0 0 26px;overflow:hidden}
@@ -73,7 +75,7 @@
 .blist time{color:var(--faint);font-size:.8rem;font-variant-numeric:tabular-nums}
 .bnote{margin:10px 0 0}
 @media (max-width:1100px){ .qmenu{grid-template-columns:repeat(3,minmax(0,1fr))} .qmenu a:nth-child(4){border-left:0} .qmenu a:nth-child(n+4){border-top:1px solid var(--line-2)} .stats{grid-template-columns:repeat(2,minmax(0,1fr))} }
-@media (max-width:860px){ .blist .bm{display:none} .phead.gov .crumb{justify-self:start} }
+@media (max-width:860px){ .blist .bm{display:none} .phead.gov .crumb{justify-self:start} .crumb.top{justify-content:flex-start} }
 /* 개요 */
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(200px,15vw,260px),1fr));gap:clamp(10px,1vw,16px);margin-bottom:18px}
 .kpi{padding:16px 18px;display:grid;gap:8px;align-content:start}
@@ -333,11 +335,14 @@ function download(name, text, type){
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
 const csv = rows => "﻿" + rows.map(r => r.map(v => `"${String(v == null ? "" : v).replace(/"/g, '""')}"`).join(",")).join("\r\n");
-const phead = (eyebrow, title, lead, right) => {
+const crumb = (eyebrow, cls) => {
   const trail = eyebrow.split(" · "); // "관리자 · 개요" → 홈 › 관리자 › 개요
-  return `<div class="phead gov"><nav class="crumb" aria-label="현재 위치"><a href="#/">${icon('<path d="M4 11l8-7 8 7"/><path d="M6 9.5V20h12V9.5"/>')}홈</a>${trail.map((x, i) => `<i aria-hidden="true">›</i>${i === trail.length - 1 ? `<b aria-current="page">${x}</b>` : `<span>${x}</span>`}`).join("")}</nav>
-    <div><h1>${title}</h1>${lead?`<p class="lead">${lead}</p>`:""}</div>${right||""}</div>`;
+  return `<nav class="crumb${cls ? " " + cls : ""}" aria-label="현재 위치"><a href="#/">${icon('<path d="M4 11l8-7 8 7"/><path d="M6 9.5V20h12V9.5"/>')}홈</a>${trail.map((x, i) => `<i aria-hidden="true">›</i>${i === trail.length - 1 ? `<b aria-current="page">${x}</b>` : `<span>${x}</span>`}`).join("")}</nav>`;
 };
+/* eyebrow가 비면 위치 표시 없이 제목만 (개요는 위치 표시를 맨 위에 따로 둠) */
+const phead = (eyebrow, title, lead, right) =>
+  `<div class="phead gov">${eyebrow ? crumb(eyebrow) : ""}
+    <div><h1>${title}</h1>${lead?`<p class="lead">${lead}</p>`:""}</div>${right||""}</div>`;
 
 function route(){
   const r = location.hash.replace(/^#\/?/, "").split("/")[0] || "home";
@@ -349,7 +354,7 @@ function route(){
   /* 공용 DB가 없으면 사용자 페이지(다른 도메인)와 데이터를 공유하지 못한다는 걸 늘 보여준다 */
   renderShell();
   // 노란 안내는 개요에만 — 다른 화면은 위 안내 띠의 "● 이 주소에만 저장 중"(누르면 저장 · 백업)으로 충분
-  if (!Sh.REMOTE && name === "home") $("#view").insertAdjacentHTML("afterbegin", `<div class="miss">공용 DB 미연결 — 지금 바꾸는 내용은 이 관리자 주소에만 저장돼요. 사용자 페이지(다른 도메인)에 반영하려면 config.js에 Supabase를 연결하세요. <a href="#/storage">자세히</a></div>`);
+  if (!Sh.REMOTE && name === "home") $("#view .crumb.top").insertAdjacentHTML("afterend", `<div class="miss">공용 DB 미연결 — 지금 바꾸는 내용은 이 관리자 주소에만 저장돼요. 사용자 페이지(다른 도메인)에 반영하려면 config.js에 Supabase를 연결하세요. <a href="#/storage">자세히</a></div>`);
 }
 window.addEventListener("hashchange", () => { route(); window.scrollTo(0,0); });
 window.addEventListener("storage", () => { DB = Sh.loadDB(); route(); });
@@ -406,7 +411,7 @@ function viewHome(){
   const now = new Date(), asOf = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,"0")}.${String(now.getDate()).padStart(2,"0")} ${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
   const stat = (href, cls, ic, label, num, unit, sub, extra) => `<a class="card stat" href="${href}"><span class="si ${cls}">${ic}</span><span class="sl">${label}</span><b>${num}<small>${unit}</small></b>${extra || ""}<span class="note">${sub}</span></a>`;
   const qm = (href, ic, label, sub, ext) => `<a href="${href}"${ext ? ' target="_blank" rel="noopener"' : ""}><span>${ic}</span><b>${label}</b><small>${sub}</small></a>`;
-  $("#view").innerHTML = `<section class="hero has-slides" aria-label="광역 운영 소개"><span class="slides" aria-hidden="true"></span><span class="slide-cap"></span>
+  $("#view").innerHTML = `${crumb("관리자 · 개요", "top")}<section class="hero has-slides" aria-label="광역 운영 소개"><span class="slides" aria-hidden="true"></span><span class="slide-cap"></span>
     <div><small>광역 운영 · ${Sh.SIDO_LABEL}</small><h2>관광 숏폼 광역 관리</h2><p>지역 ${active}곳에서 11월 1일까지 40편 게시를 목표로 해요. 지금 ${pub.length}편 게시, ${waitAll}건이 확인을 기다려요.</p></div></section>
   <nav class="qmenu" aria-label="자주 찾는 메뉴">
     ${qm("#/data", ICON.wait, "확인 대기", `${waitAll}건`)}
@@ -416,7 +421,7 @@ function viewHome(){
     ${qm("#/storage", ICON.backup, "저장 · 백업", Sh.REMOTE ? "공용 DB" : "이 주소만")}
     ${qm(esc(Sh.CFG.userAppUrl || "#"), ICON.link, "사용자 사이트", "새 창", true)}
   </nav>
-  ${phead("관리자 · 개요", "전체 현황", "")}
+  ${phead("", "전체 현황", "")}
   <div class="sec-h"><h2>운영 현황</h2><span class="asof">${asOf} 기준 · 이 브라우저의 시연 데이터</span></div>
   <div class="stats">
     ${stat("#/data", "ok", ICON.pub, "게시 완료", pub.length, " / 40편", "11월 1일까지 목표 40편", `<span class="bar" role="img" aria-label="40편 중 ${pub.length}편"><i style="width:${Math.min(100, pub.length/40*100)}%"></i></span>`)}
