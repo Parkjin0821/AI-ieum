@@ -437,13 +437,17 @@
     setThemeMode(THEME_ORDER[(THEME_ORDER.indexOf(themeMode()) + 1) % THEME_ORDER.length]);
   });
 
-  /** 지역 사진 묶음 [{src, caption}] — 관리자가 넣은 사진 → 관광공사(TourAPI, shared/region-photos.js) → 기본 사진 순 */
+  /** 지역 사진 묶음 [{src, caption}] — 관리자가 넣은 사진 → 관광공사(TourAPI, shared/region-photos.js) → 기본 사진 순.
+      caption은 두 줄: 장소 
+ 사진 출처 (.slide-cap이 white-space:pre-line이라 잘리지 않고 줄바꿈) */
   function regionPhotoList(id) {
-    const r = regionOf(id), s = regionSettings(id), name = r ? `${r.sidoName} ${r.name}` : id;
+    const r = regionOf(id), s = regionSettings(id), name = r ? r.name : id;
     const custom = ((read(KEY.regions, {}) || {})[id] || {}).photo;
     const tour = (((root.AIIEUM_PHOTOS || {}).regions || {})[id] || [])
-      .map(p => ({ src: p.src, caption: `${name}${p.title ? " " + p.title : ""} · 사진 한국관광공사 · 공공누리 제1유형` }));
-    const own = s.photo ? [{ src: photoUrl(s, 960), caption: `${name} · 사진 ${photoCredit(s)}` }] : [];
+      .map(p => ({ src: p.src, caption: `${name}${p.title ? " " + p.title : ""}
+사진 한국관광공사 · 공공누리 제1유형` }));
+    const own = s.photo ? [{ src: photoUrl(s, 960), caption: `${name}
+사진 ${photoCredit(s)}` }] : [];
     return custom ? own.concat(tour) : tour.length ? tour : own;
   }
 

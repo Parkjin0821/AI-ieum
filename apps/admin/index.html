@@ -74,6 +74,14 @@
 .blist .bm{color:var(--sub);font-size:.8rem;white-space:nowrap}
 .blist time{color:var(--faint);font-size:.8rem;font-variant-numeric:tabular-nums}
 .bnote{margin:10px 0 0}
+/* 개요 글자·아이콘 한 단계 작게 (로그인 화면과 맞춤) */
+.hero h2{font-size:clamp(1.35rem,1.6vw,1.7rem)} .hero p{font-size:.9rem} .hero small{font-size:.78rem}
+.qmenu a{padding:14px 8px 12px} .qmenu a>span{width:46px;height:46px} .qmenu svg{width:23px;height:23px} .qmenu b{font-size:.84rem} .qmenu small{font-size:.7rem}
+.phead.gov h1{font-size:clamp(1.2rem,1.3vw,1.45rem)}
+.sec-h h2{font-size:1rem} .sec-h.in h2{font-size:.95rem} .sec-h h2 svg{width:18px;height:18px} .sec-h .asof{font-size:.74rem} .sec-h .more{font-size:.78rem}
+.stat{padding:16px 18px} .stat .si{width:44px;height:44px;border-radius:12px} .stat .si svg{width:23px;height:23px} .stat .sl{font-size:.8rem}
+.stat>b{font-size:clamp(1.5rem,1.7vw,1.9rem)} .stat>b small{font-size:.8rem} .stat .note{font-size:.78rem}
+.board .btabs button{font-size:.8rem;padding:7px 12px} .blist li a{font-size:.84rem;padding:9px 4px} .blist time,.blist .bm{font-size:.74rem}
 @media (max-width:1100px){ .qmenu{grid-template-columns:repeat(3,minmax(0,1fr))} .qmenu a:nth-child(4){border-left:0} .qmenu a:nth-child(n+4){border-top:1px solid var(--line-2)} .stats{grid-template-columns:repeat(2,minmax(0,1fr))} }
 @media (max-width:860px){ .blist .bm{display:none} .phead.gov .crumb{justify-self:start} .crumb.top{justify-content:flex-start} }
 /* 개요 */
@@ -145,7 +153,7 @@ a.kpi.link .kh::after{content:"보기 ›";margin-left:auto;color:var(--accent-f
 .sumgrid small{color:var(--sub);font-weight:700;font-size:.78rem}
 .sumgrid .ok{background:var(--ok-bg);color:var(--ok)}.sumgrid .red{background:var(--seal-bg);color:var(--seal)}
 .sumgrid .ok small,.sumgrid .red small{color:inherit}
-.miss{background:var(--warn-bg);color:var(--warn);border-radius:var(--r);padding:11px 14px;font-size:.84rem;font-weight:600;margin-bottom:16px}
+.miss{background:var(--warn-bg);color:var(--warn);border-radius:var(--r);padding:9px 12px;font-size:.78rem;font-weight:600;margin-bottom:16px}
 .miss a{color:inherit}
 .miss.red{background:var(--seal-bg);color:var(--seal)}
 
@@ -323,10 +331,11 @@ $$("[data-home]").forEach(a => a.addEventListener("click", e => {
   toast("처음 화면으로 돌아왔어요");
 }));
 function toast(m){ const t = $("#toast"); t.textContent = m; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 2200); }
-const regionTitle = id => { const r = Sh.regionOf(id); return r ? `${r.short} ${r.name}` : id; };
+// 화면 표기는 지금 광역 이름으로 ("전남광주통합특별시 보성군") — id의 옛 약칭("전남 보성군")은 저장 열쇠라 그대로
+const regionTitle = id => { const r = Sh.regionOf(id); return r ? `${r.sidoName} ${r.name}` : id; };
 function regionCell(id, sub){
-  const s = Sh.regionSettings(id), u = Sh.photoUrl(s, 330);
-  return `<span class="rth" style="--c:${s.color}">${u ? `<img src="${esc(u)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : `<span class="ph"></span>`}<span><b>${esc(regionTitle(id))}</b>${sub ? `<small>${esc(sub)}</small>` : ""}</span></span>`;
+  const r = Sh.regionOf(id), s = Sh.regionSettings(id), u = Sh.photoUrl(s, 330);
+  return `<span class="rth" style="--c:${s.color}">${u ? `<img src="${esc(u)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : `<span class="ph"></span>`}<span><b>${esc(r ? r.name : id)}</b><small>${esc(sub || (r ? r.sidoName : ""))}</small></span></span>`;
 }
 function download(name, text, type){
   const a = document.createElement("a");
@@ -366,8 +375,7 @@ function logout(){ Sh.auth.signOut(); if ($("#dlg").open) $("#dlg").close(); toa
 function viewLogin(){
   $("#view").innerHTML = `<div class="auth">
     <section class="auth-side"><span class="slides" aria-hidden="true"></span><span class="slide-cap"></span>
-      <small>${Sh.SIDO_LABEL} 광역 운영</small><h1>AI-이음 관리자 로그인</h1><p>지역 41곳의 담당자·템플릿·확인 기록을 관리하는 곳이에요.</p>
-      <ul><li>지역 사용 여부 · 담당자 · 지역 색 관리</li><li>템플릿 규칙 검사와 사용 설정</li><li>지울 수 없는 결정 기록 조회 · 내려받기</li></ul></section>
+      <small>${Sh.SIDO_LABEL} 광역 운영</small><h1>AI-이음 관리자 로그인</h1></section>
     <form class="card auth-card" id="lf" novalidate aria-label="관리자 로그인">
       <div><label class="lbl2" for="le">관리자 아이디</label><input class="inp" id="le" type="text" autocomplete="username" autocapitalize="off" spellcheck="false"></div>
       <div><label class="lbl2" for="lp">비밀번호</label><div class="pw"><input class="inp" id="lp" type="password" autocomplete="current-password"><button type="button" id="lpeek" aria-pressed="false">보기</button></div></div>
