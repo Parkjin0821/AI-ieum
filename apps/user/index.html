@@ -393,7 +393,7 @@ function renderShell(){
   $("#acct").innerHTML = !sess
     ? `<a href="#/login">로그인</a><i></i><a href="#/signup">가입 신청</a><i></i>${Sh.themeBtn("gu")}`
     : `<b>${esc(r ? me() : sess.name)}</b><small>${sess.demo ? "시연 계정" : esc(sess.dept || "")}${r ? " · 1·2·3차 확인 담당" : ""}</small><i></i><button type="button" data-open-settings>설정 · 시연 도구</button><i></i>${Sh.themeBtn("gu")}<i></i><button type="button" data-logout>로그아웃</button>`;
-  if (!sess) $("#rcard").innerHTML = `<span class="emb"></span><span><small>${Sh.SIDO_LABEL}</small><b>담당자 로그인</b></span>`;
+  $("#rcard").hidden = !sess; // 로그인 전에는 로고와 같은 곳(로그인)으로 가므로 숨김
   $("#topbar").innerHTML = !sess ? `<a href="#/login"><span class="emb"></span><b>AI-이음</b><small>담당자 로그인</small></a>${Sh.themeBtn("gu")}` : `<a href="#/region"><span class="emb"${emb}></span><b>${r ? esc(r.name) : "지역 고르기"}</b><small>${r ? esc(s.mood || r.sidoName) : "AI-이음"}</small></a>${r ? `<button type="button" onclick="location.hash='#/region'">바꾸기</button>` : ""}<button type="button" data-open-settings aria-label="설정">⚙</button>`;
   $$("[data-cnt]").forEach(c => { const n = S.region ? waiting() : 0; c.textContent = n; c.hidden = !n; });
   $$("[data-open-settings]").forEach(b => b.onclick = openSettings);

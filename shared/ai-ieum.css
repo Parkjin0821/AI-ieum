@@ -228,9 +228,10 @@ main.center{flex:1;display:grid;align-content:center;padding-bottom:clamp(16px,1
 .gutil button:hover,.gutil a:hover{color:var(--text);background:var(--surface)}
 .gutil i{width:1px;height:12px;background:var(--line);margin:0 2px}
 .gbar .wrap{display:flex;align-items:stretch;gap:clamp(16px,2vw,40px);min-height:var(--head-h)}
-.brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:1.05rem;letter-spacing:-.01em;color:inherit;text-decoration:none;white-space:nowrap}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.2rem;letter-spacing:-.01em;color:inherit;text-decoration:none;white-space:nowrap}
 .brand i{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
-.brand small{font-size:.72rem;font-weight:700;color:var(--faint)}
+.brand small{font-size:1.05rem;font-weight:700;color:var(--sub);padding-left:10px;border-left:1.5px solid var(--line);line-height:1.1}
+.gorg[hidden]{display:none}
 .brand:hover{color:var(--accent-fg)}
 /* 기관명 자리: 지역 상징 원(사진) + 광역 · 시군구 이름 */
 .gorg{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);padding-left:clamp(16px,2vw,40px);border-left:1px solid var(--line);margin:14px 0}

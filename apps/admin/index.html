@@ -14,9 +14,10 @@
 /* 관리자 페이지 — 사용자 페이지와 같은 틀(shared/ai-ieum.css). 특정 지역 색 대신 기본 남색 하나만 쓰고,
    지역 사진·색은 관리 대상으로만 보여준다. */
 
-/* 헤더 기관명 옆 공용 DB 상태 (초록: 연결됨 · 노랑: 이 주소에만 저장) */
-.gorg .chg.ok::before,.gorg .chg.off::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:1px;background:var(--ok)}
-.gorg .chg.off::before{background:#E0A43A}
+/* 안내 띠의 공용 DB 상태 (초록: 연결됨 · 노랑: 이 주소에만 저장) */
+.dbs{font-weight:700;margin-right:6px}
+.dbs.ok::before,.dbs.off::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:1px;background:var(--ok)}
+.dbs.off::before{background:#E0A43A}
 
 
 /* 개요 */
@@ -183,7 +184,6 @@
       <div class="gutil" id="acct"></div></div></div>
     <div class="gbar"><div class="wrap">
       <a class="brand" href="#/" data-home title="처음 화면으로 (필터·검색 초기화)"><i></i>AI-이음<small>관리자</small></a>
-      <a class="gorg" href="#/regions" id="acard"></a>
       <nav class="rnav" aria-label="관리 화면">
       <a href="#/" data-r="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 13h6V4H4zM14 20h6v-9h-6zM4 20h6v-4H4zM14 4v4h6V4z"/></svg><span>개요</span></a>
       <a href="#/regions" data-r="regions"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span>지역 · 담당자</span></a>
@@ -225,13 +225,12 @@ $("#userBtn").onclick = () => { if (Sh.CFG.userAppUrl) window.open(Sh.CFG.userAp
 function renderShell(){
   const sess = Sh.auth.session(), admin = sess && sess.role === "admin";
   const userLink = `<a href="${esc(Sh.CFG.userAppUrl || "#")}" target="_blank" rel="noopener">사용자 사이트 열기 ↗</a>`;
-  $("#acct").innerHTML = admin
+  const db = `<span class="dbs ${Sh.REMOTE ? "ok" : "off"}">${Sh.REMOTE ? "공용 DB 연결됨" : "이 주소에만 저장 중"}</span><i></i>`;
+  $("#acct").innerHTML = db + (admin
     ? `<b>${esc(sess.name)}</b><small>${sess.demo ? "시연 계정" : esc(sess.email)}</small><i></i>${userLink}<i></i>${Sh.themeBtn("gu")}<i></i><button type="button" data-logout>로그아웃</button>`
-    : `${userLink}<i></i>${Sh.themeBtn("gu")}`;
+    : `${userLink}<i></i>${Sh.themeBtn("gu")}`);
   $$("[data-logout]").forEach(b => b.onclick = logout);
   $(".tabs").hidden = !admin;
-  const active = Sh.REGIONS.filter(r => Sh.regionSettings(r.id).active).length;
-  $("#acard").innerHTML = `<span class="emb"></span><span><small>광역 운영 · ${Sh.SIDO_LABEL}</small><b>지역 ${active}곳</b></span><span class="chg ${Sh.REMOTE ? "ok" : "off"}">${Sh.REMOTE ? "공용 DB 연결됨" : "이 주소에만 저장 중"}</span>`;
   const n = DB.plans.filter(p => /gate\d_wait/.test(p.status)).length;
   $$("[data-cnt]").forEach(c => { c.textContent = n; c.hidden = !n; });
 }
