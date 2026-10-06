@@ -327,7 +327,9 @@ main{padding:clamp(16px,1.8vw,28px) var(--gutter) 40px;max-width:var(--max-w);ma
 .auth-side ul{margin:0;padding:0;list-style:none;display:grid;gap:7px;font-weight:600;font-size:.84rem}
 .auth-side li::before{content:"✓";display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.22);margin-right:8px;font-size:.7rem}
 .auth-card{padding:clamp(20px,2vw,30px);display:grid;gap:12px;align-content:start}
-.auth-card h2{margin:0;font-size:1.25rem;letter-spacing:-.03em}
+.auth-card h2{margin:0;font-size:1.25rem;letter-spacing:-.03em;text-align:center}
+.auth-card .lbl2{font-size:.75rem;margin-bottom:5px}
+.auth-card .pw button{font-size:.72rem}
 .btn.wide{width:100%;min-height:44px;font-size:.92rem}
 .auth-links{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:2px;font-size:.8rem;line-height:1.4}
 .auth-links a,.auth-links button{color:var(--sub);text-decoration:none;font:inherit;font-weight:600;border:0;background:none;padding:4px 8px}
