@@ -294,9 +294,9 @@ function renderShell(){
   const sess = Sh.auth.session(), admin = sess && sess.role === "admin";
   const userLink = `<a href="${esc(Sh.CFG.userAppUrl || "#")}" target="_blank" rel="noopener">사용자 사이트 열기 ↗</a>`;
   const db = Sh.REMOTE ? `<span class="dbs ok">공용 DB 연결됨</span><i></i>` : `<a class="dbs off" href="#/storage" title="저장 · 백업 안내 보기">이 주소에만 저장 중</a><i></i>`;
-  $("#acct").innerHTML = db + (admin
-    ? `<b>${esc(sess.name)}</b><small>${sess.demo ? "시연 계정" : esc(sess.id || sess.email)}</small><i></i>${userLink}<i></i>${Sh.themeBtn("gu")}<i></i><button type="button" data-logout>로그아웃</button>`
-    : `${userLink}<i></i>${Sh.themeBtn("gu")}`);
+  $("#acct").innerHTML = (admin
+    ? db + `<b>${esc(sess.name)}</b><small>${sess.demo ? "시연 계정" : esc(sess.id || sess.email)}</small><i></i>${userLink}<i></i>${Sh.themeBtn("gu")}<i></i><button type="button" data-logout>${sess.demo ? "로그인" : "로그아웃"}</button>`
+    : Sh.themeBtn("gu")); // 로그인 화면엔 화면 모드만
   $$("[data-logout]").forEach(b => b.onclick = logout);
   $(".tabs").hidden = !admin;
   $(".gbar .rnav").hidden = !admin; // 메뉴는 로그인한 뒤에
@@ -371,7 +371,7 @@ window.addEventListener("storage", () => { DB = Sh.loadDB(); route(); });
 /* =========================================================
    관리자 로그인 (시연용 — 관리자 계정은 회원가입 없이 발급, shared.js의 Sh.auth)
    ========================================================= */
-function logout(){ Sh.auth.signOut(); if ($("#dlg").open) $("#dlg").close(); toast("로그아웃했어요"); if (location.hash === "#/" || location.hash === "") route(); else location.hash = "#/"; }
+function logout(){ const demo = (Sh.auth.session() || {}).demo; Sh.auth.signOut(); if ($("#dlg").open) $("#dlg").close(); if (!demo) toast("로그아웃했어요"); if (location.hash === "#/" || location.hash === "") route(); else location.hash = "#/"; }
 function viewLogin(){
   $("#view").innerHTML = `<div class="auth">
     <section class="auth-side"><span class="slides" aria-hidden="true"></span><span class="slide-cap"></span>
