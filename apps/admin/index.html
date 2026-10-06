@@ -69,6 +69,7 @@
 .box.flush{padding:0;overflow:hidden} .box.flush .tbl-wrap{border:0;border-radius:0}
 .colsec{display:flex;flex-direction:column;min-width:0} .colsec>.box{flex:1;display:flex;flex-direction:column}
 .colsec .sec-h h2 .pill{margin-left:2px}
+.cols .sec-h:not(:has(.more)){flex-direction:column;align-items:flex-start;gap:2px}
 .box .goal{flex:1;grid-template-rows:auto repeat(3,minmax(46px,1fr))}
 .box .goal .g{border-radius:8px;padding:8px 6px 7px;gap:5px} .box .goal .g b{font-size:.95rem} .box .goal .g.zero{border-width:1px}
 .box .btabs{margin-top:0} .box .bnote{margin:auto 0 0;padding-top:10px;font-size:.72rem;color:var(--faint)}
@@ -90,6 +91,10 @@
 .blist li a{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:10px 4px;border-bottom:1px solid var(--line-2);color:inherit;text-decoration:none;font-size:.9rem}
 .blist li a:hover .bt{color:var(--accent-fg);text-decoration:underline}
 .blist .bt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* 분류 표시: 같은 폭의 둥근 표 + 앞에 상태 점 — 제목 시작 위치가 줄마다 같아짐 */
+.blist .tag{width:4.9rem;justify-content:center;gap:5px;border-radius:999px;padding:3px 0;font-size:.7rem;font-weight:700;background:transparent;border:1px solid color-mix(in oklab,currentColor 30%,transparent)}
+.blist .tag::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+.blist .tag:not(.ok):not(.warn):not(.red){color:var(--faint)}
 .blist .bm{color:var(--sub);font-size:.8rem;white-space:nowrap}
 .blist time{color:var(--faint);font-size:.8rem;font-variant-numeric:tabular-nums}
 .bnote{margin:10px 0 0}
@@ -121,7 +126,7 @@ a.kpi.link .kh::after{content:"보기 ›";margin-left:auto;color:var(--accent-f
 .goal .g{align-content:center}
 .tbl th.num,.tbl td.num{text-align:center;width:9%}
 .goal .h{font-size:.75rem;font-weight:700;color:var(--sub);text-align:center;padding-bottom:2px}
-.goal .rh{font-size:.75rem;font-weight:700;color:var(--sub);align-self:center}
+.goal .rh{font-size:.75rem;font-weight:700;color:var(--sub);align-self:center;justify-self:center;text-align:center}
 .goal .g{background:var(--line-2);border-radius:12px;padding:10px 6px 9px;display:grid;justify-items:center;gap:6px}
 .goal .g b{font-size:1.05rem;font-variant-numeric:tabular-nums;line-height:1}
 .dots{display:flex;gap:4px}
@@ -147,8 +152,8 @@ a.kpi.link .kh::after{content:"보기 ›";margin-left:auto;color:var(--accent-f
 .tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
 .tools .sp{flex:1}
 /* 도구 줄의 선택·검색·스위치·분절형은 모두 같은 높이(44px), 입력칸은 같은 너비 */
-.tools .inp,.tools select.inp{height:40px;min-height:40px;width:clamp(160px,12vw,210px);max-width:none;flex:none;padding-top:0;padding-bottom:0;font-size:.84rem}
-.tools .seg,.tools .switch{min-height:40px} .tools .seg button{min-height:32px;font-size:.8rem}
+.tools .inp,.tools select.inp{height:36px;min-height:36px;width:clamp(150px,11vw,190px);max-width:none;flex:none;padding-top:0;padding-bottom:0;font-size:.82rem}
+.tools .seg,.tools .switch{min-height:36px} .tools .seg button{min-height:28px;font-size:.8rem}
 .tools .seg{align-items:center}
 /* 탭 버튼은 묶음 안에서 모두 같은 폭 (가장 긴 버튼에 맞춤) */
 .tools .seg{display:inline-grid;grid-auto-flow:column;grid-auto-columns:1fr}
@@ -177,7 +182,7 @@ a.kpi.link .kh::after{content:"보기 ›";margin-left:auto;color:var(--accent-f
 /* 템플릿 커버 */
 .cover{display:grid;grid-template-columns:76px repeat(4,1fr);gap:6px;max-width:560px;margin-bottom:16px}
 .cover .h{font-size:.75rem;color:var(--sub);font-weight:700;text-align:center}
-.cover .rh{font-size:.75rem;color:var(--sub);font-weight:700;align-self:center}
+.cover .rh{font-size:.75rem;color:var(--sub);font-weight:700;align-self:center;justify-self:center;text-align:center}
 .cover .c{background:var(--line-2);border-radius:8px;min-height:32px;font-size:.9rem;font-weight:800;display:grid;place-items:center;font-variant-numeric:tabular-nums}
 .cover .c.zero{color:var(--seal);background:var(--seal-bg)}
 
@@ -190,7 +195,8 @@ a.kpi.link .kh::after{content:"보기 ›";margin-left:auto;color:var(--accent-f
 .checks-inline input{position:absolute;opacity:0}
 .checks-inline span{display:inline-flex;align-items:center;justify-content:center;width:5.75rem;border:1px solid var(--line);border-radius:999px;padding:.35rem .4rem;font-size:.84rem;font-weight:600;cursor:pointer;min-height:34px;white-space:nowrap}
 /* 화면 위쪽 버튼 묶음(내려받기 등)은 묶음 안에서 같은 폭 */
-.hb{display:inline-grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:8px}
+.hb{display:inline-flex;gap:6px;flex-wrap:wrap}
+.hb .btn{min-height:34px;padding:0 12px;font-size:.8rem}
 @media (max-width:860px){ .hb{display:grid;grid-auto-flow:row;grid-template-columns:repeat(2,minmax(0,1fr));width:100%} .hb .btn{padding:0 .5rem} }
 .checks-inline input:checked+span{background:var(--accent);color:#fff;border-color:var(--accent)}
 .checks-inline input:focus-visible+span{outline:2.5px solid var(--accent);outline-offset:2px}
@@ -297,7 +303,7 @@ function renderShell(){
   const userLink = `<a href="${esc(Sh.CFG.userAppUrl || "#")}" target="_blank" rel="noopener">사용자 사이트 열기 ↗</a>`;
   const db = Sh.REMOTE ? `<span class="dbs ok">공용 DB 연결됨</span><i></i>` : `<a class="dbs off" href="#/storage" title="저장 · 백업 안내 보기">이 주소에만 저장 중</a><i></i>`;
   $("#acct").innerHTML = (admin
-    ? db + `<b>${esc(sess.name)}</b><small>${sess.demo ? "시연 계정" : esc(sess.id || sess.email)}</small><i></i>${userLink}<i></i>${Sh.themeBtn("gu")}<i></i><button type="button" data-logout>${sess.demo ? "로그인" : "로그아웃"}</button>`
+    ? db + `${userLink}<i></i>${Sh.themeBtn("gu")}<i></i><b>${esc(sess.name)}</b><small>${sess.demo ? "시연 계정" : esc(sess.id || sess.email)}</small><i></i><button type="button" data-logout>${sess.demo ? "로그인" : "로그아웃"}</button>`
     : Sh.themeBtn("gu")); // 로그인 화면엔 화면 모드만
   $$("[data-logout]").forEach(b => b.onclick = logout);
   $(".tabs").hidden = !admin;
@@ -306,6 +312,7 @@ function renderShell(){
   $$("[data-cnt]").forEach(c => { c.textContent = n; c.hidden = !n; });
 }
 const icon = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const DL = '<path d="M12 4v11M7.5 10.5L12 15l4.5-4.5"/><path d="M5 19h14"/>'; // 내려받기
 /* 공공 행정 화면에서 익숙한 그림: 결재판(확인 대기), 결재 도장(결정 기록) */
 const ICON = {
   wait: icon('<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2.8h6V4"/><circle cx="12" cy="13" r="3.6"/><path d="M12 11.3V13l1.2.9"/>'),
@@ -551,7 +558,7 @@ function viewTemplates(){
   const missing = R.missingTypes(on), customized = !!Sh.read(Sh.KEY.tpl, null);
   const n = (c,a) => on.filter(t => t.categories.includes(c) && t.ages.includes(a)).length;
   $("#view").innerHTML = `${phead("관리자 · 템플릿", "템플릿 관리", `사용 중 ${on.length}개 / 전체 ${list.length}개 · 고치면 사용자 페이지에 바로 반영되고, 규칙을 어기면 저장되지 않아요.`,
-    `<div class="hb"><button class="btn" id="tNew">+ 새 템플릿</button><button class="btn ghost" id="tDl">templates.json 내려받기</button>${customized?`<button class="btn red" id="tReset">기본값으로</button>`:""}</div>`)}
+    `<div class="hb"><button class="btn" id="tNew">${icon('<path d="M12 5v14M5 12h14"/>')}새 템플릿</button><button class="btn ghost" id="tDl">${icon(DL)}JSON 내려받기</button>${customized?`<button class="btn red" id="tReset">기본값으로</button>`:""}</div>`)}
   ${missing.length ? `<div class="miss">사용 중인 템플릿이 없는 유형: ${missing.join(", ")} — 사용자 화면에서 이 유형은 고를 형식이 없어요.</div>` : ""}
   <div class="cols" style="margin-bottom:24px">
     <section class="colsec"><div class="sec-h"><h2>분야 × 연령 커버</h2><span class="asof">사용 중인 템플릿 수 · 빨간 칸은 고를 형식 없음</span></div>
@@ -691,7 +698,7 @@ function viewData(){
   const logs = DB.logs.filter(l => ids.has(l.planId) && (!f.q || (l.planId + l.reviewer + (l.reasonText||"") + (l.note||"")).includes(f.q))).sort((a,b) => a.at < b.at ? 1 : -1);
   const kind = l => l.kind === "request" ? "요청" : l.kind === "system" ? "시스템" : l.decision === "pass" ? "통과" : "반려";
   $("#view").innerHTML = `${phead("관리자 · 기록", "콘텐츠 · 기록", "모든 지역의 콘텐츠와 결정 기록이에요. 기록은 지울 수 없고, 고칠 때는 새 기록이 붙어요.",
-    `<div class="hb"><button class="btn ghost" id="xCsv">CSV 내려받기</button><button class="btn ghost" id="xJson">JSON 내려받기</button></div>`)}
+    `<div class="hb"><button class="btn ghost" id="xCsv">${icon(DL)}CSV</button><button class="btn ghost" id="xJson">${icon(DL)}JSON</button></div>`)}
   <div class="tools">
     <div class="seg" role="group" aria-label="표"><button data-tab="plans" aria-pressed="${f.tab==="plans"}">콘텐츠<i>${plans.length}</i></button><button data-tab="logs" aria-pressed="${f.tab==="logs"}">결정 기록<i>${logs.length}</i></button></div>
     <span class="sp"></span>
