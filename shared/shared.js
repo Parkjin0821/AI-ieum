@@ -475,10 +475,10 @@
      계정은 이 브라우저(localStorage)에만 두고 공용 DB로 보내지 않는다. 비밀번호는 SHA-256 해시만 저장.
      운영 전환 때 이 묶음을 Supabase Auth(signUp · signInWithPassword · signOut)로 바꾸고 schema.sql 정책을 로그인 기준으로 바꾼다. */
   const AUTH = { accounts: "aiieum-accounts-v1", session: "aiieum-session" };
-  const TEST_LOGIN = true; // 테스트판: 아무 메일·비밀번호로 로그인. 운영 전환 때 false로
-  const DEMO_ADMIN = { email: "admin@ai-ieum.test", pw: "aiieum-demo", name: "광역 관리자" }; // README '시연 계정'과 같게
-  async function pwHash(email, pw) {
-    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`aiieum:${email.toLowerCase()}:${pw}`));
+  const TEST_LOGIN = true; // 테스트판: 아무 아이디·비밀번호로 로그인. 운영 전환 때 false로
+  const DEMO_ADMIN = { id: "admin", pw: "aiieum-demo", name: "광역 관리자" }; // README '테스트 로그인'과 같게
+  async function pwHash(id, pw) {
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`aiieum:${id.toLowerCase()}:${pw}`));
     return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
   }
   const publicAcct = a => { const { pw, ...rest } = a; return rest; };
@@ -488,30 +488,33 @@
     accounts: () => (lsRead(AUTH.accounts, []) || []).map(publicAcct),
     /** 비밀번호 규칙: 8자 이상, 영문·숫자 모두 */
     pwProblem: pw => pw.length < 8 ? "비밀번호는 8자 이상이어야 해요" : !(/[A-Za-z]/.test(pw) && /\d/.test(pw)) ? "영문과 숫자를 함께 써주세요" : "",
+    /** 아이디 규칙: 영문 소문자·숫자·밑줄 4~20자 */
+    idProblem: id => /^[a-z0-9_]{4,20}$/.test(id.trim().toLowerCase()) ? "" : "아이디는 영문·숫자 4~20자로 써주세요",
     async signUp(f) {
-      const email = f.email.trim().toLowerCase(), list = lsRead(AUTH.accounts, []) || [];
-      if (list.some(a => a.email === email)) throw new Error("이미 가입한 메일이에요");
-      // 운영: status "pending" → 광역 관리자 승인. 시연판은 바로 승인
-      const acct = { email, name: f.name.trim(), region: f.region, dept: f.dept.trim(), title: (f.title || "").trim(), phone: (f.phone || "").trim(),
-        role: "manager", status: "approved", createdAt: new Date().toISOString(), pw: await pwHash(email, f.pw) };
+      const id = f.id.trim().toLowerCase(), email = f.email.trim().toLowerCase(), list = lsRead(AUTH.accounts, []) || [];
+      if (list.some(a => (a.id || a.email) === id)) throw new Error("이미 쓰고 있는 아이디예요");
+      // 운영: status "pending" → 광역 관리자 승인. 시연판은 바로 승인. 업무 메일은 승인 알림용 연락처
+      const acct = { id, email, name: f.name.trim(), region: f.region, dept: f.dept.trim(), title: (f.title || "").trim(), phone: (f.phone || "").trim(),
+        role: "manager", status: "approved", createdAt: new Date().toISOString(), pw: await pwHash(id, f.pw) };
       list.push(acct); lsWrite(AUTH.accounts, list);
       return publicAcct(acct);
     },
-    async signIn(email, pw, role) {
-      email = email.trim().toLowerCase();
+    async signIn(id, pw, role) {
+      id = id.trim().toLowerCase();
       if (role === "admin") {
-        if (!TEST_LOGIN && (email !== DEMO_ADMIN.email || pw !== DEMO_ADMIN.pw)) throw new Error("메일 또는 비밀번호가 맞지 않아요");
-        const s = { email, name: DEMO_ADMIN.name, role: "admin", test: TEST_LOGIN || undefined, at: new Date().toISOString() };
+        if (!TEST_LOGIN && (id !== DEMO_ADMIN.id || pw !== DEMO_ADMIN.pw)) throw new Error("아이디 또는 비밀번호가 맞지 않아요");
+        const s = { id, name: DEMO_ADMIN.name, role: "admin", test: TEST_LOGIN || undefined, at: new Date().toISOString() };
         lsWrite(AUTH.session, s); return s;
       }
-      const a = (lsRead(AUTH.accounts, []) || []).find(x => x.email === email);
-      if (TEST_LOGIN && !a) { // 가입하지 않은 메일 → 테스트 계정 (지역은 직접 고름)
-        const s = { email, name: email.split("@")[0] || "테스트", role: "manager", test: true, at: new Date().toISOString() };
+      // 아이디 도입 전(메일로 가입한) 계정은 그 메일을 아이디로 씀
+      const a = (lsRead(AUTH.accounts, []) || []).find(x => (x.id || x.email) === id);
+      if (TEST_LOGIN && !a) { // 가입하지 않은 아이디 → 테스트 계정 (지역은 직접 고름)
+        const s = { id, name: id.split("@")[0] || "테스트", role: "manager", test: true, at: new Date().toISOString() };
         lsWrite(AUTH.session, s); return s;
       }
-      if (!a || a.pw !== await pwHash(email, pw)) throw new Error("메일 또는 비밀번호가 맞지 않아요");
+      if (!a || a.pw !== await pwHash(id, pw)) throw new Error("아이디 또는 비밀번호가 맞지 않아요");
       if (a.status !== "approved") throw new Error("광역 관리자 승인을 기다리고 있어요");
-      const s = { email, name: a.name, region: a.region, dept: a.dept, role: a.role, at: new Date().toISOString() };
+      const s = { id, email: a.email, name: a.name, region: a.region, dept: a.dept, role: a.role, at: new Date().toISOString() };
       lsWrite(AUTH.session, s); return s;
     },
     /** 계정 없이 둘러보기 (시연) */

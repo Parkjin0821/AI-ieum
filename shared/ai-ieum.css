@@ -328,11 +328,11 @@ main{padding:clamp(16px,1.8vw,28px) var(--gutter) 40px;max-width:var(--max-w);ma
 .auth-side li::before{content:"✓";display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.22);margin-right:8px;font-size:.7rem}
 /* 로그인 카드: 제목 없이 입력칸 → 로그인 → 링크, 아래 칸막이 뒤에 시연 입장. 사진 높이에 맞춰 세로 가운데 */
 .auth-card{padding:clamp(24px,2.6vw,36px);display:grid;gap:14px;align-content:center}
-.auth-card .lbl2{font-size:.75rem;margin-bottom:5px}
+.auth-card .lbl2,.signup .lbl2{font-size:.75rem;font-weight:600;color:var(--sub);margin-bottom:5px} /* 칸 이름·보기는 옅게 */
+.auth-card .pw button,.signup .pw button{font-size:.72rem;font-weight:600;color:var(--faint)}
 .auth-card .auth-links{margin-top:-4px}
 .auth-demo{display:grid;gap:8px;border-top:1px solid var(--line);padding-top:18px;margin-top:4px}
 .auth-demo .demo-note{background:none;padding:0;color:var(--faint)}
-.auth-card .pw button{font-size:.72rem}
 .btn.wide{width:100%;min-height:44px;font-size:.92rem}
 .auth-links{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:2px;font-size:.8rem;line-height:1.4}
 .auth-links a,.auth-links button{color:var(--sub);text-decoration:none;font:inherit;font-weight:600;border:0;background:none;padding:4px 8px}
@@ -351,8 +351,7 @@ main{padding:clamp(16px,1.8vw,28px) var(--gutter) 40px;max-width:var(--max-w);ma
 .auth-side.strip{min-height:120px;padding:16px 20px;margin-bottom:16px}
 .auth-side.strip h1{font-size:1.4rem;margin:2px 0 0}
 .auth-side.strip .slide-cap{position:static;align-self:flex-end;max-width:100%;margin:0 0 auto}
-.signup .lbl2{font-size:.75rem;margin-bottom:5px}
-.signup .pw button{font-size:.72rem}
+
 .signup form{overflow:hidden}
 .fsec{padding:20px clamp(16px,2vw,28px);border-top:1px solid var(--line-2);display:grid;gap:14px}
 .fsec:first-child{border-top:0}

@@ -114,7 +114,7 @@ npm run dev
 - 가짜 공용 DB(:5180)가 함께 떠서 두 사이트가 데이터를 공유해요. 끄면 내용은 사라져요
 - `npm run dev:local` 은 DB 없이 (각 사이트에만 저장)
 
-> **테스트 로그인** — 지금은 사용자·관리자 모두 **아무 메일·비밀번호**로 들어갈 수 있어요 (`shared/shared.js`의 `TEST_LOGIN = true`). 사용자 사이트에서 회원가입한 메일이면 그 계정(소속 지역)으로 들어가요. `TEST_LOGIN`을 끄면 관리자는 `admin@ai-ieum.test` / `aiieum-demo`만 통과해요.
+> **테스트 로그인** — 지금은 사용자·관리자 모두 **아무 아이디·비밀번호**로 들어갈 수 있어요 (`shared/shared.js`의 `TEST_LOGIN = true`). 사용자 사이트에서 회원가입한 아이디면 그 계정(소속 지역)으로 들어가요. `TEST_LOGIN`을 끄면 관리자는 `admin` / `aiieum-demo`만 통과해요.
 
 검사 (문법 → 템플릿 규칙 → 테스트 23개):
 ```bash
