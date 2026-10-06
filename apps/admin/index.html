@@ -268,6 +268,7 @@ function route(){
   const r = location.hash.replace(/^#\/?/, "").split("/")[0] || "home";
   const sess = Sh.auth.session();
   const name = !sess || sess.role !== "admin" ? "login" : ["regions","templates","data","storage"].includes(r) ? r : "home";
+  $("#view").classList.toggle("center", name === "login");
   $$(".rnav a, .tabs a").forEach(a => a.setAttribute("aria-current", a.dataset.r === name ? "page" : "false"));
   ({login:viewLogin, home:viewHome, regions:viewRegions, templates:viewTemplates, data:viewData, storage:viewStorage})[name]();
   /* 공용 DB가 없으면 사용자 페이지(다른 도메인)와 데이터를 공유하지 못한다는 걸 늘 보여준다 */

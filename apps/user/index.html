@@ -436,6 +436,7 @@ function route(){
   else if (sess && (name === "login" || name === "signup")) name = "templates";
   if (sess && (!S.region || !rs().active)) name = "region"; // 지역을 먼저 골라야 한다
   $("#view").classList.toggle("fit", name === "studio");
+  $("#view").classList.toggle("center", name === "login");
   $$(".rnav a, .tabs a").forEach(a => a.setAttribute("aria-current", a.dataset.r === name ? "page" : "false"));
   applyTheme();
   ({login:viewLogin, signup:viewSignup, region:viewRegion, templates:viewTemplates, studio:viewStudio, review:() => viewReview(arg ? decodeURIComponent(arg) : null)})[name]();

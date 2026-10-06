@@ -213,7 +213,9 @@ dialog::backdrop{background:rgba(12,18,30,.5);backdrop-filter:blur(2px)}
    지역색은 포인트(메뉴 밑줄 · 주요 버튼 · 링크)에만 쓰고, 바탕은 흰색 · 옅은 회색. ---------- */
 .app{min-height:100vh;display:flex;flex-direction:column}
 .app>*{min-width:0} /* 넓은 표가 있어도 본문 칸이 화면보다 커지지 않게 */
-.app>.body{flex:1}
+.app>.body{flex:1;display:flex;flex-direction:column}
+/* 로그인 화면: 머리와 푸터 사이 정가운데 */
+main.center{flex:1;display:grid;align-content:center;padding-bottom:clamp(16px,1.8vw,28px)} /* 위·아래 여백 같게 */
 .wrap{max-width:var(--max-w);margin:0 auto;padding:0 var(--gutter);width:100%}
 .ghead{position:sticky;top:0;z-index:30;background:var(--surface);border-bottom:1px solid var(--line)}
 .gstrip{background:var(--line-2);font-size:.8rem;color:var(--sub)}
