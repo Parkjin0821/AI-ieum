@@ -355,7 +355,7 @@ window.addEventListener("hashchange", () => { route(); window.scrollTo(0,0); });
 window.addEventListener("storage", () => { DB = Sh.loadDB(); route(); });
 
 /* =========================================================
-   관리자 로그인 (시연용 — 관리자 계정은 가입 신청 없이 발급, shared.js의 Sh.auth)
+   관리자 로그인 (시연용 — 관리자 계정은 회원가입 없이 발급, shared.js의 Sh.auth)
    ========================================================= */
 function logout(){ Sh.auth.signOut(); if ($("#dlg").open) $("#dlg").close(); toast("로그아웃했어요"); if (location.hash === "#/" || location.hash === "") route(); else location.hash = "#/"; }
 function viewLogin(){
@@ -372,14 +372,14 @@ function viewLogin(){
       <div class="auth-links"><button type="button" id="lfind">비밀번호 찾기</button><i></i><button type="button" id="lask">계정 발급 문의</button></div>
       <div class="or">또는</div>
       <button class="btn ghost wide" type="button" id="ldemo">시연 관리자로 들어가기</button>
-      <p class="demo-note">${Sh.auth.TEST_LOGIN ? "테스트판: 아무 메일·비밀번호로 들어갈 수 있어요." : "시연 계정: <code>admin@ai-ieum.test</code> / <code>aiieum-demo</code>"} 관리자 계정은 가입 신청을 받지 않아요.</p>
+      <p class="demo-note">${Sh.auth.TEST_LOGIN ? "테스트판: 아무 메일·비밀번호로 들어갈 수 있어요." : "시연 계정: <code>admin@ai-ieum.test</code> / <code>aiieum-demo</code>"} 관리자 계정은 회원가입을 받지 않아요.</p>
     </form></div>`;
   Sh.slideshow($(".auth-side .slides"), $(".auth-side .slide-cap"), 4000);
   $("#le").focus({preventScroll:true});
   $("#lpeek").onclick = e => { const i = $("#lp"), show = i.type === "password"; i.type = show ? "text" : "password"; e.target.textContent = show ? "숨기기" : "보기"; e.target.setAttribute("aria-pressed", show); };
   const enter = () => { if (location.hash === "#/" || location.hash === "") route(); else location.hash = "#/"; };
   $("#lfind").onclick = () => toast("시연판에선 비밀번호 찾기가 없어요 — 운영 땐 관리자 메일로 재설정 링크를 보내요");
-  $("#lask").onclick = () => toast("관리자 계정은 광역 관광 담당 부서에서 발급해요 — 사용자 사이트처럼 가입 신청을 받지 않아요");
+  $("#lask").onclick = () => toast("관리자 계정은 광역 관광 담당 부서에서 발급해요 — 사용자 사이트처럼 회원가입을 받지 않아요");
   $("#ldemo").onclick = () => { Sh.auth.demo("admin"); toast("시연 관리자로 들어왔어요"); enter(); };
   $("#lf").onsubmit = async e => {
     e.preventDefault();

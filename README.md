@@ -50,7 +50,7 @@
 ```
 AI-이음/
 ├─ apps/                     두 사이트 (각각 따로 배포)
-│  ├─ user/index.html        사용자 사이트 전체 (로그인·가입 신청 + 화면 4개 + 팝업)
+│  ├─ user/index.html        사용자 사이트 전체 (로그인·회원가입 + 화면 4개 + 팝업)
 │  ├─ admin/index.html       관리자 사이트 전체 (로그인 + 화면 5개 + 팝업)
 │  └─ */config.js            공용 DB 주소·키, 두 사이트 주소 (배포 때 자동 생성)
 ├─ shared/                   두 사이트가 함께 쓰는 코드
@@ -87,7 +87,7 @@ AI-이음/
 
 | 화면 | 파일 | 찾을 함수 |
 |---|---|---|
-| 로그인 · 가입 신청 | `apps/user/index.html` | `viewLogin`, `viewSignup`, `logout` |
+| 로그인 · 회원가입 | `apps/user/index.html` | `viewLogin`, `viewSignup`, `logout` |
 | 지역 고르기 (통합특별시는 옛 광주·옛 전남으로 묶음) | `apps/user/index.html` | `viewRegion` |
 | 템플릿 고르기 (메인 비주얼 · 분야·연령 필터) | `apps/user/index.html` | `hero`, `viewTemplates`, `openTemplate` |
 | 대화로 만들기 (후보 카드) | `apps/user/index.html` | `viewStudio`, `fetchCands`, `sendGate1` |
@@ -114,7 +114,7 @@ npm run dev
 - 가짜 공용 DB(:5180)가 함께 떠서 두 사이트가 데이터를 공유해요. 끄면 내용은 사라져요
 - `npm run dev:local` 은 DB 없이 (각 사이트에만 저장)
 
-> **테스트 로그인** — 지금은 사용자·관리자 모두 **아무 메일·비밀번호**로 들어갈 수 있어요 (`shared/shared.js`의 `TEST_LOGIN = true`). 사용자 사이트에서 가입 신청한 메일이면 그 계정(소속 지역)으로 들어가요. `TEST_LOGIN`을 끄면 관리자는 `admin@ai-ieum.test` / `aiieum-demo`만 통과해요.
+> **테스트 로그인** — 지금은 사용자·관리자 모두 **아무 메일·비밀번호**로 들어갈 수 있어요 (`shared/shared.js`의 `TEST_LOGIN = true`). 사용자 사이트에서 회원가입한 메일이면 그 계정(소속 지역)으로 들어가요. `TEST_LOGIN`을 끄면 관리자는 `admin@ai-ieum.test` / `aiieum-demo`만 통과해요.
 
 검사 (문법 → 템플릿 규칙 → 테스트 23개):
 ```bash
@@ -147,7 +147,7 @@ node scripts/deploy-vercel.mjs
 - [x] 해외 레퍼런스 기반 템플릿 12개 · 규칙 검사 · 테스트 23개 · 문법 검사
 - [x] 지자체 누리집 벤치마킹 리디자인 · 다크 모드 · 전남광주통합특별시 반영
 - [x] 지역 슬로건 33곳 · 누리집 대표색 41곳 · 관광공사 사진 41곳 205장
-- [x] 로그인 · 가입 신청 화면 (시연용 — 계정은 그 브라우저에만, 가입 신청은 바로 승인)
+- [x] 로그인 · 회원가입 화면 (시연용 — 계정은 그 브라우저에만, 회원가입은 바로 승인)
 - [ ] **Supabase 연결** — 연결 전에는 팀원끼리 데이터가 공유되지 않음
 - [ ] 실제 로그인으로 교체 — Supabase Auth + 광역 관리자 승인 + DB 정책을 로그인 기준으로 (지금은 화면만 막고 데이터는 누구나 읽고 씀). 교체 때 `TEST_LOGIN = false`
 - [ ] 2차 점검표 · 장면 선택을 서버(Edge Function)에서도 검사

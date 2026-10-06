@@ -70,7 +70,9 @@ button{cursor:pointer}
 a{color:var(--accent-fg)}
 :focus-visible{outline:2.5px solid var(--accent);outline-offset:2px;border-radius:6px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}
+  /* 사진 슬라이드는 확대 없이 서서히 겹쳐 바뀌기만 (움직임 없는 페이드) */
+  .auth-side .slides img,.hero .slides img{transition:opacity 1.2s ease!important;transform:none!important}}
 
 /* ---------- 기본 부품 ---------- */
 .btn{border:1px solid transparent;border-radius:var(--r-sm);padding:0 1.05rem;font-weight:700;background:var(--accent);color:#fff;min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;transition:background-color .15s,box-shadow .15s;white-space:nowrap}
@@ -311,7 +313,7 @@ main{padding:clamp(16px,1.8vw,28px) var(--gutter) 40px;max-width:var(--max-w);ma
 .tl2 .m{font-size:.875rem}
 .tl2 .r{font-size:.8rem;color:var(--seal);background:var(--seal-bg);border-radius:9px;padding:6px 10px;margin-top:4px}
 
-/* ---------- 로그인 · 가입 신청 — 누리집 로그인처럼 머리·푸터는 그대로, 본문 가운데 카드 ---------- */
+/* ---------- 로그인 · 회원가입 — 누리집 로그인처럼 머리·푸터는 그대로, 본문 가운데 카드 ---------- */
 .auth{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(340px,440px);gap:clamp(20px,3vw,40px);width:100%;max-width:1080px;margin:0 auto} /* 가운데 정렬 grid 안에서도 내용 길이와 상관없이 같은 폭 */
 .auth-side{position:relative;overflow:hidden;isolation:isolate;border-radius:var(--r-lg);color:#fff;padding:clamp(24px,3vw,44px);display:flex;flex-direction:column;justify-content:flex-end;min-height:0;background:#1D2B3F}
 .auth-side .slides,.hero .slides{position:absolute;inset:0;z-index:-2;background:#1D2B3F}
@@ -320,16 +322,16 @@ main{padding:clamp(16px,1.8vw,28px) var(--gutter) 40px;max-width:var(--max-w);ma
 .auth-side .slide-cap,.hero .slide-cap{position:absolute;right:14px;top:12px;max-width:75%;font-size:.68rem;font-weight:600;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 3px rgba(0,0,0,.5)}
 .auth-side::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(10,14,22,.28) 0%,rgba(10,14,22,0) 22%,rgba(10,14,22,0) 38%,rgba(10,14,22,.78) 100%)} /* 사진이 보이게: 위(출처)·아래(글자)만 어둡게 */
 .auth-side small{font-weight:700;opacity:.9}
-.auth-side h1{font-size:clamp(1.8rem,2.4vw,2.5rem);letter-spacing:-.035em;line-height:1.2;margin:6px 0 10px}
-.auth-side p{margin:0 0 18px;opacity:.92;max-width:42ch}
-.auth-side ul{margin:0;padding:0;list-style:none;display:grid;gap:8px;font-weight:600;font-size:.9rem}
+.auth-side h1{font-size:clamp(1.5rem,1.9vw,1.9rem);letter-spacing:-.035em;line-height:1.2;margin:6px 0 10px}
+.auth-side p{margin:0 0 16px;opacity:.92;max-width:42ch;font-size:.9rem}
+.auth-side ul{margin:0;padding:0;list-style:none;display:grid;gap:7px;font-weight:600;font-size:.84rem}
 .auth-side li::before{content:"✓";display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:rgba(255,255,255,.22);margin-right:8px;font-size:.7rem}
 .auth-card{padding:clamp(20px,2vw,30px);display:grid;gap:12px;align-content:start}
-.auth-card h2{margin:0;font-size:1.5rem;letter-spacing:-.03em}
-.auth-card>p{margin:-8px 0 4px;color:var(--sub);font-size:.9rem}
-.btn.wide{width:100%;min-height:46px;font-size:1rem}
-.auth-links{display:flex;justify-content:center;flex-wrap:wrap;gap:2px;font-size:.875rem}
-.auth-links a,.auth-links button{color:var(--sub);text-decoration:none;font-weight:600;border:0;background:none;padding:4px 8px}
+.auth-card h2{margin:0;font-size:1.25rem;letter-spacing:-.03em}
+.auth-card>p{margin:-8px 0 4px;color:var(--sub);font-size:.84rem}
+.btn.wide{width:100%;min-height:44px;font-size:.92rem}
+.auth-links{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:2px;font-size:.8rem;line-height:1.4}
+.auth-links a,.auth-links button{color:var(--sub);text-decoration:none;font:inherit;font-weight:600;border:0;background:none;padding:4px 8px}
 .auth-links a:hover,.auth-links button:hover{color:var(--accent-fg);text-decoration:underline}
 .auth-links i{width:1px;height:12px;background:var(--line);align-self:center}
 .or{display:flex;align-items:center;gap:10px;color:var(--faint);font-size:.8rem}
@@ -339,9 +341,9 @@ main{padding:clamp(16px,1.8vw,28px) var(--gutter) 40px;max-width:var(--max-w);ma
 .pw button{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;color:var(--sub);font-size:.8rem;font-weight:700;padding:6px 8px;border-radius:4px}
 .err-t{color:var(--seal);font-size:.84rem;font-weight:600;margin:0}
 .auth-card .err-t:empty{display:none}
-.demo-note{font-size:.8rem;color:var(--sub);background:var(--line-2);border-radius:var(--r-sm);padding:9px 12px;margin:0}
+.demo-note{font-size:.74rem;line-height:1.5;text-align:center;color:var(--sub);background:var(--line-2);border-radius:var(--r-sm);padding:8px 12px;margin:0}
 .demo-note code{font-size:.78rem;color:var(--text)}
-/* 가입 신청: 한 장짜리 양식 (소속 → 담당자 정보 → 비밀번호 → 동의) */
+/* 회원가입: 한 장짜리 양식 (소속 → 담당자 정보 → 비밀번호 → 동의) */
 .signup{max-width:780px;margin:0 auto}
 .signup form{overflow:hidden}
 .fsec{padding:20px clamp(16px,2vw,28px);border-top:1px solid var(--line-2);display:grid;gap:14px}

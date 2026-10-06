@@ -449,7 +449,7 @@
 
   /* 사진 슬라이드 — items를 ms마다 서서히 바꿈 (items가 없으면 지역마다 대표 사진 1장씩, 순서는 매번 섞음).
      사진 두 장을 번갈아 쓰며 다음 사진이 다 받아진 뒤에 바꾸고, 출처(저작자 표시)도 같이 바꾼다.
-     '동작 줄이기' 설정이면 서서히 겹치지 않고 바로 바꾼다(CSS가 전환을 끔). host가 화면에서 빠지면 스스로 멈춘다. */
+     '동작 줄이기' 설정이면 확대 효과 없이 서서히 겹치기만 한다(CSS). host가 화면에서 빠지면 스스로 멈춘다. */
   function slideshow(host, cap, ms, items) {
     let list = items;
     if (!list) {
@@ -471,7 +471,7 @@
     }, ms || 4000);
   }
 
-  /* ---------- 로그인 · 가입 신청 (시연용) ----------
+  /* ---------- 로그인 · 회원가입 (시연용) ----------
      계정은 이 브라우저(localStorage)에만 두고 공용 DB로 보내지 않는다. 비밀번호는 SHA-256 해시만 저장.
      운영 전환 때 이 묶음을 Supabase Auth(signUp · signInWithPassword · signOut)로 바꾸고 schema.sql 정책을 로그인 기준으로 바꾼다. */
   const AUTH = { accounts: "aiieum-accounts-v1", session: "aiieum-session" };
@@ -490,7 +490,7 @@
     pwProblem: pw => pw.length < 8 ? "비밀번호는 8자 이상이어야 해요" : !(/[A-Za-z]/.test(pw) && /\d/.test(pw)) ? "영문과 숫자를 함께 써주세요" : "",
     async signUp(f) {
       const email = f.email.trim().toLowerCase(), list = lsRead(AUTH.accounts, []) || [];
-      if (list.some(a => a.email === email)) throw new Error("이미 가입 신청한 메일이에요");
+      if (list.some(a => a.email === email)) throw new Error("이미 가입한 메일이에요");
       // 운영: status "pending" → 광역 관리자 승인. 시연판은 바로 승인
       const acct = { email, name: f.name.trim(), region: f.region, dept: f.dept.trim(), title: (f.title || "").trim(), phone: (f.phone || "").trim(),
         role: "manager", status: "approved", createdAt: new Date().toISOString(), pw: await pwHash(email, f.pw) };

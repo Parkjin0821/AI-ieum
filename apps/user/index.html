@@ -393,7 +393,7 @@ function renderShell(){
     ? `<span class="emb"${emb}></span><span><small>${esc(r.sidoName)}</small><b>${esc(r.name)}</b></span><span class="chg">지역 바꾸기</span>`
     : `<span class="emb"></span><span><small>${Sh.SIDO_LABEL}</small><b>지역 고르기</b></span><span class="chg">${Sh.REGIONS.length}곳</span>`;
   $("#acct").innerHTML = !sess
-    ? `<a href="#/login">로그인</a><i></i><a href="#/signup">가입 신청</a><i></i>${Sh.themeBtn("gu")}`
+    ? `<a href="#/login">로그인</a><i></i><a href="#/signup">회원가입</a><i></i>${Sh.themeBtn("gu")}`
     : `<b>${esc(r ? me() : sess.name)}</b><small>${sess.demo ? "시연 계정" : esc(sess.dept || "")}${r ? " · 1·2·3차 확인 담당" : ""}</small><i></i><button type="button" data-open-settings>설정 · 시연 도구</button><i></i>${Sh.themeBtn("gu")}<i></i><button type="button" data-logout>로그아웃</button>`;
   $("#rcard").hidden = !sess; // 로그인 전에는 로고와 같은 곳(로그인)으로 가므로 숨김
   $(".gbar .rnav").hidden = !sess; // 메뉴는 로그인한 뒤에
@@ -435,7 +435,7 @@ function route(){
   const [r, arg] = location.hash.replace(/^#\/?/, "").split("/");
   let name = {region:"region", studio:"studio", review:"review", login:"login", signup:"signup"}[r] || "templates";
   const sess = Sh.auth.session();
-  if (!sess && name !== "signup") name = "login"; // 로그인 전에는 로그인·가입 신청만
+  if (!sess && name !== "signup") name = "login"; // 로그인 전에는 로그인·회원가입만
   else if (sess && (name === "login" || name === "signup")) name = "templates";
   if (sess && (!S.region || !rs().active)) name = "region"; // 지역을 먼저 골라야 한다
   $("#view").classList.toggle("fit", name === "studio");
@@ -460,7 +460,7 @@ $$("[data-home]").forEach(a => a.addEventListener("click", e => {
 }));
 
 /* =========================================================
-   로그인 · 가입 신청 (시연용 — 계정은 이 브라우저에만, shared.js의 Sh.auth)
+   로그인 · 회원가입 (시연용 — 계정은 이 브라우저에만, shared.js의 Sh.auth)
    ========================================================= */
 function authSide(title, lead, items){
   return `<section class="auth-side"><span class="slides" aria-hidden="true"></span><span class="slide-cap"></span>
@@ -488,15 +488,15 @@ function viewLogin(){
   $("#view").innerHTML = `<div class="auth">${authSide("AI-이음 담당자 로그인", "우리 지역 관광 숏폼을 기획하고, 1·2·3차로 확인하는 담당자 전용 공간이에요.",
       ["지역 관광자료로 숏폼 주제 찾기", "검증된 형식 12개로 빠르게 기획", "확인 기록이 남는 결재"])}
     <form class="card auth-card" id="lf" novalidate>
-      <h2>로그인</h2><p>가입 신청 때 적은 업무 메일로 로그인하세요.</p>
+      <h2>로그인</h2><p>회원가입 때 적은 업무 메일로 로그인하세요.</p>
       <div><label class="lbl2" for="le">업무 메일</label><input class="inp" id="le" type="email" autocomplete="username" placeholder="name@○○.go.kr" value="${esc(S.lastEmail || "")}"></div>
       <div><label class="lbl2" for="lp">비밀번호</label><div class="pw"><input class="inp" id="lp" type="password" autocomplete="current-password"><button type="button" data-peek="lp" aria-pressed="false">보기</button></div></div>
       <p class="err-t" id="lerr" role="alert"></p>
       <button class="btn wide" type="submit">로그인</button>
-      <div class="auth-links"><a href="#/signup">가입 신청</a><i></i><button type="button" id="lfind">비밀번호 찾기</button></div>
+      <div class="auth-links"><a href="#/signup">회원가입</a><i></i><button type="button" id="lfind">비밀번호 찾기</button></div>
       <div class="or">또는</div>
       <button class="btn ghost wide" type="button" id="ldemo">계정 없이 시연으로 둘러보기</button>
-      <p class="demo-note">${Sh.auth.TEST_LOGIN ? "테스트판: 아무 메일·비밀번호로 들어갈 수 있어요. 가입 신청한 메일이면 그 계정으로 들어가요." : "시연판이에요. 계정은 이 브라우저에만 저장되고, 가입 신청은 바로 승인돼요."}</p>
+      <p class="demo-note">${Sh.auth.TEST_LOGIN ? "테스트판: 아무 메일·비밀번호로 들어갈 수 있어요. 회원가입한 메일이면 그 계정으로 들어가요." : "시연판이에요. 계정은 이 브라우저에만 저장되고, 회원가입은 바로 승인돼요."}</p>
     </form></div>`;
   peek();
   Sh.slideshow($(".auth-side .slides"), $(".auth-side .slide-cap"), 4000);
@@ -513,7 +513,7 @@ function viewLogin(){
 }
 function viewSignup(){
   const f = S.su || (S.su = {sido: "jg"});
-  $("#view").innerHTML = `<div class="signup">${phead("가입 신청", "담당자 가입 신청", "전남광주통합특별시·전북특별자치도 시·군·구 관광 담당자만 신청할 수 있어요. 광역 관리자가 소속을 확인한 뒤 승인해요.")}
+  $("#view").innerHTML = `<div class="signup">${phead("회원가입", "담당자 회원가입", "전남광주통합특별시·전북특별자치도 시·군·구 관광 담당자만 신청할 수 있어요. 광역 관리자가 소속을 확인한 뒤 승인해요.")}
   <form class="card" id="sf" novalidate>
     <section class="fsec"><h3><i>1</i>소속</h3>
       <div class="row2">
@@ -546,7 +546,7 @@ function viewSignup(){
         <label><input type="checkbox" data-agree>[필수] 1·2·3차 확인 기록은 지울 수 없다는 점을 확인했어요</label>
       </div>
     </section>
-    <div class="fsub"><p class="err-t" id="serr" role="alert"></p><a class="btn ghost" href="#/login">취소</a><button class="btn" type="submit">가입 신청</button></div>
+    <div class="fsub"><p class="err-t" id="serr" role="alert"></p><a class="btn ghost" href="#/login">취소</a><button class="btn" type="submit">회원가입</button></div>
   </form></div>`;
   const regs = () => { $("#sreg").innerHTML = `<option value="">선택하세요</option>` + Sh.SIDO.find(s => s.id === f.sido).areas.map(a => { const o = Sh.REGIONS.filter(r => r.area === a.id && r.sido === f.sido).map(r => `<option value="${esc(r.id)}">${esc(r.name)}</option>`).join(""); return a.name ? `<optgroup label="${esc(a.name)}">${o}</optgroup>` : o; }).join(""); };
   regs();
@@ -572,7 +572,7 @@ function viewSignup(){
       const a = await Sh.auth.signUp({ region: v("sreg"), dept: v("sdept"), title: v("stitle"), name: v("sname"), phone: v("sphone"), email: v("semail"), pw: $("#spw").value });
       const r = Sh.regionOf(a.region);
       S.lastEmail = a.email; S.su = null;
-      $("#view").innerHTML = `<div class="signup"><div class="card done"><span class="ok-ic" aria-hidden="true">✓</span><h2>가입 신청을 받았어요</h2>
+      $("#view").innerHTML = `<div class="signup"><div class="card done"><span class="ok-ic" aria-hidden="true">✓</span><h2>회원가입 신청을 받았어요</h2>
         <p>${esc(a.name)} · ${esc(r.sidoName)} ${esc(r.name)} ${esc(a.dept)}</p>
         <div class="flow" aria-label="진행 상황"><b class="on">신청</b>›<b class="on">광역 관리자 승인</b>›<b class="on">이용</b></div>
         <p class="note">운영 땐 광역 관리자가 승인하면 업무 메일로 알려드려요. 시연판에서는 바로 승인됐어요.</p>
