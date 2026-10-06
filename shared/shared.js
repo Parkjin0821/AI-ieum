@@ -449,7 +449,7 @@
 
   /* 사진 슬라이드 — items를 ms마다 서서히 바꿈 (items가 없으면 지역마다 대표 사진 1장씩, 순서는 매번 섞음).
      사진 두 장을 번갈아 쓰며 다음 사진이 다 받아진 뒤에 바꾸고, 출처(저작자 표시)도 같이 바꾼다.
-     '동작 줄이기' 설정이면 첫 장만. host가 화면에서 빠지면 스스로 멈춘다. */
+     '동작 줄이기' 설정이면 서서히 겹치지 않고 바로 바꾼다(CSS가 전환을 끔). host가 화면에서 빠지면 스스로 멈춘다. */
   function slideshow(host, cap, ms, items) {
     let list = items;
     if (!list) {
@@ -462,7 +462,7 @@
     let i = 0, front = imgs[0];
     const caption = k => { if (cap) cap.textContent = list[k % list.length].caption; };
     front.src = list[0].src; front.classList.add("on"); caption(0);
-    if (list.length < 2 || root.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (list.length < 2) return;
     const t = setInterval(() => {
       if (!host.isConnected) return clearInterval(t);
       const back = front === imgs[0] ? imgs[1] : imgs[0], k = ++i;
