@@ -432,6 +432,27 @@
     setThemeMode(THEME_ORDER[(THEME_ORDER.indexOf(themeMode()) + 1) % THEME_ORDER.length]);
   });
 
+  /* 로그인 화면 배경 — 지역 사진을 한 장씩 ms마다 서서히 바꿈 (순서는 매번 섞음).
+     사진 두 장을 번갈아 쓰며 다음 사진이 다 받아진 뒤에 바꾸고, 출처(CC 저작자 표시)도 같이 바꾼다.
+     '동작 줄이기' 설정이면 첫 장만. host가 화면에서 빠지면 스스로 멈춘다. */
+  function slideshow(host, cap, ms) {
+    const list = REGIONS.map(r => [r, regionSettings(r.id)]).filter(([, s]) => s.photo);
+    if (!list.length) return;
+    for (let i = list.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [list[i], list[j]] = [list[j], list[i]]; }
+    host.innerHTML = `<img alt="" referrerpolicy="no-referrer"><img alt="" referrerpolicy="no-referrer">`;
+    const imgs = host.querySelectorAll("img");
+    let i = 0, front = imgs[0];
+    const caption = k => { const [r, s] = list[k % list.length]; cap.textContent = `${r.sidoName} ${r.name} · 사진 ${photoCredit(s)}`; };
+    front.src = photoUrl(list[0][1], 960); front.classList.add("on"); caption(0);
+    if (list.length < 2 || root.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const t = setInterval(() => {
+      if (!host.isConnected) return clearInterval(t);
+      const back = front === imgs[0] ? imgs[1] : imgs[0], k = ++i;
+      back.onload = () => { back.classList.add("on"); front.classList.remove("on"); front = back; caption(k); };
+      back.src = photoUrl(list[k % list.length][1], 960); // 못 받으면 onload가 없으니 지금 사진 그대로
+    }, ms || 4000);
+  }
+
   /* ---------- 로그인 · 가입 신청 (시연용) ----------
      계정은 이 브라우저(localStorage)에만 두고 공용 DB로 보내지 않는다. 비밀번호는 SHA-256 해시만 저장.
      운영 전환 때 이 묶음을 Supabase Auth(signUp · signInWithPassword · signOut)로 바꾸고 schema.sql 정책을 로그인 기준으로 바꾼다. */
@@ -480,7 +501,7 @@
     signOut() { lsRemove(AUTH.session); }
   };
 
-  root.Shared = { SIDO, SIDO_LABEL, REGIONS, themeBtn, auth, regionOf, THEME, ASSETS, TRENDS, assetsIn, candOf, candidates,
+  root.Shared = { SIDO, SIDO_LABEL, REGIONS, themeBtn, auth, slideshow, regionOf, THEME, ASSETS, TRENDS, assetsIn, candOf, candidates,
     KEY, read, write, remove, REMOTE, CFG, init, refresh, nextPlanId, PHOTOS, photoUrl, photoCredit, resetRegionPhoto, regionSettings, saveRegionSettings, resetRegionColor,
     defaultTemplates, templates, disabledIds, enabledTemplates, scenesOf, seed, loadDB, saveDB, mergeDB,
     ROLE, SRC, HOOK, STATUS, esc, fmt, day, hash, screen, R };

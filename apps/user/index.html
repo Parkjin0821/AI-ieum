@@ -460,8 +460,7 @@ $$("[data-home]").forEach(a => a.addEventListener("click", e => {
    로그인 · 가입 신청 (시연용 — 계정은 이 브라우저에만, shared.js의 Sh.auth)
    ========================================================= */
 function authSide(title, lead, items){
-  const imgs = Sh.REGIONS.map(x => Sh.photoUrl(Sh.regionSettings(x.id), 330)).filter(Boolean).slice(0, 6);
-  return `<section class="auth-side"><span class="mosaic" aria-hidden="true">${imgs.map(u => `<img src="${esc(u)}" alt="" referrerpolicy="no-referrer">`).join("")}</span>
+  return `<section class="auth-side"><span class="slides" aria-hidden="true"></span><span class="slide-cap"></span>
     <small>${Sh.SIDO_LABEL} 시·군·구 관광 담당자</small><h1>${title}</h1><p>${lead}</p><ul>${items.map(x => `<li>${x}</li>`).join("")}</ul></section>`;
 }
 /* 비밀번호 보기/숨기기 */
@@ -497,6 +496,7 @@ function viewLogin(){
       <p class="demo-note">${Sh.auth.TEST_LOGIN ? "테스트판: 아무 메일·비밀번호로 들어갈 수 있어요. 가입 신청한 메일이면 그 계정으로 들어가요." : "시연판이에요. 계정은 이 브라우저에만 저장되고, 가입 신청은 바로 승인돼요."}</p>
     </form></div>`;
   peek();
+  Sh.slideshow($(".auth-side .slides"), $(".auth-side .slide-cap"), 4000);
   $(S.lastEmail ? "#lp" : "#le").focus({preventScroll:true});
   $("#lfind").onclick = () => toast("시연판에선 비밀번호 찾기가 없어요 — 운영 땐 업무 메일로 재설정 링크를 보내요");
   $("#ldemo").onclick = () => { Sh.auth.demo(); toast("시연 계정으로 들어왔어요 — 지역을 고르세요"); location.hash = "#/region"; };
