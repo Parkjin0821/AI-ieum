@@ -11,8 +11,8 @@
 <style>
 
 /* ---------- 0. 지역 고르기 ---------- */
-.here{display:flex;align-items:center;gap:14px;padding:14px 16px;margin-bottom:18px;border-radius:var(--r);background:var(--accent-soft);border:1px solid var(--accent-line)}
-.here .dot{width:52px;height:52px;border-radius:12px;background:linear-gradient(140deg,var(--accent),var(--accent-2)) center/cover;flex:none}
+.here{display:flex;align-items:center;gap:12px;padding:12px 16px;margin-bottom:16px;border-radius:var(--r-lg);background:var(--surface);border:1px solid var(--line);font-size:.88rem}
+.here .dot{width:44px;height:44px;border-radius:12px;background:linear-gradient(140deg,var(--accent),var(--accent-2)) center/cover;flex:none}
 .here div{flex:1;min-width:0}
 .here b{display:block}
 .rtools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
@@ -22,8 +22,8 @@
 .rtools .seg button{justify-content:center}
 .rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(150px,11vw,210px),1fr));gap:clamp(10px,1vw,16px)}
 .rtile{all:unset;box-sizing:border-box;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;display:flex;flex-direction:column;transition:transform .15s,box-shadow .15s}
-.rtile:hover{transform:translateY(-3px);box-shadow:0 14px 30px -10px color-mix(in oklab,var(--c) 55%,transparent)}
-.rtile:active{transform:translateY(-1px) scale(.99)}
+.rtile:hover{border-color:var(--c)}
+.rtile:active{transform:translateY(1px)}
 .rtile:focus-visible{outline:2.5px solid var(--c);outline-offset:3px}
 .rtile .band{height:clamp(96px,8vw,128px);background:linear-gradient(140deg,var(--c),color-mix(in oklab,var(--c) 55%,var(--c2)) 60%,var(--c2) 130%);position:relative;display:flex;align-items:flex-end;padding:8px 10px;overflow:hidden;isolation:isolate}
 .rtile .band img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
@@ -33,10 +33,10 @@
 .rtile .band .cr{position:absolute;right:6px;bottom:3px;font-size:.55rem;color:rgba(255,255,255,.75);max-width:55%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rtile.has-photo .band .mood{margin-bottom:10px}
 .rtile .body{padding:10px 12px 12px;display:grid;gap:2px}
-.rtile b{font-size:1.02rem;letter-spacing:-.02em}
+.rtile b{font-size:.95rem;letter-spacing:-.02em}
 .rtile small{color:var(--faint);font-size:.75rem}
 .rtile .tag{justify-self:start;margin-top:4px}
-.rgh{grid-column:1/-1;margin:10px 0 -2px;font-size:.95rem;display:flex;align-items:center;gap:6px}
+.rgh{grid-column:1/-1;margin:10px 0 -2px;font-size:.88rem;display:flex;align-items:center;gap:6px}
 .rgh:first-child{margin-top:0}
 .rgh span{font-size:.75rem;color:var(--sub);background:var(--line-2);border-radius:4px;padding:1px 7px}
 .rtile .tag.rc{background:color-mix(in oklab,var(--c) 12%,var(--surface));color:color-mix(in oklab,var(--c) var(--keep),#fff)}
@@ -59,8 +59,8 @@
 .tpl .screen{box-shadow:var(--sh-2);transition:transform .15s}
 .tpl:hover .screen{transform:translateY(-3px)}
 .tpl .meta{display:flex;gap:6px;align-items:center;font-size:.78rem;color:var(--sub);font-weight:600;flex-wrap:wrap}
-.tpl h3{margin:0;font-size:.98rem;line-height:1.3;letter-spacing:-.01em}
-.tpl p{margin:0;font-size:.8rem;color:var(--sub);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tpl h3{margin:0;font-size:.9rem;line-height:1.3;letter-spacing:-.01em}
+.tpl p{margin:0;font-size:.76rem;color:var(--sub);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .tags{display:flex;gap:5px;flex-wrap:wrap}
 .durbar{display:flex;gap:2px;height:6px}
 .durbar span{border-radius:2px;background:var(--accent)}
@@ -154,35 +154,37 @@ main.fit>.studio{flex:1;min-height:0}
 .qtabs button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent-ink);box-shadow:inset 0 -2px 0 var(--accent)}
 .qtabs button[aria-pressed="true"] b{color:var(--accent-fg)}
 .qtabs button.has b{color:var(--warn)}
-.qlist{display:grid;gap:8px}
-.qi{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
-.qi:hover{border-color:var(--accent-line)}
+.qlist{display:grid;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
+.qlist>.empty{padding:18px;margin:0}
+.qi{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;background:transparent;border-top:1px solid var(--line-2);padding:10px 14px}
+.qi:first-child{border-top:0}
+.qi:hover{background:var(--line-2)}
 .qi:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px}
-.qi[aria-current="true"]{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.qi[aria-current="true"]{background:var(--accent-soft);box-shadow:inset 3px 0 0 var(--accent)}
 .qi .screen{border-radius:7px}
-.qi b{display:block;font-size:.9rem;line-height:1.35}
-.qi small{color:var(--sub);font-size:.78rem}
+.qi b{display:block;font-size:.86rem;line-height:1.35}
+.qi small{color:var(--faint);font-size:.74rem}
 .pipe{display:flex;gap:3px;margin-top:5px}
 .pipe i{flex:1;height:4px;border-radius:2px;background:var(--line)}
 .pipe i.ok{background:var(--accent)}.pipe i.now{background:#E0A43A}.pipe i.no{background:var(--seal)}
 .detail{padding:22px 24px 0;min-width:0;container-type:inline-size}
 .back{display:none}
 .dhead{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;flex-wrap:wrap;margin-bottom:18px}
-.dhead h2{margin:4px 0 6px;font-size:1.3rem;line-height:1.3;letter-spacing:-.02em}
+.dhead h2{margin:4px 0 6px;font-size:1.15rem;line-height:1.3;letter-spacing:-.02em}
 .dmeta{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .sec{margin:0 0 18px}
-.sec>h3{font-size:.95rem;margin:0 0 10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.sec>h3{font-size:.88rem;margin:0 0 10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .facts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.field{background:var(--accent-soft);border-radius:var(--r);padding:12px 14px}
-.field .k{font-size:.75rem;color:var(--sub);font-weight:600}
-.field .v{font-weight:800;font-size:.98rem}
+.field{background:var(--surface-2);border:1px solid var(--line-2);border-radius:var(--r);padding:10px 14px}
+.field .k{font-size:.72rem;color:var(--faint);font-weight:600}
+.field .v{font-weight:700;font-size:.9rem}
 .field.wide{grid-column:1/-1}
 details.thread{border:1px solid var(--line);border-radius:var(--r);padding:0 14px}
 details.thread summary{cursor:pointer;padding:11px 0;font-weight:700;font-size:.875rem}
 details.thread .tl{display:grid;gap:6px;padding:0 0 12px;font-size:.84rem}
 details.thread .tl div{padding:7px 10px;border-radius:10px;background:var(--line-2)}
 details.thread .tl div.me{background:var(--accent-soft)}
-.warn{background:var(--warn-bg);color:var(--warn);border-radius:var(--r);padding:11px 14px;font-size:.875rem;margin-bottom:16px;font-weight:600}
+.warn{background:var(--warn-bg);color:var(--warn);border-radius:var(--r);padding:10px 14px;font-size:.82rem;margin-bottom:16px;font-weight:600}
 .warn.red{background:var(--seal-bg);color:var(--seal)}
 .tag.warn{padding:2px 8px;margin:0;border-radius:7px;font-size:.75rem} /* 안내 상자(.warn)와 이름이 겹치는 노란 태그는 태그 크기 유지 */
 .warn.ok{background:var(--ok-bg);color:var(--ok)}
@@ -211,8 +213,8 @@ details.thread .tl div.me{background:var(--accent-soft)}
 .checks label:first-child{border-top:0}
 .checks label:has(input:checked){background:var(--accent-soft)}
 .checks input{margin:2px 0 0;width:20px;height:20px;accent-color:var(--accent);flex:none}
-.checks b{font-size:.9rem}
-.checks small{display:block;color:var(--sub);font-size:.8rem;margin-top:1px}
+.checks b{font-size:.84rem}
+.checks small{display:block;color:var(--faint);font-size:.74rem;margin-top:1px}
 .final{display:grid;grid-template-columns:clamp(220px,18vw,300px) 1fr;gap:22px;align-items:stretch}
 .postinfo{background:var(--line-2);border-radius:var(--r);padding:12px 14px;font-size:.84rem;display:grid;gap:6px}
 .postinfo pre{margin:0;white-space:pre-wrap;font-family:inherit;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
@@ -659,11 +661,12 @@ function hero(){
   const r = Sh.regionOf(S.region), s = rs(), n = Sh.assetsIn(r.id).length, w = waiting(), photos = Sh.regionPhotoList(r.id).length;
   return `<section class="hero${photos ? " has-slides" : ""}" aria-label="${esc(r.name)} 소개">${photos ? `<span class="slides" aria-hidden="true" data-region="${esc(r.id)}"></span><span class="slide-cap"></span>` : ""}
     <div><small>${esc(r.sidoName)} ${esc(r.name)}</small><h2>${esc(s.slogan || s.mood || r.name)}</h2><p>${esc(r.name)} 관광자료 ${n}건으로 숏폼을 기획하고, ${esc(me())}가 1·2·3차로 확인해요.</p></div>
-    <nav class="quick" aria-label="자주 찾는 메뉴">
-      <a href="#/studio"><span>${QICON('<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.6A8 8 0 1 1 21 12z"/>')}</span>대화로 만들기<small>주제 찾기</small></a>
-      <a href="#/review"><span>${QICON('<circle cx="12" cy="12" r="8"/><path d="M8.5 12l2.3 2.3L15.5 9.5"/>')}</span>확인함<small>${w ? `대기 ${w}건` : "대기 없음"}</small></a>
-      <a href="#/region"><span>${QICON('<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>')}</span>지역 바꾸기<small>${Sh.REGIONS.length}곳</small></a>
-    </nav></section>`;
+    </section>
+  <nav class="qmenu" style="--qn:3" aria-label="자주 찾는 메뉴">
+      <a href="#/studio"><span>${QICON('<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.6A8 8 0 1 1 21 12z"/>')}</span><b>대화로 만들기</b><small>주제 찾기</small></a>
+      <a href="#/review"><span>${QICON('<circle cx="12" cy="12" r="8"/><path d="M8.5 12l2.3 2.3L15.5 9.5"/>')}</span><b>확인함</b><small>${w ? `대기 ${w}건` : "대기 없음"}</small></a>
+      <a href="#/region"><span>${QICON('<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>')}</span><b>지역 바꾸기</b><small>${Sh.REGIONS.length}곳</small></a>
+    </nav>`;
 }
 function viewTemplates(){
   const f = S.t;

@@ -33,15 +33,6 @@
 .crumb b{color:var(--text)}
 .phead.gov h1{margin:0}
 /* 자주 찾는 메뉴: 원형 아이콘 6칸 */
-.qmenu{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);margin:0 0 26px;overflow:hidden}
-.qmenu a{display:grid;justify-items:center;gap:6px;padding:18px 8px 16px;text-decoration:none;color:var(--text);border-left:1px solid var(--line-2);transition:background-color .15s}
-.qmenu a:first-child{border-left:0}
-.qmenu a:hover{background:var(--accent-soft)}
-.qmenu a>span{width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent-fg);transition:transform .2s}
-.qmenu a:hover>span{transform:translateY(-3px)}
-.qmenu svg{width:28px;height:28px}
-.qmenu b{font-size:.95rem}
-.qmenu small{font-size:.75rem;color:var(--sub);margin-top:-4px}
 /* 구역 제목: 굵은 제목 + 오른쪽 기준일·더보기 */
 .sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 10px}
 .sec-h h2{margin:0;font-size:1.15rem;letter-spacing:-.02em;display:flex;align-items:center;gap:7px}
@@ -99,8 +90,6 @@
 .blist time{color:var(--faint);font-size:.8rem;font-variant-numeric:tabular-nums}
 .bnote{margin:10px 0 0}
 /* 개요 글자·아이콘 한 단계 작게 (로그인 화면과 맞춤) */
-.hero h2{font-size:clamp(1.35rem,1.6vw,1.7rem)} .hero p{font-size:.9rem} .hero small{font-size:.78rem}
-.qmenu a{padding:14px 8px 12px} .qmenu a>span{width:46px;height:46px} .qmenu svg{width:23px;height:23px} .qmenu b{font-size:.84rem} .qmenu small{font-size:.7rem}
 .phead.gov h1{font-size:clamp(1.2rem,1.3vw,1.45rem)}
 .sec-h h2{font-size:1rem} .sec-h.in h2{font-size:.95rem} .sec-h h2 svg{width:18px;height:18px} .sec-h .asof{font-size:.74rem} .sec-h .more{font-size:.78rem}
 .board .btabs button{font-size:.8rem;padding:7px 12px} .blist li a{font-size:.84rem;padding:9px 4px} .blist time,.blist .bm{font-size:.74rem}
@@ -223,13 +212,14 @@ a.kpi.link .kh::after{content:"보기 ›";margin-left:auto;color:var(--accent-f
 .actbar .at{flex:1 1 180px;min-width:0}
 .actbar .at b{display:block;font-size:.88rem}
 .actbar .at small{color:var(--faint);font-size:.72rem}
-.actbar .ab{display:grid;grid-template-columns:repeat(2,11rem);gap:8px} /* 백업·시연 도구 네 버튼 모두 같은 폭 */
+.actbar .ab{display:flex;gap:6px;flex-wrap:wrap}
+.actbar .btn{min-height:34px;padding:0 12px;font-size:.8rem}
 /* 팝업 아래 버튼은 모든 팝업에서 같은 최소 폭 */
 .dlg-f .btn{min-width:7.5rem}
 @media (max-width:1100px){ .actbar{grid-template-columns:1fr} .actbar .ag+.ag{border-left:0;border-top:1px solid var(--line-2)} }
 @media (max-width:860px){
   .tbl .inp,.scn-row .inp{font-size:16px} /* 작은 칸도 16px — 아이폰 확대 방지 */
-  .actbar .ab{grid-template-columns:minmax(0,1fr);width:100%}
+  .actbar .ab{width:100%}
   /* 폰 팝업 아래: 안내·되돌리기는 한 줄 전체, 취소·저장은 반반 같은 폭 */
   .dlg-f{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
   .dlg-f .note,.dlg-f #pReset{grid-column:1/-1;margin:0 !important} /* 데스크톱용 왼쪽 밀기(margin-right:auto) 해제 */
@@ -756,10 +746,10 @@ function viewStorage(){
   $("#view").innerHTML = `${phead("관리자 · 저장", "저장 · 백업", Sh.REMOTE ? "공용 DB(Supabase)에 저장 중이에요. 사용자 페이지와 같은 데이터를 봐요." : "공용 DB 미연결 — 이 관리자 주소의 브라우저에만 저장돼요. 연결 방법은 docs/deploy.md.")}
   <!-- 백업·시연 도구는 버튼 몇 개뿐이라 큰 상자 대신 한 줄짜리 동작 막대로 -->
   <section class="box flush actbar" aria-label="백업과 시연 도구">
-    <div class="ag"><div class="at"><b>백업</b><small>불러오기는 없는 기록만 더해요 (지우거나 덮지 않음)</small></div>
-      <div class="ab"><button class="btn" id="bOut">전체 백업 내려받기</button><label class="btn ghost filebtn">백업 불러오기<input type="file" id="bIn" accept="application/json,.json"></label></div></div>
-    <div class="ag"><div class="at"><b>시연 도구</b><small>발표 리허설 전에 처음 상태로 돌릴 때만</small></div>
-      <div class="ab"><button class="btn red" id="rDb" ${Sh.REMOTE ? "disabled title=\"공용 DB의 기록은 지울 수 없어요\"" : ""}>시연 기록 처음으로</button><button class="btn red" id="rCfg">템플릿·지역 기본값으로</button></div></div>
+    <div class="ag"><div class="at"><b>백업</b><small>불러오기는 없는 기록만 더해요</small></div>
+      <div class="ab"><button class="btn" id="bOut">${icon(DL)}전체 백업</button><label class="btn ghost filebtn">${icon('<path d="M12 15V4M7.5 8.5L12 4l4.5 4.5"/><path d="M5 19h14"/>')}불러오기<input type="file" id="bIn" accept="application/json,.json"></label></div></div>
+    <div class="ag"><div class="at"><b>시연 도구</b><small>리허설 전 처음 상태로</small></div>
+      <div class="ab"><button class="btn red" id="rDb" ${Sh.REMOTE ? "disabled title=\"공용 DB의 기록은 지울 수 없어요\"" : ""}>${icon('<path d="M4 12a8 8 0 1 0 2.3-5.6"/><path d="M4 4v4h4"/>')}시연 기록 초기화</button><button class="btn red" id="rCfg" title="고친 템플릿·사용 중지 목록·지역 설정을 기본값으로">${icon('<path d="M4 12a8 8 0 1 0 2.3-5.6"/><path d="M4 4v4h4"/>')}설정 기본값</button></div></div>
   </section>
   <section class="colsec"><div class="sec-h"><h2>지금 저장된 것</h2><span class="asof">${Sh.REMOTE ? "공용 DB (크기는 이 브라우저에 남은 값)" : "이 브라우저"} · 콘텐츠 ${DB.plans.length} · 기록 ${DB.logs.length} · 대화 ${Object.keys(DB.threads).length}건</span></div>
     <div class="tbl-wrap"><table class="tbl"><thead><tr><th>내용</th><th>키</th><th class="num">크기</th></tr></thead><tbody>
