@@ -68,14 +68,21 @@
 .tdetail{display:grid;grid-template-columns:clamp(220px,20vw,300px) 1fr;gap:24px}
 .player{display:grid;gap:8px;align-content:start}
 .player .ctl{display:flex;gap:6px;justify-content:center;align-items:center;flex-wrap:wrap}
-.board{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.board li{display:grid;grid-template-columns:44px 1fr;gap:10px;align-items:start;border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
-.board li.on{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
-.board .sec{font-weight:800;color:var(--accent-ink);font-size:.95rem;text-align:center;background:var(--accent-soft);border-radius:9px;padding:6px 0;line-height:1.1}
-.board .sec small{display:block;font-size:.62rem;font-weight:600}
-.board .n{font-size:.78rem;color:var(--sub)}
-.refs{margin:14px 0 0;padding:12px 14px;background:var(--line-2);border-radius:var(--r);font-size:.8rem}
-.refs ul{margin:6px 0 0;padding-left:18px}
+/* 장면 목록: 한 상자 안의 시간표 — 왼쪽 몇 초~몇 초, 오른쪽 장면 이름·출처·자막 */
+.tlead{margin:0 0 14px;color:var(--sub);font-size:.84rem}
+.board{list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
+.board li{display:grid;grid-template-columns:3.6rem 1fr;gap:12px;align-items:start;padding:10px 14px;border-top:1px solid var(--line-2);transition:background-color .2s}
+.board li:first-child{border-top:0}
+.board li.on{background:var(--accent-soft);box-shadow:inset 3px 0 0 var(--accent)}
+.board .sec{font-size:.78rem;font-weight:700;color:var(--accent-fg);font-variant-numeric:tabular-nums;line-height:1.5;white-space:nowrap}
+.board .sec small{font-size:.68rem;font-weight:600;color:var(--faint);margin-left:1px}
+.board .sh{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.board .sh b{font-size:.86rem}
+.board .sh .tag{font-size:.66rem;padding:1px 7px}
+.board .st{font-size:.84rem;margin-top:2px}
+.board .n{font-size:.74rem;color:var(--faint);margin-top:2px}
+.refs{margin:12px 2px 0;font-size:.74rem;color:var(--sub)}
+.refs ul{margin:4px 0 0;padding-left:16px}
 
 /* ---------- 2. 대화로 만들기 ---------- */
 .studio{display:grid;grid-template-columns:minmax(0,1fr) clamp(300px,24vw,420px);gap:clamp(16px,1.4vw,28px);min-height:0}
@@ -83,8 +90,8 @@ main.fit{height:calc(100vh - var(--head-total));height:calc(100dvh - var(--head-
 main.fit>.studio{flex:1;min-height:0}
 @media (max-height:760px) and (min-width:861px){ main.fit .phead .lead{display:none} main.fit .stepper{margin-bottom:12px} }
 .chat{display:flex;flex-direction:column;min-height:0;overflow:hidden}
-.log{flex:1;overflow:auto;padding:20px;display:flex;flex-direction:column;gap:12px}
-.msg{max-width:82%;padding:.7rem .9rem;border-radius:var(--r);white-space:pre-line}
+.log{flex:1;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:82%;padding:.6rem .85rem;border-radius:var(--r);white-space:pre-line;font-size:.9rem;line-height:1.6}
 .msg.ai{background:var(--line-2);align-self:flex-start;border-top-left-radius:5px}
 .msg.me{background:var(--accent);color:#fff;align-self:flex-end;border-top-right-radius:5px}
 .msg.err{background:var(--seal-bg);color:var(--seal);align-self:stretch;max-width:none;border-radius:var(--r);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
@@ -109,40 +116,42 @@ main.fit>.studio{flex:1;min-height:0}
 .fit small{font-size:.66rem;color:var(--faint);font-weight:600}
 .meter{width:64px;height:5px;background:var(--line-2);border-radius:3px;overflow:hidden}
 .meter i{display:block;height:100%;background:var(--accent)}
-.conds{padding:10px 16px 6px;border-top:1px solid var(--line-2);display:grid;gap:6px}
+.conds{padding:10px 16px 4px;border-top:1px solid var(--line-2);display:grid;gap:6px}
 .crow{display:flex;gap:6px;align-items:center;overflow-x:auto;scrollbar-width:none}
 .crow::-webkit-scrollbar{display:none}
-.crow .lbl{font-size:.75rem;font-weight:700;color:var(--faint);width:30px;flex:none}
-.crow .chip{flex:none;padding:.3rem .5rem;min-height:32px;font-size:.8rem;width:5.75rem;text-align:center}
-.compose{display:flex;gap:8px;padding:10px 16px 14px}
+.crow .lbl{font-size:.72rem;font-weight:700;color:var(--faint);width:30px;flex:none}
+.crow .chip{flex:none;padding:.25rem .85rem;min-height:30px;font-size:.8rem;min-width:4.5rem;text-align:center}
+.compose{display:flex;gap:8px;padding:8px 16px 14px}
 .compose input{flex:1;min-width:0}
-.side{padding:18px;overflow:auto;display:flex;flex-direction:column;gap:14px}
-.side h2{font-size:.95rem;margin:0}
-.mini{display:grid;grid-template-columns:clamp(96px,8vw,128px) 1fr;gap:14px;align-items:start}
+.side{padding:16px;overflow:auto;display:flex;flex-direction:column;gap:12px}
+.side h2{font-size:.9rem;margin:0}
+.mini{display:grid;grid-template-columns:clamp(76px,6vw,100px) 1fr;gap:12px;align-items:start}
 .side .act{margin-top:auto;display:grid;gap:10px} /* 요청 버튼은 칸 맨 아래 — 대화 입력줄과 나란히 */
-.kv{display:grid;grid-template-columns:62px 1fr;gap:5px 10px;font-size:.84rem;margin:0}
-.kv dt{color:var(--sub)}
-.kv dd{margin:0;font-weight:700}
-.steps{list-style:none;padding:0;margin:0;font-size:.84rem;display:grid;gap:2px}
-.steps li{padding:5px 0 5px 24px;position:relative;color:var(--faint)}
-.steps li::before{content:"";position:absolute;left:4px;top:10px;width:10px;height:10px;border-radius:50%;border:2px solid var(--line)}
+.kv{display:grid;grid-template-columns:52px 1fr;gap:4px 8px;font-size:.8rem;margin:0}
+.kv dt{color:var(--faint)}
+.kv dd{margin:0;font-weight:600;min-width:0;overflow-wrap:anywhere}
+.steps{list-style:none;padding:12px 0 0;margin:0;font-size:.8rem;display:grid;gap:0;border-top:1px solid var(--line-2)}
+.steps li{padding:3px 0 3px 22px;position:relative;color:var(--faint)}
+.steps li::before{content:"";position:absolute;left:4px;top:8px;width:9px;height:9px;border-radius:50%;border:2px solid var(--line)}
 .steps li.on{color:var(--text);font-weight:700}
 .steps li.on::before{background:var(--accent);border-color:var(--accent)}
 .mbrief{display:none}
+.snote{margin:0;font-size:.72rem;color:var(--faint)}
 
 /* ---------- 3. 확인함 ---------- */
 .review{display:grid;grid-template-columns:clamp(260px,24vw,400px) minmax(0,1fr);gap:clamp(16px,1.4vw,28px);align-items:stretch}
 /* 항목을 고르기 전: 큰 빈 상자 대신 위쪽에 붙는 한 줄 점선 안내 */
-.review .detail:has(> .empty){align-self:start;padding:14px 18px;background:transparent;border:1.5px dashed var(--line);box-shadow:none}
+.review .detail:has(> .empty){align-self:start;padding:14px 18px;background:transparent;border:1px dashed var(--line);box-shadow:none;font-size:.84rem;color:var(--faint)}
 .review .detail > .empty{padding:0;margin:0;text-align:left}
 .queue{min-width:0}
 /* 대기열 탭: 같은 크기 5칸 (위 건수 · 아래 이름) */
-.qtabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;background:var(--line-2);border-radius:var(--r);padding:4px;margin-bottom:12px}
-.qtabs button{border:0;background:transparent;border-radius:10px;min-height:54px;padding:6px 2px;display:grid;justify-items:center;align-content:center;gap:3px;font-weight:700;font-size:.75rem;color:var(--sub);white-space:nowrap;transition:background-color .2s,color .2s,box-shadow .2s}
-.qtabs button b{font-size:1.05rem;line-height:1;color:var(--text);font-variant-numeric:tabular-nums}
-.qtabs button:hover{background:color-mix(in oklab,var(--surface) 60%,transparent)}
+.qtabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;margin-bottom:12px}
+.qtabs button{border:0;border-left:1px solid var(--line-2);background:transparent;border-radius:0;min-height:52px;padding:6px 2px;display:grid;justify-items:center;align-content:center;gap:3px;font-weight:700;font-size:.75rem;color:var(--sub);white-space:nowrap;transition:background-color .2s,color .2s,box-shadow .2s}
+.qtabs button:first-child{border-left:0}
+.qtabs button b{font-size:1rem;line-height:1;color:var(--text);font-variant-numeric:tabular-nums}
+.qtabs button:hover{background:var(--line-2)}
 .qtabs button:active{transform:translateY(1px)}
-.qtabs button[aria-pressed="true"]{background:var(--surface);color:var(--accent-ink);box-shadow:0 1px 2px rgba(16,24,40,.08),0 0 0 1px var(--accent-line)}
+.qtabs button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent-ink);box-shadow:inset 0 -2px 0 var(--accent)}
 .qtabs button[aria-pressed="true"] b{color:var(--accent-fg)}
 .qtabs button.has b{color:var(--warn)}
 .qlist{display:grid;gap:8px}
@@ -706,18 +715,18 @@ function openTemplate(t){
   d.innerHTML = `<div class="dlg">
     <div class="dlg-h"><div><div class="eyebrow">${HOOK[t.hook.type]||t.hook.type} · ${t.scenes.length}장면 · ${total(t)}초 · 1080×1920</div><h2 id="tplDlgT">${esc(t.name)}</h2></div><button class="x" data-close aria-label="닫기">×</button></div>
     <div class="dlg-b">
-      <p style="margin:0 0 16px;color:var(--sub)">${esc(t.description)}</p>
+      <p class="tlead">${esc(t.description)}</p>
       <div class="tdetail">
         <div class="player"><div id="tpv">${screen(t,0,{still:true,safe:true})}</div>
           <div class="ctl"><button class="btn ghost sm" id="tplay">▶ 재생</button><label class="switch" style="font-size:.8rem"><input type="checkbox" id="tsafe" checked> 안전 영역</label></div>
           <p class="note" style="text-align:center;margin:0">빗금 = 플랫폼 버튼·설명이 덮는 곳</p></div>
         <div>
-          <ol class="board" id="tboard">${t.scenes.map((s,i) => `<li data-i="${i}">
-            <span class="sec">${s.seconds}<small>초</small></span>
-            <div><b>${i+1}. ${ROLE[s.role]||esc(s.role)}</b> <span class="tag ${s.source==="ai"?"warn":s.source==="photo"?"accent":""}">${SRC[s.source]||esc(s.source)}</span>
-              <div>${s.text ? esc(s.text) : `<span class="note">자막 없음</span>`}</div>
-              ${s.note ? `<div class="n">${esc(s.note)}</div>` : ""}</div></li>`).join("")}</ol>
-          <div class="refs"><b>이 구조를 참고한 곳</b> <span class="note">— 형식의 뼈대만 참고, 영상은 베끼지 않음</span>
+          <ol class="board" id="tboard">${t.scenes.map((s,i) => { const from = t.scenes.slice(0,i).reduce((n,x) => n + x.seconds, 0); return `<li data-i="${i}">
+            <span class="sec" aria-label="${from}초부터 ${s.seconds}초">${from}–${from + s.seconds}<small>초</small></span>
+            <div><div class="sh"><b>${i+1}. ${ROLE[s.role]||esc(s.role)}</b><span class="tag ${s.source==="ai"?"warn":s.source==="photo"?"accent":""}">${SRC[s.source]||esc(s.source)}</span></div>
+              <div class="st">${s.text ? esc(s.text) : `<span class="note">자막 없음</span>`}</div>
+              ${s.note ? `<div class="n">${esc(s.note)}</div>` : ""}</div></li>`; }).join("")}</ol>
+          <div class="refs"><b>참고한 곳</b> · 형식의 뼈대만 참고, 영상은 베끼지 않음
             <ul>${(t.inspiredBy||[]).map((n,k) => `<li><a href="${esc(t.references[k]||"docs/references.md")}" target="_blank" rel="noopener">${esc(n)}</a></li>`).join("")}</ul></div>
         </div>
       </div>
@@ -753,8 +762,7 @@ function viewStudio(){
   const steps = ["형식 고르기","주제 후보 받기","주제 고르기","1차 확인 요청"];
   const canSend = c && !st.sentId;
   const condLabel = [st.cond.age,st.cond.cat,st.cond.when].filter(Boolean).join(" · ");
-  $("#view").innerHTML = `${stepper("studio")}
-  ${phead("STEP 3 · 주제", "대화로 만들기", `조건을 말하면 AI가 지금 뜨는 주제와 ${esc(regionName())} 관광자료를 이어 후보를 냅니다. 고른 근거는 대화째로 저장돼요.`)}
+  $("#view").innerHTML = `${phead("STEP 3 · 주제", "대화로 만들기", `조건을 말하면 AI가 지금 뜨는 주제와 ${esc(regionName())} 관광자료를 이어 후보를 내요.`, stepper("studio"))}
   <div class="card mbrief">${screen(t,0,{still:true})}<div><b>${t ? esc(t.name) : "형식 미정"}${c ? " · " + esc(c.asset) : ""}</b><span class="note">${steps[Math.min(stepAt,3)]} 단계</span></div>
     <button class="btn sm" data-send ${canSend?"":"disabled"}>1차 요청</button></div>
   <div class="studio">
@@ -780,7 +788,7 @@ function viewStudio(){
       <ol class="steps">${steps.map((s,i) => `<li class="${(i===0 ? t : i<stepAt) ? "on" : ""}">${s}</li>`).join("")}</ol>
       <div class="act"><button class="btn" data-send ${canSend?"":"disabled"} style="width:100%">1차 확인 요청 보내기</button>
       ${st.sentId ? `<a class="btn ghost" href="#/review/${st.sentId}" style="width:100%">확인함에서 보기</a>` : ""}
-      <p class="note" style="margin:0">${esc(me())}가 1·2·3차를 차례로 확인해요. 모든 결정은 누가·언제·왜와 함께 남습니다.</p></div>
+      <p class="snote">${esc(me())}가 1·2·3차를 차례로 확인하고, 모든 결정은 기록으로 남아요.</p></div>
     </aside>
   </div>`;
   renderLog();
@@ -873,8 +881,7 @@ function viewReview(selId){
   const sel = selId ? mine().find(p => p.id === selId) : null;
   if (sel) { const tab = TABS.find(x => x.f(sel)); if (tab) rv.tab = tab.k; }
   const tab = TABS.find(x => x.k === rv.tab), list = mine().filter(tab.f);
-  $("#view").innerHTML = `${stepper("review")}
-  ${phead("STEP 4 · 확인", "확인함", `${esc(regionName())} 담당자가 세 번 확인해야 게시할 수 있어요. 순서는 건너뛸 수 없고, 반려할 때는 사유가 꼭 필요해요.`)}
+  $("#view").innerHTML = `${phead("STEP 4 · 확인", "확인함", "1·2·3차를 순서대로 확인해요. 반려할 때는 사유가 꼭 필요해요.", stepper("review"))}
   <div class="review${sel?" open":""}">
     <div class="queue">
       <div class="qtabs" role="group" aria-label="대기열">${TABS.map(x => { const n = mine().filter(x.f).length; return `<button data-tab="${x.k}" aria-pressed="${x.k===rv.tab}" aria-label="${x.l} ${n}건" class="${n && /^g/.test(x.k) ? "has" : ""}"><b>${n}</b>${x.s || x.l}</button>`; }).join("")}</div>
