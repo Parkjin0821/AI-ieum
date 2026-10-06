@@ -51,18 +51,18 @@
 .sec-h .more{font-size:.84rem;font-weight:700;color:var(--sub);text-decoration:none}
 .sec-h .more:hover{color:var(--accent-fg)}
 /* 현황판 카드 */
-.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:clamp(10px,1vw,16px);margin-bottom:18px}
-.stat{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"ic lab" "ic num" "bar bar" "sub sub";column-gap:14px;row-gap:2px;align-items:center;padding:18px 20px;color:inherit;text-decoration:none;border-top:3px solid var(--line);transition:box-shadow .15s,border-color .15s}
-.stat:hover{box-shadow:var(--sh-2)}
-.stat .si{grid-area:ic;width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent-fg)}
-.stat .si svg{width:28px;height:28px}
-.stat .si.ok{background:var(--ok-bg);color:var(--ok)}.stat .si.warn{background:var(--warn-bg);color:var(--warn)}.stat .si.red{background:var(--seal-bg);color:var(--seal)}
-.stat:has(.si.ok){border-top-color:var(--ok)}.stat:has(.si.warn){border-top-color:#E0A43A}.stat:has(.si.red){border-top-color:var(--seal)}.stat:has(.si:not(.ok):not(.warn):not(.red)){border-top-color:var(--accent)}
-.stat .sl{grid-area:lab;font-size:.875rem;font-weight:700;color:var(--sub)}
-.stat>b{grid-area:num;font-size:clamp(1.9rem,2.1vw,2.4rem);letter-spacing:-.035em;line-height:1.05;font-variant-numeric:tabular-nums}
-.stat>b small{font-size:.95rem;color:var(--sub);font-weight:700;letter-spacing:0;margin-left:2px}
-.stat .bar{grid-area:bar;margin-top:10px}
-.stat .note{grid-area:sub;margin-top:8px;padding-top:8px;border-top:1px solid var(--line-2)}
+/* 운영 현황: 한 상자 안 4칸 (칸마다 상태 점 · 숫자 · 한 줄 설명), 칸을 누르면 그 화면으로 */
+.kstrip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;margin-bottom:18px}
+.kstrip a{display:grid;align-content:start;gap:6px;padding:16px 20px;color:inherit;text-decoration:none;border-left:1px solid var(--line-2);transition:background-color .15s}
+.kstrip a:first-child{border-left:0}
+.kstrip a:hover{background:var(--accent-soft)}
+.kstrip .kl{display:flex;align-items:center;gap:7px;font-size:.78rem;font-weight:600;color:var(--sub)}
+.kstrip .kl i{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none}
+.kstrip .ok i{background:var(--ok)} .kstrip .warn i{background:#E0A43A} .kstrip .red i{background:var(--seal)}
+.kstrip b{font-size:1.6rem;letter-spacing:-.03em;line-height:1.1;font-variant-numeric:tabular-nums}
+.kstrip b small{font-size:.8rem;color:var(--sub);font-weight:600;letter-spacing:0;margin-left:2px}
+.kstrip .ks{font-size:.74rem;color:var(--faint)}
+.kstrip .bar{height:5px;margin:2px 0}
 /* 최근 결정 기록: 공지 게시판 */
 .board .btabs{display:flex;border-bottom:1px solid var(--line);margin:4px 0 2px}
 .board .btabs button{border:0;background:none;padding:8px 14px;font-weight:700;font-size:.875rem;color:var(--sub);border-bottom:2px solid transparent;margin-bottom:-1px}
@@ -79,10 +79,8 @@
 .qmenu a{padding:14px 8px 12px} .qmenu a>span{width:46px;height:46px} .qmenu svg{width:23px;height:23px} .qmenu b{font-size:.84rem} .qmenu small{font-size:.7rem}
 .phead.gov h1{font-size:clamp(1.2rem,1.3vw,1.45rem)}
 .sec-h h2{font-size:1rem} .sec-h.in h2{font-size:.95rem} .sec-h h2 svg{width:18px;height:18px} .sec-h .asof{font-size:.74rem} .sec-h .more{font-size:.78rem}
-.stat{padding:16px 18px} .stat .si{width:44px;height:44px;border-radius:12px} .stat .si svg{width:23px;height:23px} .stat .sl{font-size:.8rem}
-.stat>b{font-size:clamp(1.5rem,1.7vw,1.9rem)} .stat>b small{font-size:.8rem} .stat .note{font-size:.78rem}
 .board .btabs button{font-size:.8rem;padding:7px 12px} .blist li a{font-size:.84rem;padding:9px 4px} .blist time,.blist .bm{font-size:.74rem}
-@media (max-width:1100px){ .qmenu{grid-template-columns:repeat(3,minmax(0,1fr))} .qmenu a:nth-child(4){border-left:0} .qmenu a:nth-child(n+4){border-top:1px solid var(--line-2)} .stats{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:1100px){ .qmenu{grid-template-columns:repeat(3,minmax(0,1fr))} .qmenu a:nth-child(4){border-left:0} .qmenu a:nth-child(n+4){border-top:1px solid var(--line-2)} .kstrip{grid-template-columns:repeat(2,minmax(0,1fr))} .kstrip a:nth-child(3){border-left:0} .kstrip a:nth-child(n+3){border-top:1px solid var(--line-2)} }
 @media (max-width:860px){ .blist .bm{display:none} .phead.gov .crumb{justify-self:start} .crumb.top{justify-content:flex-start} }
 /* 개요 */
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(200px,15vw,260px),1fr));gap:clamp(10px,1vw,16px);margin-bottom:18px}
@@ -304,12 +302,9 @@ function renderShell(){
   $$("[data-cnt]").forEach(c => { c.textContent = n; c.hidden = !n; });
 }
 const icon = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
-/* 공공 행정 화면에서 익숙한 그림: 서류(게시·반려), 결재판(확인 대기), 접힌 지도(지역), 결재 도장(결정 기록) */
-const DOC = '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/>';
+/* 공공 행정 화면에서 익숙한 그림: 결재판(확인 대기), 접힌 지도(지역), 결재 도장(결정 기록) */
 const ICON = {
-  pub: icon(DOC + '<path d="M9 14.5l2 2 4-4"/>'),
   wait: icon('<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2.8h6V4"/><circle cx="12" cy="13" r="3.6"/><path d="M12 11.3V13l1.2.9"/>'),
-  rej: icon(DOC + '<path d="M9.5 12.5l5 5M14.5 12.5l-5 5"/>'),
   map: icon('<path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/>'),
   stamp: icon('<path d="M9.5 3h5l-.8 7h-3.4z"/><path d="M5 13h14v3.5H5z"/><path d="M4 20h16"/>'),
   people: icon('<circle cx="9" cy="8" r="3"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0"/><circle cx="17" cy="9" r="2.4"/><path d="M15.6 14.3A4.6 4.6 0 0 1 20.5 19"/>'),
@@ -415,7 +410,7 @@ function viewHome(){
   const logs = DB.logs.slice().sort((a,b) => a.at < b.at ? 1 : -1);
   const waitAll = wait(1) + wait(2) + wait(3), on = Sh.enabledTemplates().length, rej = P.filter(p => p.status === "rejected").length;
   const now = new Date(), asOf = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,"0")}.${String(now.getDate()).padStart(2,"0")} ${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
-  const stat = (href, cls, ic, label, num, unit, sub, extra) => `<a class="card stat" href="${href}"><span class="si ${cls}">${ic}</span><span class="sl">${label}</span><b>${num}<small>${unit}</small></b>${extra || ""}<span class="note">${sub}</span></a>`;
+  const stat = (href, cls, label, num, unit, sub, extra) => `<a href="${href}"><span class="kl ${cls}"><i></i>${label}</span><b>${num}<small>${unit}</small></b>${extra || ""}<span class="ks">${sub}</span></a>`;
   const qm = (href, ic, label, sub, ext) => `<a href="${href}"${ext ? ' target="_blank" rel="noopener"' : ""}><span>${ic}</span><b>${label}</b><small>${sub}</small></a>`;
   $("#view").innerHTML = `${crumb("관리자 · 개요", "top")}<section class="hero has-slides" aria-label="광역 운영 소개"><span class="slides" aria-hidden="true"></span><span class="slide-cap"></span>
     <div><small>광역 운영 · ${Sh.SIDO_LABEL}</small><h2>관광 숏폼 광역 관리</h2><p>지역 ${active}곳에서 11월 1일까지 40편 게시를 목표로 해요. 지금 ${pub.length}편 게시, ${waitAll}건이 확인을 기다려요.</p></div></section>
@@ -427,13 +422,12 @@ function viewHome(){
     ${qm("#/storage", ICON.backup, "저장 · 백업", Sh.REMOTE ? "공용 DB" : "이 주소만")}
     ${qm(esc(Sh.CFG.userAppUrl || "#"), ICON.link, "사용자 사이트", "새 창", true)}
   </nav>
-  ${phead("", "전체 현황", "")}
   <div class="sec-h"><h2>운영 현황</h2><span class="asof">${asOf} 기준 · 이 브라우저의 시연 데이터</span></div>
-  <div class="stats">
-    ${stat("#/data", "ok", ICON.pub, "게시 완료", pub.length, " / 40편", "11월 1일까지 목표 40편", `<span class="bar" role="img" aria-label="40편 중 ${pub.length}편"><i style="width:${Math.min(100, pub.length/40*100)}%"></i></span>`)}
-    ${stat("#/data", "warn", ICON.wait, "확인 대기", waitAll, "건", `1차 ${wait(1)} · 2차 ${wait(2)} · 3차 ${wait(3)} · 제작 중 ${P.filter(p=>p.status==="making").length}`)}
-    ${stat("#/data", "red", ICON.rej, "반려", rej, "건", "사유는 콘텐츠 · 기록에서")}
-    ${stat("#/regions", "", ICON.map, "사용 중인 지역", active, ` / ${Sh.REGIONS.length}곳`, `관광자료가 있는 지역 ${withData}곳 (시연)`)}
+  <div class="kstrip">
+    ${stat("#/data", "ok", "게시 완료", pub.length, " / 40편", "11월 1일까지 목표 40편", `<span class="bar" role="img" aria-label="40편 중 ${pub.length}편"><i style="width:${Math.min(100, pub.length/40*100)}%"></i></span>`)}
+    ${stat("#/data", "warn", "확인 대기", waitAll, "건", `1차 ${wait(1)} · 2차 ${wait(2)} · 3차 ${wait(3)} · 제작 중 ${P.filter(p=>p.status==="making").length}`)}
+    ${stat("#/data", "red", "반려", rej, "건", "사유는 콘텐츠 · 기록에서")}
+    ${stat("#/regions", "", "사용 중인 지역", active, ` / ${Sh.REGIONS.length}곳`, `관광자료가 있는 지역 ${withData}곳 (시연)`)}
   </div>
   <div class="cols">
     <section class="card panel fill"><div class="sec-h in"><h2>${ICON.goal}합격선 <span class="pill ${filled===12?"ok":""}">${filled} / 12</span></h2><span class="asof">12유형마다 게시 3편</span></div><p class="note">점 하나가 1편, 3편을 채우면 초록색이에요.</p>
