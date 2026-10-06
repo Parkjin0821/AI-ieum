@@ -6,12 +6,19 @@
   const W = root.Workflow, R = root.TemplateRules;
 
   /* ---------- 지역 ---------- */
+  /* 2026-07-01 광주광역시 + 전라남도 → 전남광주통합특별시 (시·군·구 이름은 그대로, 광역 이름만 바뀜).
+     지역 id("광주 북구", "전남 목포시")는 저장된 콘텐츠·사진·색·슬로건의 열쇠라 옛 광역 약칭을 그대로 쓴다.
+     area: 통합특별시 안에서 찾기 쉽게 옛 광역으로 묶은 것 */
   const SIDO = [
-    { id: "gj", name: "광주광역시", short: "광주", list: ["동구", "서구", "남구", "북구", "광산구"] },
-    { id: "jn", name: "전라남도", short: "전남", list: ["목포시", "여수시", "순천시", "나주시", "광양시", "담양군", "곡성군", "구례군", "고흥군", "보성군", "화순군", "장흥군", "강진군", "해남군", "영암군", "무안군", "함평군", "영광군", "장성군", "완도군", "진도군", "신안군"] },
-    { id: "jb", name: "전북특별자치도", short: "전북", list: ["전주시", "군산시", "익산시", "정읍시", "남원시", "김제시", "완주군", "진안군", "무주군", "장수군", "임실군", "순창군", "고창군", "부안군"] }
+    { id: "jg", name: "전남광주통합특별시", short: "전남광주", areas: [
+      { id: "gj", name: "옛 광주광역시", short: "광주", list: ["동구", "서구", "남구", "북구", "광산구"] },
+      { id: "jn", name: "옛 전라남도", short: "전남", list: ["목포시", "여수시", "순천시", "나주시", "광양시", "담양군", "곡성군", "구례군", "고흥군", "보성군", "화순군", "장흥군", "강진군", "해남군", "영암군", "무안군", "함평군", "영광군", "장성군", "완도군", "진도군", "신안군"] }] },
+    { id: "jb", name: "전북특별자치도", short: "전북", areas: [
+      { id: "jb", name: "", short: "전북", list: ["전주시", "군산시", "익산시", "정읍시", "남원시", "김제시", "완주군", "진안군", "무주군", "장수군", "임실군", "순창군", "고창군", "부안군"] }] }
   ];
-  const REGIONS = SIDO.flatMap(s => s.list.map(n => ({ id: `${s.short} ${n}`, sido: s.id, sidoName: s.name, short: s.short, name: n })));
+  const REGIONS = SIDO.flatMap(s => s.areas.flatMap(a => a.list.map(n => ({ id: `${a.short} ${n}`, sido: s.id, sidoName: s.name, area: a.id, areaName: a.name, short: a.short, name: n }))));
+  SIDO.forEach(s => { s.list = REGIONS.filter(r => r.sido === s.id); }); // 광역별 지역 수 표시용
+  const SIDO_LABEL = "전남광주·전북";
   const regionOf = id => REGIONS.find(r => r.id === id);
 
   /* 지역 고유 색 — 그 지역 하면 떠오르는 느낌 (공식 상징색이 아님, 관리자 페이지에서 바꿀 수 있음)
@@ -467,7 +474,7 @@
     signOut() { lsRemove(AUTH.session); }
   };
 
-  root.Shared = { SIDO, REGIONS, themeBtn, auth, regionOf, THEME, ASSETS, TRENDS, assetsIn, candOf, candidates,
+  root.Shared = { SIDO, SIDO_LABEL, REGIONS, themeBtn, auth, regionOf, THEME, ASSETS, TRENDS, assetsIn, candOf, candidates,
     KEY, read, write, remove, REMOTE, CFG, init, refresh, nextPlanId, PHOTOS, photoUrl, photoCredit, resetRegionPhoto, regionSettings, saveRegionSettings, resetRegionColor,
     defaultTemplates, templates, disabledIds, enabledTemplates, scenesOf, seed, loadDB, saveDB, mergeDB,
     ROLE, SRC, HOOK, STATUS, esc, fmt, day, hash, screen, R };

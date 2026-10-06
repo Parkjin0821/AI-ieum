@@ -36,6 +36,9 @@
 .rtile b{font-size:1.02rem;letter-spacing:-.02em}
 .rtile small{color:var(--faint);font-size:.75rem}
 .rtile .tag{justify-self:start;margin-top:4px}
+.rgh{grid-column:1/-1;margin:10px 0 -2px;font-size:.95rem;display:flex;align-items:center;gap:6px}
+.rgh:first-child{margin-top:0}
+.rgh span{font-size:.75rem;color:var(--sub);background:var(--line-2);border-radius:4px;padding:1px 7px}
 .rtile .tag.rc{background:color-mix(in oklab,var(--c) 12%,var(--surface));color:color-mix(in oklab,var(--c) var(--keep),#fff)}
 .rtile[aria-pressed="true"]{border-color:var(--c);box-shadow:0 0 0 3px color-mix(in oklab,var(--c) 22%,transparent)}
 .rtile[aria-pressed="true"] .band::after{z-index:1;content:"지금 지역";position:absolute;right:8px;top:8px;font-size:.68rem;font-weight:800;background:var(--surface);color:var(--c);padding:2px 7px;border-radius:999px}
@@ -274,7 +277,7 @@ details.thread .tl div.me{background:var(--accent-soft)}
 <body>
 <div class="app">
   <header class="ghead">
-    <div class="gstrip"><div class="wrap"><span>광주·전남·전북 시·군·구 관광 숏폼 기획 · 확인</span><span class="sp"></span><div class="gutil" id="acct"></div></div></div>
+    <div class="gstrip"><div class="wrap"><span>전남광주통합특별시 · 전북특별자치도 시·군·구 관광 숏폼 기획 · 확인</span><span class="sp"></span><div class="gutil" id="acct"></div></div></div>
     <div class="gbar"><div class="wrap">
       <a class="brand" href="#/" data-home title="처음 화면으로 (필터·대화 초기화)"><i></i>AI-이음<small>사용자</small></a>
       <a class="gorg" href="#/region" id="rcard"></a>
@@ -386,11 +389,11 @@ function renderShell(){
   $("#rcard").title = ph ? `사진: ${Sh.photoCredit(s)}` : "";
   $("#rcard").innerHTML = r
     ? `<span class="emb"${emb}></span><span><small>${esc(r.sidoName)}</small><b>${esc(r.name)}</b></span><span class="chg">지역 바꾸기</span>`
-    : `<span class="emb"></span><span><small>광주·전남·전북</small><b>지역 고르기</b></span><span class="chg">${Sh.REGIONS.length}곳</span>`;
+    : `<span class="emb"></span><span><small>${Sh.SIDO_LABEL}</small><b>지역 고르기</b></span><span class="chg">${Sh.REGIONS.length}곳</span>`;
   $("#acct").innerHTML = !sess
     ? `<a href="#/login">로그인</a><i></i><a href="#/signup">가입 신청</a><i></i>${Sh.themeBtn("gu")}`
     : `<b>${esc(r ? me() : sess.name)}</b><small>${sess.demo ? "시연 계정" : esc(sess.dept || "")}${r ? " · 1·2·3차 확인 담당" : ""}</small><i></i><button type="button" data-open-settings>설정 · 시연 도구</button><i></i>${Sh.themeBtn("gu")}<i></i><button type="button" data-logout>로그아웃</button>`;
-  if (!sess) $("#rcard").innerHTML = `<span class="emb"></span><span><small>광주·전남·전북</small><b>담당자 로그인</b></span>`;
+  if (!sess) $("#rcard").innerHTML = `<span class="emb"></span><span><small>${Sh.SIDO_LABEL}</small><b>담당자 로그인</b></span>`;
   $("#topbar").innerHTML = !sess ? `<a href="#/login"><span class="emb"></span><b>AI-이음</b><small>담당자 로그인</small></a>${Sh.themeBtn("gu")}` : `<a href="#/region"><span class="emb"${emb}></span><b>${r ? esc(r.name) : "지역 고르기"}</b><small>${r ? esc(s.mood || r.sidoName) : "AI-이음"}</small></a>${r ? `<button type="button" onclick="location.hash='#/region'">바꾸기</button>` : ""}<button type="button" data-open-settings aria-label="설정">⚙</button>`;
   $$("[data-cnt]").forEach(c => { const n = S.region ? waiting() : 0; c.textContent = n; c.hidden = !n; });
   $$("[data-open-settings]").forEach(b => b.onclick = openSettings);
@@ -456,7 +459,7 @@ $$("[data-home]").forEach(a => a.addEventListener("click", e => {
 function authSide(title, lead, items){
   const imgs = Sh.REGIONS.map(x => Sh.photoUrl(Sh.regionSettings(x.id), 330)).filter(Boolean).slice(0, 6);
   return `<section class="auth-side"><span class="mosaic" aria-hidden="true">${imgs.map(u => `<img src="${esc(u)}" alt="" referrerpolicy="no-referrer">`).join("")}</span>
-    <small>광주·전남·전북 시·군·구 관광 담당자</small><h1>${title}</h1><p>${lead}</p><ul>${items.map(x => `<li>${x}</li>`).join("")}</ul></section>`;
+    <small>${Sh.SIDO_LABEL} 시·군·구 관광 담당자</small><h1>${title}</h1><p>${lead}</p><ul>${items.map(x => `<li>${x}</li>`).join("")}</ul></section>`;
 }
 /* 비밀번호 보기/숨기기 */
 function peek(){
@@ -503,8 +506,8 @@ function viewLogin(){
   };
 }
 function viewSignup(){
-  const f = S.su || (S.su = {sido: "jn"});
-  $("#view").innerHTML = `<div class="signup">${phead("가입 신청", "담당자 가입 신청", "광주·전남·전북 시·군·구 관광 담당자만 신청할 수 있어요. 광역 관리자가 소속을 확인한 뒤 승인해요.")}
+  const f = S.su || (S.su = {sido: "jg"});
+  $("#view").innerHTML = `<div class="signup">${phead("가입 신청", "담당자 가입 신청", "전남광주통합특별시·전북특별자치도 시·군·구 관광 담당자만 신청할 수 있어요. 광역 관리자가 소속을 확인한 뒤 승인해요.")}
   <form class="card" id="sf" novalidate>
     <section class="fsec"><h3><i>1</i>소속</h3>
       <div class="row2">
@@ -539,7 +542,7 @@ function viewSignup(){
     </section>
     <div class="fsub"><p class="err-t" id="serr" role="alert"></p><a class="btn ghost" href="#/login">취소</a><button class="btn" type="submit">가입 신청</button></div>
   </form></div>`;
-  const regs = () => { $("#sreg").innerHTML = `<option value="">선택하세요</option>` + Sh.REGIONS.filter(r => r.sido === f.sido).map(r => `<option value="${esc(r.id)}">${esc(r.name)}</option>`).join(""); };
+  const regs = () => { $("#sreg").innerHTML = `<option value="">선택하세요</option>` + Sh.SIDO.find(s => s.id === f.sido).areas.map(a => { const o = Sh.REGIONS.filter(r => r.area === a.id && r.sido === f.sido).map(r => `<option value="${esc(r.id)}">${esc(r.name)}</option>`).join(""); return a.name ? `<optgroup label="${esc(a.name)}">${o}</optgroup>` : o; }).join(""); };
   regs();
   peek();
   $("#ssido").onchange = e => { f.sido = e.target.value; regs(); };
@@ -578,7 +581,7 @@ function viewSignup(){
    ========================================================= */
 function viewRegion(){
   const cur = Sh.regionOf(S.region);
-  const f = S.rg || (S.rg = {sido: cur ? cur.sido : "jn", q:""});
+  const f = S.rg || (S.rg = {sido: cur ? cur.sido : "jg", q:""});
   const blocked = S.region && !rs().active;
   $("#view").innerHTML = `${stepper("region")}
   ${phead("STEP 1 · 지역", "어느 지역의 숏폼을 만들까요?", "지역을 고르면 그 지역 관광자료로만 주제 후보를 찾고, 확인함도 그 지역 것만 보여요. 화면 색도 지역 색으로 바뀝니다.")}
@@ -592,16 +595,17 @@ function viewRegion(){
   <div class="rgrid" id="rgrid" role="group" aria-label="시·군·구"></div>
   <details class="credits" id="credits"></details>`;
   const grid = () => {
-    const list = Sh.REGIONS.filter(r => f.q ? (r.name + r.sidoName).includes(f.q) : r.sido === f.sido);
-    $("#rgrid").innerHTML = list.map(r => {
+    const list = Sh.REGIONS.filter(r => f.q ? (r.name + r.sidoName + r.areaName + r.short).includes(f.q) : r.sido === f.sido);
+    const head = (r, i) => !f.q && r.areaName && (i === 0 || list[i-1].area !== r.area) ? `<h3 class="rgh">${esc(r.areaName)} <span>${list.filter(x => x.area === r.area).length}</span></h3>` : "";
+    $("#rgrid").innerHTML = list.map((r, i) => head(r, i) + (() => {
       const s = Sh.regionSettings(r.id), n = Sh.assetsIn(r.id).length;
       const ph = Sh.photoUrl(s, 330);
       return `<button class="rtile${ph?" has-photo":""}" data-region="${esc(r.id)}" style="--c:${s.color};--c2:${s.color2}" aria-pressed="${r.id===S.region}" ${s.active?"":"disabled"} aria-label="${esc(r.sidoName)} ${esc(r.name)}${s.mood?", "+esc(s.mood):""}, ${n?`관광자료 ${n}건`:"자료 준비 중"}">
         <span class="band">${ph?`<img src="${esc(ph)}" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" onerror="this.parentNode.parentNode.classList.remove('has-photo');this.remove()">`:""}${s.mood?`<span class="mood">${esc(s.mood)}</span>`:""}${ph?`<span class="cr">${esc(Sh.photoCredit(s))}</span>`:""}</span>
-        <span class="body"><b>${esc(r.name)}</b><small>${esc(r.sidoName)}</small>
+        <span class="body"><b>${esc(r.name)}</b><small>${esc(r.areaName ? r.areaName.replace("옛 ", "") + " · 통합특별시" : r.sidoName)}</small>
           <span class="tag${n?" rc":""}">${s.active ? (n?`관광자료 ${n}건`:"자료 준비 중") : "사용 중지"}</span></span>
       </button>`;
-    }).join("") || `<p class="empty">'${esc(f.q)}'에 맞는 지역이 없어요.</p>`;
+    })()).join("") || `<p class="empty">'${esc(f.q)}'에 맞는 지역이 없어요.</p>`;
     $$("[data-region]").forEach(b => b.onclick = () => pickRegion(b.dataset.region));
     // 사진 출처 — CC 라이선스는 저작자·라이선스·원본 링크 표시가 조건
     const used = list.map(r => [r, Sh.regionSettings(r.id)]).filter(([,s]) => s.photo);

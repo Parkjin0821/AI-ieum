@@ -179,7 +179,7 @@
 <body>
 <div class="app">
   <header class="ghead">
-    <div class="gstrip"><div class="wrap"><span>광주·전남·전북 관광 숏폼 — 광역 관리</span><span class="sp"></span>
+    <div class="gstrip"><div class="wrap"><span>전남광주통합특별시 · 전북특별자치도 관광 숏폼 — 광역 관리</span><span class="sp"></span>
       <div class="gutil" id="acct"></div></div></div>
     <div class="gbar"><div class="wrap">
       <a class="brand" href="#/" data-home title="처음 화면으로 (필터·검색 초기화)"><i></i>AI-이음<small>관리자</small></a>
@@ -231,7 +231,7 @@ function renderShell(){
   $$("[data-logout]").forEach(b => b.onclick = logout);
   $(".tabs").hidden = !admin;
   const active = Sh.REGIONS.filter(r => Sh.regionSettings(r.id).active).length;
-  $("#acard").innerHTML = `<span class="emb"></span><span><small>광역 운영 · 광주·전남·전북</small><b>지역 ${active}곳</b></span><span class="chg ${Sh.REMOTE ? "ok" : "off"}">${Sh.REMOTE ? "공용 DB 연결됨" : "이 주소에만 저장 중"}</span>`;
+  $("#acard").innerHTML = `<span class="emb"></span><span><small>광역 운영 · ${Sh.SIDO_LABEL}</small><b>지역 ${active}곳</b></span><span class="chg ${Sh.REMOTE ? "ok" : "off"}">${Sh.REMOTE ? "공용 DB 연결됨" : "이 주소에만 저장 중"}</span>`;
   const n = DB.plans.filter(p => /gate\d_wait/.test(p.status)).length;
   $$("[data-cnt]").forEach(c => { c.textContent = n; c.hidden = !n; });
 }
@@ -285,7 +285,7 @@ function logout(){ Sh.auth.signOut(); if ($("#dlg").open) $("#dlg").close(); toa
 function viewLogin(){
   $("#view").innerHTML = `<div class="auth">
     <section class="auth-side"><span class="mosaic" aria-hidden="true">${regionPhotos(6).map(u => `<img src="${esc(u)}" alt="" referrerpolicy="no-referrer">`).join("")}</span>
-      <small>광주·전남·전북 광역 운영</small><h1>AI-이음 관리자 로그인</h1><p>지역 41곳의 담당자·템플릿·확인 기록을 관리하는 곳이에요.</p>
+      <small>${Sh.SIDO_LABEL} 광역 운영</small><h1>AI-이음 관리자 로그인</h1><p>지역 41곳의 담당자·템플릿·확인 기록을 관리하는 곳이에요.</p>
       <ul><li>지역 사용 여부 · 담당자 · 지역 색 관리</li><li>템플릿 규칙 검사와 사용 설정</li><li>지울 수 없는 결정 기록 조회 · 내려받기</li></ul></section>
     <form class="card auth-card" id="lf" novalidate>
       <h2>관리자 로그인</h2><p>광역 담당 부서에서 발급한 계정으로 로그인하세요.</p>
@@ -328,7 +328,7 @@ function viewHome(){
   const what = l => l.kind === "request" ? "1차 확인 요청" : l.kind === "system" ? l.note : `${l.gate}차 ${l.decision === "pass" ? "통과" : "반려"}`;
   const waitAll = wait(1) + wait(2) + wait(3), on = Sh.enabledTemplates().length;
   $("#view").innerHTML = `<section class="hero has-mosaic" aria-label="광역 운영 현황"><span class="mosaic" aria-hidden="true">${regionPhotos(6).map(u => `<img src="${esc(u)}" alt="" referrerpolicy="no-referrer">`).join("")}</span>
-    <div><small>광역 운영 · 광주·전남·전북</small><h2>관광 숏폼 광역 관리</h2><p>지역 ${active}곳에서 11월 1일까지 40편 게시를 목표로 해요. 지금 ${pub.length}편 게시, ${waitAll}건이 확인을 기다려요.</p></div>
+    <div><small>광역 운영 · ${Sh.SIDO_LABEL}</small><h2>관광 숏폼 광역 관리</h2><p>지역 ${active}곳에서 11월 1일까지 40편 게시를 목표로 해요. 지금 ${pub.length}편 게시, ${waitAll}건이 확인을 기다려요.</p></div>
     <nav class="quick" aria-label="자주 찾는 메뉴">
       <a href="#/data"><span>${ICON.wait}</span>확인 대기<small>${waitAll}건</small></a>
       <a href="#/regions"><span>${ICON.map}</span>지역 · 담당자<small>${active}곳 사용</small></a>
@@ -375,7 +375,7 @@ function viewRegions(){
     $("#rbody").innerHTML = list.map(r => { const s = Sh.regionSettings(r.id), id = esc(r.id), ph = Sh.photoUrl(s, 330); return `<tr data-id="${id}">
       <td><button class="phbtn" data-photo title="${ph ? esc(Sh.photoCredit(s)) : "사진 없음"}" aria-label="${id} 사진 바꾸기">${ph ? `<img src="${esc(ph)}" alt="" loading="lazy" referrerpolicy="no-referrer">` : "<span>+ 사진</span>"}</button></td>
       <td><div class="colorpair"><input type="color" data-k="color" value="${s.color}" aria-label="${id} 진한 색"><input type="color" data-k="color2" value="${s.color2}" aria-label="${id} 밝은 색"><span class="grad" style="background:linear-gradient(135deg,${s.color},${s.color2})"></span></div></td>
-      <td class="name"><span class="rth" style="--c:${s.color}"><span><b>${esc(r.name)}</b><small>${esc(r.sidoName)}</small></span></span></td>
+      <td class="name"><span class="rth" style="--c:${s.color}"><span><b>${esc(r.name)}</b><small>${esc(r.sidoName)}${r.areaName ? " · " + esc(r.areaName) : ""}</small></span></span></td>
       <td><input class="inp" data-k="mood" value="${esc(s.mood)}" maxlength="14" aria-label="${id} 분위기 문구" style="min-width:130px"></td>
       <td><input class="inp" data-k="slogan" value="${esc(s.slogan)}" maxlength="30" aria-label="${id} 슬로건" placeholder="공식 브랜드 슬로건" title="${s.sloganSrc ? "출처: " + esc(s.sloganSrc) : ""}" style="min-width:180px"></td>
       <td><input class="inp" data-k="manager" value="${esc(s.manager)}" maxlength="20" aria-label="${id} 담당자" style="min-width:130px"></td>
