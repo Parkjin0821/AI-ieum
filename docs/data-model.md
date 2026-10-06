@@ -8,7 +8,7 @@
 
 | 표 | 내용 | 주요 칸 | 규칙 |
 |---|---|---|---|
-| `regions` | 시·군·구 계정 | id, sido, name, active, manager, cross_check, color, color2, mood, photo, photo_by, photo_license, photo_page | 관리자만 수정. `cross_check` 기본 false (담당자 한 명이 1·2·3차 확인). 사진은 출처·라이선스 없이는 저장 안 됨 |
+| `regions` | 시·군·구 계정 | id, sido, name, active, manager, cross_check, color, color2, mood, slogan, photo, photo_by, photo_license, photo_page | 관리자만 수정. `cross_check` 기본 false (담당자 한 명이 1·2·3차 확인). 사진은 출처·라이선스 없이는 저장 안 됨 |
 | `users` | 담당자·관리자 | id, region_id, name, role (`manager`·`admin`) | 담당자는 자기 지역만 읽고 쓸 수 있음 |
 | `local_assets` | 지역 관광자료 (관광공사) | id, region_id, name, categories, photo_license, source_url | 변경 금지 사진은 `photo_license`로 표시 → 원본 비율 유지 |
 | `trend_logs` | 트렌드 수집 | id, keyword, category, age, source (데이터랩·유튜브), score, collected_at | 공식 API·공개 지수만 |

@@ -236,14 +236,17 @@
   const nextPlanId = db => REMOTE ? "P-" + Date.now().toString(36).toUpperCase().slice(-5) : "P-" + (db.seq++);
 
   /* 지역 설정 (관리자 페이지에서 바꿈) */
+  /* 지자체 공식 브랜드 슬로건 — 출처를 확인한 것만. 없으면 빈 칸(화면은 분위기 문구로 대신) */
+  const BRAND = {};
   function regionSettings(id) {
     const r = regionOf(id) || { name: id };
     const saved = (read(KEY.regions, {}) || {})[id] || {};
     const th = THEME[id];
     const h = hash(id) % 360;
-    const ph = PHOTOS[id] || {};
+    const ph = PHOTOS[id] || {}, br = BRAND[id] || {};
     return Object.assign({ active: true, manager: `${r.name} 담당자`, crossCheck: false,
       color: th ? th.c : hslHex(h, 46, 34), color2: th ? th.c2 : hslHex(h, 58, 78), mood: th ? th.mood : "",
+      slogan: br.slogan || "", sloganSrc: br.src || "",
       photo: ph.src || "", photoBy: ph.by || "", photoLic: ph.lic || "", photoPage: ph.page || "" }, saved);
   }
   /** 사진 주소 — 기본 사진은 폭을 골라 쓰고, 관리자가 넣은 주소는 그대로 */
@@ -379,7 +382,49 @@
     setThemeMode(THEME_ORDER[(THEME_ORDER.indexOf(themeMode()) + 1) % THEME_ORDER.length]);
   });
 
-  root.Shared = { SIDO, REGIONS, themeBtn, regionOf, THEME, ASSETS, TRENDS, assetsIn, candOf, candidates,
+  /* ---------- 로그인 · 가입 신청 (시연용) ----------
+     계정은 이 브라우저(localStorage)에만 두고 공용 DB로 보내지 않는다. 비밀번호는 SHA-256 해시만 저장.
+     운영 전환 때 이 묶음을 Supabase Auth(signUp · signInWithPassword · signOut)로 바꾸고 schema.sql 정책을 로그인 기준으로 바꾼다. */
+  const AUTH = { accounts: "aiieum-accounts-v1", session: "aiieum-session" };
+  const DEMO_ADMIN = { email: "admin@ai-ieum.test", pw: "aiieum-demo", name: "광역 관리자" }; // README '시연 계정'과 같게
+  async function pwHash(email, pw) {
+    const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`aiieum:${email.toLowerCase()}:${pw}`));
+    return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+  }
+  const publicAcct = a => { const { pw, ...rest } = a; return rest; };
+  const auth = {
+    session: () => lsRead(AUTH.session, null),
+    accounts: () => (lsRead(AUTH.accounts, []) || []).map(publicAcct),
+    /** 비밀번호 규칙: 8자 이상, 영문·숫자 모두 */
+    pwProblem: pw => pw.length < 8 ? "비밀번호는 8자 이상이어야 해요" : !(/[A-Za-z]/.test(pw) && /\d/.test(pw)) ? "영문과 숫자를 함께 써주세요" : "",
+    async signUp(f) {
+      const email = f.email.trim().toLowerCase(), list = lsRead(AUTH.accounts, []) || [];
+      if (list.some(a => a.email === email)) throw new Error("이미 가입 신청한 메일이에요");
+      // 운영: status "pending" → 광역 관리자 승인. 시연판은 바로 승인
+      const acct = { email, name: f.name.trim(), region: f.region, dept: f.dept.trim(), title: (f.title || "").trim(), phone: (f.phone || "").trim(),
+        role: "manager", status: "approved", createdAt: new Date().toISOString(), pw: await pwHash(email, f.pw) };
+      list.push(acct); lsWrite(AUTH.accounts, list);
+      return publicAcct(acct);
+    },
+    async signIn(email, pw, role) {
+      email = email.trim().toLowerCase();
+      if (role === "admin") {
+        if (email !== DEMO_ADMIN.email || pw !== DEMO_ADMIN.pw) throw new Error("메일 또는 비밀번호가 맞지 않아요");
+        const s = { email, name: DEMO_ADMIN.name, role: "admin", at: new Date().toISOString() };
+        lsWrite(AUTH.session, s); return s;
+      }
+      const a = (lsRead(AUTH.accounts, []) || []).find(x => x.email === email);
+      if (!a || a.pw !== await pwHash(email, pw)) throw new Error("메일 또는 비밀번호가 맞지 않아요");
+      if (a.status !== "approved") throw new Error("광역 관리자 승인을 기다리고 있어요");
+      const s = { email, name: a.name, region: a.region, dept: a.dept, role: a.role, at: new Date().toISOString() };
+      lsWrite(AUTH.session, s); return s;
+    },
+    /** 계정 없이 둘러보기 (시연) */
+    demo(role) { const s = { demo: true, role: role || "manager", name: role === "admin" ? DEMO_ADMIN.name : "시연 계정", at: new Date().toISOString() }; lsWrite(AUTH.session, s); return s; },
+    signOut() { lsRemove(AUTH.session); }
+  };
+
+  root.Shared = { SIDO, REGIONS, themeBtn, auth, regionOf, THEME, ASSETS, TRENDS, assetsIn, candOf, candidates,
     KEY, read, write, remove, REMOTE, CFG, init, refresh, nextPlanId, PHOTOS, photoUrl, photoCredit, resetRegionPhoto, regionSettings, saveRegionSettings, resetRegionColor,
     defaultTemplates, templates, disabledIds, enabledTemplates, scenesOf, seed, loadDB, saveDB, mergeDB,
     ROLE, SRC, HOOK, STATUS, esc, fmt, day, hash, screen, R };
