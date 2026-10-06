@@ -400,8 +400,8 @@ function renderShell(){
   $("#rcard").title = r ? "지역 바꾸기" : "지역 고르기";
   $("#rcard").setAttribute("aria-label", r ? `${r.sidoName} ${r.name} — 지역 바꾸기` : "지역 고르기");
   $("#rcard").innerHTML = r
-    ? `<span class="emb"${emb}></span><span><small>${esc(r.sidoName)}</small><b>${esc(r.name)}</b></span><span class="chg" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></span>`
-    : `<span class="emb"></span><span><small>${Sh.SIDO_LABEL}</small><b>지역 고르기</b></span><span class="chg" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></span>`;
+    ? `<span class="emb"${emb}></span><span><small>${esc(r.sidoName)}</small><b>${esc(r.name)}</b></span>`
+    : `<span class="emb"></span><span><small>${Sh.SIDO_LABEL}</small><b>지역 고르기</b></span>`;
   $("#acct").innerHTML = !sess
     ? Sh.themeBtn("gu") // 로그인 화면엔 로그인 카드가 있으니 화면 모드만
     : `<b>${esc(r ? me() : sess.name)}</b><small>${sess.demo ? "시연 계정" : esc(sess.dept || "")}${r ? " · 1·2·3차 확인 담당" : ""}</small><i></i><button type="button" data-open-settings>설정 · 시연 도구</button><i></i>${Sh.themeBtn("gu")}<i></i>${sess.demo
@@ -409,7 +409,7 @@ function renderShell(){
       : `<button type="button" data-logout>로그아웃</button>`}`;
   $("#rcard").hidden = !sess; // 로그인 전에는 로고와 같은 곳(로그인)으로 가므로 숨김
   $(".gbar .rnav").hidden = !sess; // 메뉴는 로그인한 뒤에
-  $("#topbar").innerHTML = !sess ? `<a href="#/login"><span class="emb"></span><b>AI-이음</b><small>${location.hash.startsWith("#/signup") ? "담당자 회원가입" : "담당자 로그인"}</small></a>${Sh.themeBtn("gu")}` : `<a href="#/region"><span class="emb"${emb}></span><b>${r ? esc(r.name) : "지역 고르기"}</b><small>${r ? esc(s.mood || r.sidoName) : "AI-이음"}</small><span class="chg" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></span></a><button type="button" data-open-settings aria-label="설정">⚙</button>`;
+  $("#topbar").innerHTML = !sess ? `<a href="#/login"><span class="emb"></span><b>AI-이음</b><small>${location.hash.startsWith("#/signup") ? "담당자 회원가입" : "담당자 로그인"}</small></a>${Sh.themeBtn("gu")}` : `<a href="#/region"><span class="emb"${emb}></span><b>${r ? esc(r.name) : "지역 고르기"}</b><small>${r ? esc(s.mood || r.sidoName) : "AI-이음"}</small></a><button type="button" data-open-settings aria-label="설정">⚙</button>`;
   $$("[data-cnt]").forEach(c => { const n = S.region ? waiting() : 0; c.textContent = n; c.hidden = !n; });
   $$("[data-open-settings]").forEach(b => b.onclick = openSettings);
   $$("[data-logout]").forEach(b => b.onclick = logout);
@@ -610,8 +610,7 @@ function viewRegion(){
   const cur = Sh.regionOf(S.region);
   const f = S.rg || (S.rg = {sido: cur ? cur.sido : "jg", q:""});
   const blocked = S.region && !rs().active;
-  $("#view").innerHTML = `${stepper("region")}
-  ${phead("STEP 1 · 지역", "어느 지역의 숏폼을 만들까요?", "지역을 고르면 그 지역 관광자료로만 주제 후보를 찾고, 확인함도 그 지역 것만 보여요. 화면 색도 지역 색으로 바뀝니다.")}
+  $("#view").innerHTML = `${phead("STEP 1 · 지역", "어느 지역의 숏폼을 만들까요?", "고른 지역의 관광자료와 확인함만 보이고, 화면도 그 지역 색으로 바뀌어요.", stepper("region"))}
   ${cur && !blocked ? `<div class="here"><span class="dot" aria-hidden="true" style="${Sh.photoUrl(rs(),330) ? `background-image:url('${esc(Sh.photoUrl(rs(),330))}')` : ""}"></span><div><b>지금 ${esc(cur.sidoName)} ${esc(cur.name)}</b><span class="note">${esc(me())} · 확인 대기 ${waiting()}건</span></div><a class="btn sm" href="#/">이 지역으로 계속</a></div>` : ""}
   ${blocked ? `<div class="warn">이 지역은 관리자가 사용을 멈췄어요. 다른 지역을 고르세요.</div>` : ""}
   <div class="rtools">

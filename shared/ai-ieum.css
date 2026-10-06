@@ -119,8 +119,8 @@ input.inp,select.inp{height:40px;padding-top:0;padding-bottom:0} /* 한 줄 입�
 .inp:focus{border-color:var(--accent-mid);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
 .inp:focus-visible{outline:none} /* 입력칸은 굵은 파란 테두리 대신 옅은 지역색 고리만 */
 /* 선택칸: 브라우저 기본 화살표 대신 얇은 꺾쇠 · 찾기 칸: 왼쪽 돋보기 */
-select.inp{appearance:none;-webkit-appearance:none;padding-right:2rem;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%238B93A1' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .65rem center;background-size:14px}
-input[type=search].inp{padding-left:2rem;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%238B93A1' stroke-width='1.8' stroke-linecap='round'%3E%3Ccircle cx='7' cy='7' r='4.5'/%3E%3Cpath d='M10.5 10.5L14 14'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:.7rem center;background-size:14px}
+select.inp{border-radius:10px;appearance:none;-webkit-appearance:none;padding-right:2rem;cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%238B93A1' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .65rem center;background-size:14px}
+input[type=search].inp{border-radius:10px;padding-left:2rem;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%238B93A1' stroke-width='1.8' stroke-linecap='round'%3E%3Ccircle cx='7' cy='7' r='4.5'/%3E%3Cpath d='M10.5 10.5L14 14'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:.7rem center;background-size:14px}
 input[type=search].inp::-webkit-search-cancel-button{cursor:pointer}
 textarea.inp{min-height:96px;resize:vertical}
 .lbl2{font-size:.8125rem;font-weight:700;color:var(--text);display:block;margin:0 0 6px}
@@ -132,7 +132,7 @@ textarea.inp{min-height:96px;resize:vertical}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 
 /* ---------- 페이지 머리 ---------- */
-.phead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:clamp(14px,1.6vw,24px)}
+.phead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:clamp(10px,1vw,16px)}
 .phead h1{font-size:clamp(1.2rem,1.3vw,1.45rem);margin:2px 0 4px;letter-spacing:-.025em;line-height:1.25}
 .phead .lead{color:var(--sub);margin:0;max-width:64ch;font-size:.84rem}
 
@@ -257,9 +257,6 @@ main.center{flex:1;display:grid;align-content:center;padding-bottom:clamp(16px,1
 .gorg .emb{width:40px;height:40px;border-radius:50%;background:linear-gradient(140deg,var(--accent),var(--accent-2)) center/cover;flex:none;box-shadow:0 0 0 2px var(--surface),0 0 0 3.5px var(--accent)}
 .gorg small{display:block;font-size:.75rem;color:var(--sub);font-weight:600;line-height:1.2}
 .gorg b{display:block;font-size:1.3rem;letter-spacing:-.03em;line-height:1.2;white-space:nowrap}
-.gorg .chg,.topbar .chg{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;color:var(--faint);flex:none;transition:color .15s,transform .15s}
-.gorg .chg svg,.topbar .chg svg{width:14px;height:14px}
-.gorg:hover .chg{color:var(--accent-fg);transform:translateY(1px)}
 .gorg:hover b{color:var(--accent-fg)}
 .rnav{display:flex;gap:clamp(8px,1.2vw,22px);margin-left:auto} /* 오른쪽 끝(마지막 메뉴) 기준으로 붙여 정렬 */
 .rnav a{display:flex;align-items:center;gap:6px;padding:0 4px;color:var(--text);text-decoration:none;font-weight:600;font-size:.875rem;position:relative;white-space:nowrap}
