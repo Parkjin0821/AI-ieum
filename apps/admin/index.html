@@ -60,7 +60,8 @@
 .box.flush{padding:0;overflow:hidden} .box.flush .tbl-wrap{border:0;border-radius:0}
 .colsec{display:flex;flex-direction:column;min-width:0} .colsec>.box{flex:1;display:flex;flex-direction:column}
 .colsec .sec-h h2 .pill{margin-left:2px}
-.cols .sec-h:not(:has(.more)){flex-direction:column;align-items:flex-start;gap:2px}
+.cols .sec-h:not(:has(.more)),.cols .sec-h .st{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
+.cols .sec-h{min-height:3.1rem;align-items:flex-start} /* 나란한 상자는 제목 칸 높이를 같게 — 흰 상자 위·아래 선이 맞음 */
 .box .goal{flex:1;grid-template-rows:auto repeat(3,minmax(46px,1fr))}
 .box .goal .g{border-radius:8px;padding:8px 6px 7px;gap:5px} .box .goal .g b{font-size:.95rem} .box .goal .g.zero{border-width:1px}
 .box .btabs{margin-top:0} .box .bnote{margin:auto 0 0;padding-top:10px;font-size:.72rem;color:var(--faint)}
@@ -433,10 +434,9 @@ function viewHome(){
       <div class="box"><div class="goal"><span></span>${R.CATS.map(c => `<span class="h">${c}</span>`).join("")}
       ${R.AGES.map(a => `<span class="rh">${a}</span>${R.CATS.map(c => { const n = per(c,a); return `<span class="g ${n>=3?"full":n?"part":"zero"}" aria-label="${c} ${a} ${n}편"><b>${n}</b><span class="dots">${[0,1,2].map(i => `<i class="${i<n?"on":""}"></i>`).join("")}</span></span>`; }).join("")}`).join("")}</div></div>
     </section>
-    <section class="colsec board"><div class="sec-h"><h2>최근 결정 기록</h2><a class="more" href="#/data">더보기 <span aria-hidden="true">+</span></a></div>
+    <section class="colsec board"><div class="sec-h"><div class="st"><h2>최근 결정 기록</h2><span class="asof">확인 요청 · 통과 · 반려 · 기록은 지울 수 없어요</span></div><a class="more" href="#/data">더보기 <span aria-hidden="true">+</span></a></div>
       <div class="box"><div class="btabs" role="tablist" aria-label="기록 종류">${[["all","전체"],["request","확인 요청"],["pass","통과"],["reject","반려"]].map(([k,l],i) => `<button role="tab" data-bt="${k}" aria-selected="${i===0}">${l}</button>`).join("")}</div>
-      <ul class="blist" id="blist"></ul>
-      <p class="bnote">결정 기록은 지울 수 없어요.</p></div>
+      <ul class="blist" id="blist"></ul></div>
     </section>
   </div>
   <section class="colsec" style="margin-top:24px"><div class="sec-h"><h2>지역별 현황</h2><span class="asof">콘텐츠가 하나 이상 있는 지역</span></div>
