@@ -511,8 +511,9 @@ function viewLogin(){
 }
 function viewSignup(){
   const f = S.su || (S.su = {sido: "jg"});
-  $("#view").innerHTML = `<div class="signup">${phead("회원가입", "담당자 회원가입", "전남광주통합특별시·전북특별자치도 시·군·구 관광 담당자만 신청할 수 있어요. 광역 관리자가 소속을 확인한 뒤 승인해요.")}
-  <form class="card" id="sf" novalidate>
+  $("#view").innerHTML = `<div class="signup"><section class="auth-side strip"><span class="slides" aria-hidden="true"></span><span class="slide-cap"></span>
+    <small>${Sh.SIDO_LABEL} 시·군·구 관광 담당자</small><h1>AI-이음 담당자 회원가입</h1></section>
+  <form class="card" id="sf" novalidate aria-label="회원가입">
     <section class="fsec"><h3><i>1</i>소속</h3>
       <div class="row2">
         <div><label class="lbl2" for="ssido">광역<span class="req">*</span></label><select class="inp" id="ssido">${Sh.SIDO.map(s => `<option value="${s.id}" ${s.id === f.sido ? "selected" : ""}>${esc(s.name)}</option>`).join("")}</select></div>
@@ -544,8 +545,11 @@ function viewSignup(){
         <label><input type="checkbox" data-agree>[필수] 1·2·3차 확인 기록은 지울 수 없다는 점을 확인했어요</label>
       </div>
     </section>
-    <div class="fsub"><p class="err-t" id="serr" role="alert"></p><a class="btn ghost" href="#/login">취소</a><button class="btn" type="submit">회원가입</button></div>
+    <div class="fsub"><p class="err-t" id="serr" role="alert"></p><button class="btn wide" type="submit">회원가입</button>
+      <div class="auth-links"><span>이미 계정이 있나요?</span><a href="#/login">로그인</a></div>
+      <p class="demo-note">전남광주통합특별시·전북특별자치도 시·군·구 관광 담당자만 가입할 수 있어요. 광역 관리자가 소속을 확인한 뒤 승인해요.</p></div>
   </form></div>`;
+  Sh.slideshow($(".auth-side .slides"), $(".auth-side .slide-cap"), 4000);
   const regs = () => { $("#sreg").innerHTML = `<option value="">선택하세요</option>` + Sh.SIDO.find(s => s.id === f.sido).areas.map(a => { const o = Sh.REGIONS.filter(r => r.area === a.id && r.sido === f.sido).map(r => `<option value="${esc(r.id)}">${esc(r.name)}</option>`).join(""); return a.name ? `<optgroup label="${esc(a.name)}">${o}</optgroup>` : o; }).join(""); };
   regs();
   peek();
