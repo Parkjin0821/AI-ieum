@@ -21,7 +21,7 @@
 .rtools .seg{min-height:44px;align-items:center;display:inline-grid;grid-auto-flow:column;grid-auto-columns:1fr}
 .rtools .seg button{justify-content:center}
 .rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(clamp(150px,11vw,210px),1fr));gap:clamp(10px,1vw,16px)}
-.rtile{all:unset;box-sizing:border-box;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:transform .15s,box-shadow .15s}
+.rtile{all:unset;box-sizing:border-box;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;display:flex;flex-direction:column;transition:transform .15s,box-shadow .15s}
 .rtile:hover{transform:translateY(-3px);box-shadow:0 14px 30px -10px color-mix(in oklab,var(--c) 55%,transparent)}
 .rtile:active{transform:translateY(-1px) scale(.99)}
 .rtile:focus-visible{outline:2.5px solid var(--c);outline-offset:3px}
@@ -66,32 +66,32 @@
 .player{display:grid;gap:8px;align-content:start}
 .player .ctl{display:flex;gap:6px;justify-content:center;align-items:center;flex-wrap:wrap}
 .board{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-.board li{display:grid;grid-template-columns:44px 1fr;gap:10px;align-items:start;border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+.board li{display:grid;grid-template-columns:44px 1fr;gap:10px;align-items:start;border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
 .board li.on{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
 .board .sec{font-weight:800;color:var(--accent-ink);font-size:.95rem;text-align:center;background:var(--accent-soft);border-radius:9px;padding:6px 0;line-height:1.1}
 .board .sec small{display:block;font-size:.62rem;font-weight:600}
 .board .n{font-size:.78rem;color:var(--sub)}
-.refs{margin:14px 0 0;padding:12px 14px;background:var(--line-2);border-radius:14px;font-size:.8rem}
+.refs{margin:14px 0 0;padding:12px 14px;background:var(--line-2);border-radius:var(--r);font-size:.8rem}
 .refs ul{margin:6px 0 0;padding-left:18px}
 
 /* ---------- 2. 대화로 만들기 ---------- */
 .studio{display:grid;grid-template-columns:minmax(0,1fr) clamp(300px,24vw,420px);gap:clamp(16px,1.4vw,28px);min-height:0}
-main.fit{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;padding-bottom:var(--gutter)}
+main.fit{height:calc(100vh - var(--head-total));height:calc(100dvh - var(--head-total));display:flex;flex-direction:column;overflow:hidden;padding-bottom:var(--gutter)}
 main.fit>.studio{flex:1;min-height:0}
 @media (max-height:760px) and (min-width:861px){ main.fit .phead .lead{display:none} main.fit .stepper{margin-bottom:12px} }
 .chat{display:flex;flex-direction:column;min-height:0;overflow:hidden}
 .log{flex:1;overflow:auto;padding:20px;display:flex;flex-direction:column;gap:12px}
-.msg{max-width:82%;padding:.7rem .9rem;border-radius:16px;white-space:pre-line}
+.msg{max-width:82%;padding:.7rem .9rem;border-radius:var(--r);white-space:pre-line}
 .msg.ai{background:var(--line-2);align-self:flex-start;border-top-left-radius:5px}
 .msg.me{background:var(--accent);color:#fff;align-self:flex-end;border-top-right-radius:5px}
-.msg.err{background:var(--seal-bg);color:var(--seal);align-self:stretch;max-width:none;border-radius:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.msg.err{background:var(--seal-bg);color:var(--seal);align-self:stretch;max-width:none;border-radius:var(--r);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .msg.err b{display:block}
-.typing{align-self:flex-start;background:var(--line-2);border-radius:14px;padding:12px 16px;display:flex;gap:4px}
+.typing{align-self:flex-start;background:var(--line-2);border-radius:var(--r);padding:12px 16px;display:flex;gap:4px}
 .typing i{width:6px;height:6px;border-radius:50%;background:var(--faint);animation:blink 1s infinite}
 .typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
 @keyframes blink{0%,100%{opacity:.3}50%{opacity:1}}
 .cands{display:grid;gap:10px;align-self:stretch}
-.cand{all:unset;box-sizing:border-box;cursor:pointer;border:1.5px solid var(--line);border-radius:16px;padding:13px 14px;background:var(--surface);display:grid;gap:8px}
+.cand{all:unset;box-sizing:border-box;cursor:pointer;border:1.5px solid var(--line);border-radius:var(--r);padding:13px 14px;background:var(--surface);display:grid;gap:8px}
 .cand:hover{border-color:var(--accent-line)}
 .cand:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px}
 .cand[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
@@ -134,7 +134,7 @@ main.fit>.studio{flex:1;min-height:0}
 .review .detail > .empty{padding:0;margin:0;text-align:left}
 .queue{min-width:0}
 /* 대기열 탭: 같은 크기 5칸 (위 건수 · 아래 이름) */
-.qtabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;background:var(--line-2);border-radius:14px;padding:4px;margin-bottom:12px}
+.qtabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;background:var(--line-2);border-radius:var(--r);padding:4px;margin-bottom:12px}
 .qtabs button{border:0;background:transparent;border-radius:10px;min-height:54px;padding:6px 2px;display:grid;justify-items:center;align-content:center;gap:3px;font-weight:700;font-size:.75rem;color:var(--sub);white-space:nowrap;transition:background-color .2s,color .2s,box-shadow .2s}
 .qtabs button b{font-size:1.05rem;line-height:1;color:var(--text);font-variant-numeric:tabular-nums}
 .qtabs button:hover{background:rgba(255,255,255,.6)}
@@ -143,7 +143,7 @@ main.fit>.studio{flex:1;min-height:0}
 .qtabs button[aria-pressed="true"] b{color:var(--accent-fg)}
 .qtabs button.has b{color:var(--warn)}
 .qlist{display:grid;gap:8px}
-.qi{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:10px 12px}
+.qi{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
 .qi:hover{border-color:var(--accent-line)}
 .qi:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px}
 .qi[aria-current="true"]{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
@@ -161,28 +161,28 @@ main.fit>.studio{flex:1;min-height:0}
 .sec{margin:0 0 18px}
 .sec>h3{font-size:.95rem;margin:0 0 10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .facts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.field{background:var(--accent-soft);border-radius:14px;padding:12px 14px}
+.field{background:var(--accent-soft);border-radius:var(--r);padding:12px 14px}
 .field .k{font-size:.75rem;color:var(--sub);font-weight:600}
 .field .v{font-weight:800;font-size:.98rem}
 .field.wide{grid-column:1/-1}
-details.thread{border:1px solid var(--line);border-radius:14px;padding:0 14px}
+details.thread{border:1px solid var(--line);border-radius:var(--r);padding:0 14px}
 details.thread summary{cursor:pointer;padding:11px 0;font-weight:700;font-size:.875rem}
 details.thread .tl{display:grid;gap:6px;padding:0 0 12px;font-size:.84rem}
 details.thread .tl div{padding:7px 10px;border-radius:10px;background:var(--line-2)}
 details.thread .tl div.me{background:var(--accent-soft)}
-.warn{background:var(--warn-bg);color:var(--warn);border-radius:14px;padding:11px 14px;font-size:.875rem;margin-bottom:16px;font-weight:600}
+.warn{background:var(--warn-bg);color:var(--warn);border-radius:var(--r);padding:11px 14px;font-size:.875rem;margin-bottom:16px;font-weight:600}
 .warn.red{background:var(--seal-bg);color:var(--seal)}
 .tag.warn{padding:2px 8px;margin:0;border-radius:7px;font-size:.75rem} /* 안내 상자(.warn)와 이름이 겹치는 노란 태그는 태그 크기 유지 */
 .warn.ok{background:var(--ok-bg);color:var(--ok)}
 .scenes{display:grid;gap:14px}
-.srow{border:1px solid var(--line);border-radius:16px;padding:12px;margin:0;min-width:0;min-inline-size:0} /* fieldset 기본값(내용보다 안 줄어듦) 해제 */
+.srow{border:1px solid var(--line);border-radius:var(--r);padding:12px;margin:0;min-width:0;min-inline-size:0} /* fieldset 기본값(내용보다 안 줄어듦) 해제 */
 .srow .sh{display:flex;gap:8px;align-items:center;flex-wrap:nowrap;margin-bottom:10px;font-size:.875rem;min-width:0}
 .srow .sh b{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .srow .sh .tag,.srow .sh .num{flex:none}
 .srow .num{width:24px;height:24px;border-radius:50%;background:var(--line);color:var(--sub);font-size:.78rem;font-weight:800;display:grid;place-items:center}
 .srow.done .num{background:var(--accent);color:#fff}
 .opts{display:grid;grid-template-columns:repeat(3,minmax(0,150px));gap:10px}
-.opt{position:relative;border:2px solid var(--line);border-radius:14px;padding:6px;cursor:pointer;display:grid;gap:6px;background:var(--surface)}
+.opt{position:relative;border:2px solid var(--line);border-radius:var(--r);padding:6px;cursor:pointer;display:grid;gap:6px;background:var(--surface)}
 .opt input{position:absolute;opacity:0;pointer-events:none}
 .opt:has(input:focus-visible){outline:2.5px solid var(--accent);outline-offset:2px}
 .opt:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
@@ -194,7 +194,7 @@ details.thread .tl div.me{background:var(--accent-soft)}
 .v-kling .bg{filter:hue-rotate(calc(var(--h,0deg) + 18deg)) saturate(1.15) contrast(1.05)}
 .prog{font-size:.78rem;font-weight:800;padding:2px 8px;border-radius:8px;background:var(--line-2);color:var(--sub)}
 .prog.full{background:var(--accent-soft);color:var(--accent-ink)}
-.checks{border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.checks{border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
 .checks label{display:flex;gap:12px;padding:12px 14px;border-top:1px solid var(--line-2);align-items:flex-start;cursor:pointer;min-height:48px}
 .checks label:first-child{border-top:0}
 .checks label:has(input:checked){background:var(--accent-soft)}
@@ -202,7 +202,7 @@ details.thread .tl div.me{background:var(--accent-soft)}
 .checks b{font-size:.9rem}
 .checks small{display:block;color:var(--sub);font-size:.8rem;margin-top:1px}
 .final{display:grid;grid-template-columns:clamp(220px,18vw,300px) 1fr;gap:22px;align-items:stretch}
-.postinfo{background:var(--line-2);border-radius:14px;padding:12px 14px;font-size:.84rem;display:grid;gap:6px}
+.postinfo{background:var(--line-2);border-radius:var(--r);padding:12px 14px;font-size:.84rem;display:grid;gap:6px}
 .postinfo pre{margin:0;white-space:pre-wrap;font-family:inherit;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
 .actionbar{position:sticky;bottom:0;background:rgba(255,255,255,.95);backdrop-filter:blur(6px);border-top:1px solid var(--line);margin:0 -24px;padding:12px 24px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;z-index:2;border-radius:0 0 var(--r-lg) var(--r-lg)}
 .actionbar .why{font-size:.8rem;color:var(--warn);font-weight:600;flex:1 1 220px}
@@ -273,20 +273,23 @@ details.thread .tl div.me{background:var(--accent-soft)}
 </head>
 <body>
 <div class="app">
-  <aside class="rail" aria-label="지역과 메뉴">
-    <a class="brand" href="#/" data-home title="처음 화면으로 (필터·대화 초기화)"><i></i>AI-이음<small>사용자</small></a>
-    <a class="rcard" href="#/region" id="rcard"></a>
-    <nav class="rnav" aria-label="주요 화면">
+  <header class="ghead">
+    <div class="gstrip"><div class="wrap"><span>광주·전남·전북 시·군·구 관광 숏폼 기획 · 확인</span><span class="sp"></span><div class="gutil" id="acct"></div></div></div>
+    <div class="gbar"><div class="wrap">
+      <a class="brand" href="#/" data-home title="처음 화면으로 (필터·대화 초기화)"><i></i>AI-이음<small>사용자</small></a>
+      <a class="gorg" href="#/region" id="rcard"></a>
+      <nav class="rnav" aria-label="주요 화면">
       <a href="#/" data-r="templates"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="12" rx="2"/><rect x="14" y="3" width="7" height="12" rx="2"/><path d="M3 20h18"/></svg><span>템플릿 고르기</span></a>
       <a href="#/studio" data-r="studio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.6A8 8 0 1 1 21 12z"/></svg><span>대화로 만들기</span></a>
       <a href="#/review" data-r="review"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M8.5 12l2.3 2.3L15.5 9.5"/></svg><span>확인함</span><span class="count" data-cnt>0</span></a>
     </nav>
-    <div class="acct" id="acct"></div>
-  </aside>
-  <div>
+    </div></div>
+  </header>
+  <div class="body">
     <header class="topbar" id="topbar"></header>
     <main id="view" tabindex="-1"></main>
   </div>
+  <footer class="gfoot"><div class="wrap"><b>AI-이음</b><span>지역 관광자료로 숏폼을 기획하고 담당자가 1·2·3차로 확인하는 도구 · 시연판</span><span class="sp"></span><span>사진: 위키미디어 공용 등 — 운영 때 관광공사 사진으로 교체</span></div></footer>
 </div>
 <nav class="tabs" aria-label="주요 화면 (폰)">
   <a href="#/region" data-r="region"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>지역</a>
@@ -378,18 +381,16 @@ function applyTheme(){
 function renderShell(){
   const r = Sh.regionOf(S.region), s = S.region ? rs() : null;
   const ph = s ? Sh.photoUrl(s, 960) : "";
-  [$("#rcard"), $("#topbar")].forEach(el => { el.style.setProperty("--photo", ph ? `url("${ph}")` : "none"); el.classList.toggle("has-photo", !!ph); });
+  const emb = ph ? ` style="background-image:url('${esc(ph)}')"` : "";
   $("#rcard").title = ph ? `사진: ${Sh.photoCredit(s)}` : "";
-  // 고르기 전에는 빈 그라데이션 대신 지역 사진 6장 모자이크
-  const mosaic = r ? [] : Sh.REGIONS.map(x => Sh.photoUrl(Sh.regionSettings(x.id), 330)).filter(Boolean).slice(0, 6);
-  $("#rcard").classList.toggle("has-mosaic", mosaic.length > 0);
   $("#rcard").innerHTML = r
-    ? `<small>${esc(r.sidoName)}</small><b>${esc(r.name)}</b>${s.mood ? `<span class="mood">${esc(s.mood)}</span>` : ""}<span class="chg">지역 바꾸기 ›</span>${ph ? `<span class="cr">사진 ${esc(Sh.photoCredit(s))}</span>` : ""}`
-    : `${mosaic.length ? `<span class="mosaic" aria-hidden="true">${mosaic.map(u => `<img src="${esc(u)}" alt="" referrerpolicy="no-referrer">`).join("")}</span>` : ""}<span class="txt"><small>시작하기 · 광주·전남·전북</small><b>지역 고르기</b><span class="mood">${Sh.REGIONS.length}곳 중 하나</span></span><span class="chg">고르기 ›</span>`;
-  $("#acct").innerHTML = r
-    ? `<span class="av">${esc(me().slice(0,2))}</span><div><b>${esc(me())}</b><small>1·2·3차 확인 담당</small></div><button class="btn ghost sm" data-open-settings>설정 · 시연 도구</button>${Sh.themeBtn()}`
-    : `<span class="av">?</span><div><b>로그인 전</b><small>지역을 고르면 그 지역 담당자로 들어가요</small></div><button class="btn ghost sm" data-open-settings>설정 · 시연 도구</button>${Sh.themeBtn()}`;
-  $("#topbar").innerHTML = `<a href="#/region"><b>${r ? esc(r.name) : "지역 고르기"}</b><small>${r ? esc(s.mood || r.sidoName) : "AI-이음"}</small></a>${r ? `<button type="button" onclick="location.hash='#/region'">바꾸기</button>` : ""}<button type="button" data-open-settings aria-label="설정">⚙</button>`;
+    ? `<span class="emb"${emb}></span><span><small>${esc(r.sidoName)}</small><b>${esc(r.name)}</b></span><span class="chg">지역 바꾸기</span>`
+    : `<span class="emb"></span><span><small>광주·전남·전북</small><b>지역 고르기</b></span><span class="chg">${Sh.REGIONS.length}곳</span>`;
+  $("#acct").innerHTML = (r
+    ? `<b>${esc(me())}</b><small>1·2·3차 확인 담당</small>`
+    : `<small>로그인 전 · 지역을 고르면 그 지역 담당자로 들어가요</small>`)
+    + `<i></i><button type="button" data-open-settings>설정 · 시연 도구</button><i></i>${Sh.themeBtn("gu")}`;
+  $("#topbar").innerHTML = `<a href="#/region"><span class="emb"${emb}></span><b>${r ? esc(r.name) : "지역 고르기"}</b><small>${r ? esc(s.mood || r.sidoName) : "AI-이음"}</small></a>${r ? `<button type="button" onclick="location.hash='#/region'">바꾸기</button>` : ""}<button type="button" data-open-settings aria-label="설정">⚙</button>`;
   $$("[data-cnt]").forEach(c => { const n = S.region ? waiting() : 0; c.textContent = n; c.hidden = !n; });
   $$("[data-open-settings]").forEach(b => b.onclick = openSettings);
 }
@@ -493,11 +494,23 @@ function pickRegion(id){
 /* =========================================================
    1. 템플릿 고르기
    ========================================================= */
+/* 메인 비주얼 — 지자체 누리집처럼 대표 사진 + 분위기 문구 + 자주 찾는 메뉴 */
+const QICON = d => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">${d}</svg>`;
+function hero(){
+  const r = Sh.regionOf(S.region), s = rs(), ph = Sh.photoUrl(s, 1280), n = Sh.assetsIn(r.id).length, w = waiting();
+  return `<section class="hero" ${ph ? `style="--photo:url('${esc(ph)}')"` : ""} aria-label="${esc(r.name)} 소개">
+    <div><small>${esc(r.sidoName)} ${esc(r.name)}</small><h2>${esc(s.mood || r.name)}</h2><p>${esc(r.name)} 관광자료 ${n}건으로 숏폼을 기획하고, ${esc(me())}가 1·2·3차로 확인해요.</p></div>
+    <nav class="quick" aria-label="자주 찾는 메뉴">
+      <a href="#/studio"><span>${QICON('<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.6A8 8 0 1 1 21 12z"/>')}</span>대화로 만들기<small>주제 찾기</small></a>
+      <a href="#/review"><span>${QICON('<circle cx="12" cy="12" r="8"/><path d="M8.5 12l2.3 2.3L15.5 9.5"/>')}</span>확인함<small>${w ? `대기 ${w}건` : "대기 없음"}</small></a>
+      <a href="#/region"><span>${QICON('<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>')}</span>지역 바꾸기<small>${Sh.REGIONS.length}곳</small></a>
+    </nav>${ph ? `<span class="cr">사진 ${esc(Sh.photoCredit(s))}</span>` : ""}</section>`;
+}
 function viewTemplates(){
   const f = S.t;
   const match = t => (!f.cat || t.categories.includes(f.cat)) && (!f.age || t.ages.includes(f.age));
   const list = TEMPLATES.filter(match);
-  $("#view").innerHTML = `${stepper("templates")}
+  $("#view").innerHTML = `${hero()}${stepper("templates")}
   ${phead("STEP 2 · 형식", "어떤 형식으로 만들까요", `해외 관광청 숏폼의 구조를 분석해 만든 형식 ${TEMPLATES.length}개예요. 고르면 대화창에서 ${esc(regionName())}의 주제를 정합니다.`)}
   <section class="facets" aria-label="형식 걸러보기">
     ${[["분야","cat",CATS,c => TEMPLATES.filter(t => t.categories.includes(c) && (!f.age || t.ages.includes(f.age))).length],

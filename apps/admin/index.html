@@ -12,10 +12,10 @@
 /* 관리자 페이지 — 사용자 페이지와 같은 틀(shared/ai-ieum.css). 특정 지역 색 대신 기본 남색 하나만 쓰고,
    지역 사진·색은 관리 대상으로만 보여준다. */
 
-/* 관리 카드: 지역 사진 6장 모자이크(공용 .has-mosaic) 위에 남색 */
-.rcard .mood.ok::before,.rcard .mood.off::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:1px;background:#6EE7B7}
-.rcard .mood.off::before{background:#FCD34D}
-.acct a.btn{grid-column:1/-1}
+/* 헤더 기관명 옆 공용 DB 상태 (초록: 연결됨 · 노랑: 이 주소에만 저장) */
+.gorg .chg.ok::before,.gorg .chg.off::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:1px;background:var(--ok)}
+.gorg .chg.off::before{background:#E0A43A}
+
 
 /* 개요 */
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(clamp(200px,15vw,260px),1fr));gap:clamp(10px,1vw,16px);margin-bottom:18px}
@@ -83,7 +83,7 @@
 .sumgrid small{color:var(--sub);font-weight:700;font-size:.78rem}
 .sumgrid .ok{background:var(--ok-bg);color:var(--ok)}.sumgrid .red{background:var(--seal-bg);color:var(--seal)}
 .sumgrid .ok small,.sumgrid .red small{color:inherit}
-.miss{background:var(--warn-bg);color:var(--warn);border-radius:14px;padding:11px 14px;font-size:.84rem;font-weight:600;margin-bottom:16px}
+.miss{background:var(--warn-bg);color:var(--warn);border-radius:var(--r);padding:11px 14px;font-size:.84rem;font-weight:600;margin-bottom:16px}
 .miss a{color:inherit}
 .miss.red{background:var(--seal-bg);color:var(--seal)}
 
@@ -95,7 +95,7 @@
 .phbtn img{width:100%;height:100%;object-fit:cover;display:block}
 .phbtn::after{content:"바꾸기";position:absolute;inset:0;display:grid;place-items:center;background:rgba(16,24,40,.55);color:#fff;font-size:.72rem;opacity:0;transition:opacity .2s}
 .phbtn:hover::after,.phbtn:focus-visible::after{opacity:1}
-.phprev{aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:linear-gradient(140deg,var(--c),#ddd);display:grid;place-items:center;color:#fff;font-size:.84rem;font-weight:700}
+.phprev{aspect-ratio:16/9;border-radius:var(--r);overflow:hidden;background:linear-gradient(140deg,var(--c),#ddd);display:grid;place-items:center;color:#fff;font-size:.84rem;font-weight:700}
 .phprev img{width:100%;height:100%;object-fit:cover}
 .tbl .inp{height:34px;min-height:34px;padding:0 .55rem;font-size:.84rem}
 .tbl td.name b{display:block}
@@ -176,22 +176,26 @@
 </head>
 <body>
 <div class="app">
-  <aside class="rail" aria-label="관리 메뉴">
-    <a class="brand" href="#/" data-home title="처음 화면으로 (필터·검색 초기화)"><i></i>AI-이음<small>관리자</small></a>
-    <a class="rcard has-mosaic" href="#/regions" id="acard"></a>
-    <nav class="rnav" aria-label="관리 화면">
+  <header class="ghead">
+    <div class="gstrip"><div class="wrap"><span>광주·전남·전북 관광 숏폼 — 광역 관리</span><span class="sp"></span>
+      <div class="gutil"><b>광역 관리자</b><small>시연 계정 · 운영 땐 로그인 필요</small><i></i><a id="userLink" href="#" target="_blank" rel="noopener">사용자 사이트 열기 ↗</a><i></i><button type="button" data-theme-toggle>◐ 화면 · 시스템</button></div></div></div>
+    <div class="gbar"><div class="wrap">
+      <a class="brand" href="#/" data-home title="처음 화면으로 (필터·검색 초기화)"><i></i>AI-이음<small>관리자</small></a>
+      <a class="gorg" href="#/regions" id="acard"></a>
+      <nav class="rnav" aria-label="관리 화면">
       <a href="#/" data-r="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 13h6V4H4zM14 20h6v-9h-6zM4 20h6v-4H4zM14 4v4h6V4z"/></svg><span>개요</span></a>
       <a href="#/regions" data-r="regions"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><span>지역 · 담당자</span></a>
       <a href="#/templates" data-r="templates"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="12" rx="2"/><rect x="14" y="3" width="7" height="12" rx="2"/><path d="M3 20h18"/></svg><span>템플릿</span></a>
       <a href="#/data" data-r="data"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg><span>콘텐츠 · 기록</span><span class="count" data-cnt hidden>0</span></a>
       <a href="#/storage" data-r="storage"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></svg><span>저장 · 백업</span></a>
     </nav>
-    <div class="acct"><span class="av">관리</span><div><b>광역 관리자</b><small>시연 계정 · 운영 땐 로그인 필요</small></div><a class="btn ghost sm" id="userLink" href="#" target="_blank" rel="noopener">사용자 사이트 열기 ↗</a><button type="button" class="btn ghost sm" data-theme-toggle>◐ 화면 · 시스템</button></div>
-  </aside>
-  <div>
+    </div></div>
+  </header>
+  <div class="body">
     <header class="topbar"><a href="#/" data-home><b>AI-이음 관리자</b><small>지역 41곳 · 템플릿 · 기록</small></a><button type="button" data-theme-toggle="icon" aria-label="화면 모드 바꾸기">◐</button><button type="button" id="userBtn">사용자 ↗</button></header>
     <main id="view" tabindex="-1"></main>
   </div>
+  <footer class="gfoot"><div class="wrap"><b>AI-이음 관리자</b><span>지역 · 담당자 · 템플릿 · 결정 기록 관리 · 시연판</span><span class="sp"></span><span>결정 기록은 지울 수 없어요</span></div></footer>
 </div>
 <nav class="tabs" aria-label="관리 화면 (폰)">
   <a href="#/" data-r="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 13h6V4H4zM14 20h6v-9h-6zM4 20h6v-4H4zM14 4v4h6V4z"/></svg>개요</a>
@@ -216,13 +220,10 @@ const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAl
 let DB = { plans: [], logs: [], threads: {} };
 $("#userLink").href = Sh.CFG.userAppUrl || "#";
 $("#userBtn").onclick = () => { if (Sh.CFG.userAppUrl) window.open(Sh.CFG.userAppUrl, "_blank", "noopener"); else toast("config.js에 사용자 사이트 주소가 없어요"); };
-/* 왼쪽 관리 카드 — 지역 사진 6장 모자이크 + 공용 DB 상태 */
-const MOSAIC = ["전남 보성군", "전남 여수시", "전북 전주시", "광주 북구", "전남 순천시", "전남 신안군"];
+/* 헤더 기관명 자리 — 광역 운영 + 공용 DB 상태 */
 function renderShell(){
-  const imgs = MOSAIC.map(id => Sh.photoUrl(Sh.regionSettings(id), 330)).filter(Boolean);
   const active = Sh.REGIONS.filter(r => Sh.regionSettings(r.id).active).length;
-  $("#acard").innerHTML = `<span class="mosaic" aria-hidden="true">${imgs.map(u => `<img src="${esc(u)}" alt="" referrerpolicy="no-referrer">`).join("")}</span>
-    <span class="txt"><small>광역 운영 · 광주·전남·전북</small><b>지역 ${active}곳</b><span class="mood ${Sh.REMOTE ? "ok" : "off"}">${Sh.REMOTE ? "공용 DB 연결됨" : "이 주소에만 저장 중"}</span></span><span class="chg">지역 관리 ›</span>`;
+  $("#acard").innerHTML = `<span class="emb"></span><span><small>광역 운영 · 광주·전남·전북</small><b>지역 ${active}곳</b></span><span class="chg ${Sh.REMOTE ? "ok" : "off"}">${Sh.REMOTE ? "공용 DB 연결됨" : "이 주소에만 저장 중"}</span>`;
   const n = DB.plans.filter(p => /gate\d_wait/.test(p.status)).length;
   $$("[data-cnt]").forEach(c => { c.textContent = n; c.hidden = !n; });
 }

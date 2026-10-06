@@ -5,21 +5,21 @@
 :root{
   color-scheme:light;
   --accent:#2F5D8A; --accent-2:#A9C6E2;
-  --surface:#fff; --surface-2:#FAFAFB; --base:#F7F7F4; --off:#C9CFD8;
+  --surface:#fff; --surface-2:#FAFAFB; --base:#F3F5F8; --off:#C9CFD8;
   --keep:100%; /* 지역 색(--c)을 글자로 쓸 때 남길 비율 — 다크에선 흰색을 섞어 밝게 */
   --accent-ink:color-mix(in oklab,var(--accent) 78%,#000);
   --accent-fg:var(--accent); /* 글자로 쓰는 강조색 — 다크에선 밝게 */
   --accent-soft:color-mix(in oklab,var(--accent) 9%,var(--surface));
   --accent-line:color-mix(in oklab,var(--accent) 26%,var(--surface));
   --accent-mid:color-mix(in oklab,var(--accent) 55%,var(--surface));
-  --bg:color-mix(in oklab,var(--accent) 5%,var(--base));
+  --bg:color-mix(in oklab,var(--accent) 2%,var(--base));
   --text:#161D29; --sub:#566072; --faint:#8790A0; --line:#E2E5EA; --line-2:#EFF1F4;
   --ok:#0E7A5C; --ok-bg:#E2F4ED; --warn:#8A5300; --warn-bg:#FFF2DA;
   --seal:#C2352C; --seal-bg:#FBEAE8; --info:#2B5CB8; --info-bg:#E8EFFB;
-  --r-lg:22px; --r:16px; --r-sm:11px;
+  --r-lg:12px; --r:10px; --r-sm:6px;
   --sh-1:0 1px 2px rgba(16,24,40,.05);
   --sh-2:0 1px 2px rgba(16,24,40,.04),0 10px 30px rgba(16,24,40,.07);
-  --side-w:clamp(228px,15vw,292px);
+  --max-w:1520px; --head-h:68px; --head-total:calc(var(--head-h) + 37px); /* 안내 띠 36 + 테두리 1 */
   --gutter:clamp(20px,2.4vw,48px);
   --card-min:clamp(172px,10.5vw,240px);
   --nav-h:64px;
@@ -64,7 +64,7 @@
 html,body{margin:0}
 /* 1600px까지는 16px, 더 큰 모니터에서는 글자도 함께 커짐 (2560px에서 약 19px) */
 html{font-size:clamp(16px,calc(9.6px + .4vw),19px)}
-body{font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;color:var(--text);background:var(--bg);word-break:keep-all;font-size:.9375rem;line-height:1.55;-webkit-font-smoothing:antialiased;transition:background-color .4s}
+body{font-family:Pretendard,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;color:var(--text);background:var(--bg);word-break:keep-all;font-size:1rem;line-height:1.6;-webkit-font-smoothing:antialiased;transition:background-color .4s}
 button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 a{color:var(--accent-fg)}
@@ -73,7 +73,7 @@ a{color:var(--accent-fg)}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
 /* ---------- 기본 부품 ---------- */
-.btn{border:1px solid transparent;border-radius:12px;padding:0 1.05rem;font-weight:700;background:var(--accent);color:#fff;min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;transition:background-color .15s,box-shadow .15s;white-space:nowrap}
+.btn{border:1px solid transparent;border-radius:var(--r-sm);padding:0 1.05rem;font-weight:700;background:var(--accent);color:#fff;min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;transition:background-color .15s,box-shadow .15s;white-space:nowrap}
 .btn:hover{background:var(--accent-ink)}
 .btn.ghost{background:var(--surface);color:var(--text);border:1px solid var(--line)}
 .btn.ghost:hover{border-color:var(--accent-line);background:var(--accent-soft)}
@@ -82,7 +82,7 @@ a{color:var(--accent-fg)}
 .btn.red{background:var(--surface);color:var(--seal);border:1px solid color-mix(in oklab,var(--seal) 35%,var(--surface))}
 .btn.red:hover{background:var(--seal-bg)}
 .btn.danger{background:#C2352C}
-.btn.sm{min-height:36px;padding:0 .8rem;font-size:.875rem;border-radius:10px}
+.btn.sm{min-height:36px;padding:0 .8rem;font-size:.875rem;border-radius:var(--r-sm)}
 /* 나란한 버튼 묶음(결정 · 팝업 아래)은 가장 긴 버튼 폭으로 모두 같게 */
 .btns{display:inline-grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:8px}
 .btn:disabled{background:var(--off);color:#fff;border-color:transparent;cursor:not-allowed;box-shadow:none}
@@ -90,7 +90,7 @@ a{color:var(--accent-fg)}
 .chip:hover{border-color:var(--accent-line);color:var(--text)}
 .chip[aria-pressed="true"]{background:var(--accent);color:#fff;border-color:var(--accent)}
 .chip[aria-pressed="true"] .note{color:rgba(255,255,255,.75)}
-.tag{display:inline-flex;align-items:center;gap:4px;font-size:.75rem;background:var(--line-2);border-radius:7px;padding:2px 8px;color:var(--sub);font-weight:600;white-space:nowrap}
+.tag{display:inline-flex;align-items:center;gap:4px;font-size:.75rem;background:var(--line-2);border-radius:4px;padding:2px 8px;color:var(--sub);font-weight:600;white-space:nowrap}
 .tag.accent{background:var(--accent-soft);color:var(--accent-ink)}
 .tag.ok{background:var(--ok-bg);color:var(--ok)}
 .tag.info{background:var(--info-bg);color:var(--info)}
@@ -104,7 +104,7 @@ a{color:var(--accent-fg)}
 .switch input::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .15s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
 .switch input:checked{background:var(--accent)}
 .switch input:checked::after{left:19px}
-.inp{width:100%;border:1px solid var(--line);border-radius:12px;padding:.6rem .8rem;min-height:44px;background:var(--surface)}
+.inp{width:100%;border:1px solid var(--line);border-radius:var(--r-sm);padding:.6rem .8rem;min-height:44px;background:var(--surface)}
 input.inp,select.inp{height:44px;padding-top:0;padding-bottom:0} /* 한 줄 입력칸은 버튼과 같은 44px */
 /* 폰: 입력칸 글자 16px — 그보다 작으면 아이폰 사파리가 칸을 누를 때마다 화면을 확대함 */
 @media (max-width:860px){ .inp{font-size:16px} }
@@ -208,50 +208,65 @@ dialog::backdrop{background:rgba(12,18,30,.5);backdrop-filter:blur(2px)}
 .tbl tr.clickable:hover td{background:var(--accent-soft)}
 .num{font-variant-numeric:tabular-nums;text-align:right}
 
-/* ---------- 앱 틀 (사용자·관리자 공용): 왼쪽 레일 · 지역/관리 카드 · 메뉴 · 계정 · 본문 ---------- */
-.app{display:grid;grid-template-columns:var(--side-w) minmax(0,1fr);min-height:100vh}
+/* ---------- 앱 틀 (사용자·관리자 공용) — 지자체 누리집 구성을 따름
+   안내 띠 → 기관 헤더(기관명 · 가로 메뉴 · 유틸) → 본문 → 진한 회색 푸터.
+   지역색은 포인트(메뉴 밑줄 · 주요 버튼 · 링크)에만 쓰고, 바탕은 흰색 · 옅은 회색. ---------- */
+.app{min-height:100vh;display:flex;flex-direction:column}
 .app>*{min-width:0} /* 넓은 표가 있어도 본문 칸이 화면보다 커지지 않게 */
-.rail{position:sticky;top:0;height:100vh;background:var(--surface);border-right:1px solid var(--line);padding:18px 14px;display:flex;flex-direction:column;gap:14px}
-.brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:1.05rem;padding:4px 6px;letter-spacing:-.01em;color:inherit;text-decoration:none;border-radius:10px;transition:background-color .2s}
-a.brand:hover{background:var(--line-2)}
-a.brand:active{transform:translateY(1px)}
+.app>.body{flex:1}
+.wrap{max-width:var(--max-w);margin:0 auto;padding:0 var(--gutter);width:100%}
+.ghead{position:sticky;top:0;z-index:30;background:var(--surface);border-bottom:1px solid var(--line)}
+.gstrip{background:var(--line-2);font-size:.8rem;color:var(--sub)}
+.gstrip .wrap{display:flex;align-items:center;gap:12px;min-height:36px}
+.gstrip .sp{flex:1}
+.gutil{display:flex;align-items:center;gap:2px;flex-wrap:wrap}
+.gutil>b{color:var(--text);font-weight:700;margin-right:6px}
+.gutil>small{margin-right:6px}
+.gutil button,.gutil a{border:0;background:none;color:var(--sub);font-weight:600;font-size:.8rem;padding:4px 9px;border-radius:4px;text-decoration:none;min-height:28px;display:inline-flex;align-items:center;gap:4px}
+.gutil button:hover,.gutil a:hover{color:var(--text);background:var(--surface)}
+.gutil i{width:1px;height:12px;background:var(--line);margin:0 2px}
+.gbar .wrap{display:flex;align-items:stretch;gap:clamp(16px,2vw,40px);min-height:var(--head-h)}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:1.05rem;letter-spacing:-.01em;color:inherit;text-decoration:none;white-space:nowrap}
 .brand i{width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
-.brand small{margin-left:auto;font-size:.7rem;font-weight:700;color:var(--faint)}
-.rcard{position:relative;overflow:hidden;display:block;text-decoration:none;color:#fff;border-radius:20px;padding:16px 16px 14px;min-height:150px;background:linear-gradient(140deg,var(--accent) 0%,color-mix(in oklab,var(--accent) 60%,var(--accent-2)) 62%,var(--accent-2) 135%);box-shadow:0 12px 28px -8px color-mix(in oklab,var(--accent) 55%,transparent);transition:transform .2s}
-/* 사진이 있으면: 사진 위에 지역 색을 아래쪽으로 짙게 — 글자가 늘 읽히도록 */
-.rcard.has-photo{background:linear-gradient(180deg,color-mix(in oklab,var(--accent) 25%,transparent) 0%,color-mix(in oklab,var(--accent) 82%,#000) 100%),var(--photo) center/cover}
-.rcard.has-photo::before,.rcard.has-photo::after{display:none}
-.rcard .cr{position:absolute;left:16px;right:16px;bottom:-2px;font-size:.58rem;opacity:.6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rcard.has-photo .chg{bottom:18px}
-.rcard:hover{transform:translateY(-1px)}
-.rcard::before,.rcard::after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.12)}
-.rcard::before{width:150px;height:150px;right:-50px;top:-60px}
-.rcard::after{width:90px;height:90px;right:30px;bottom:-50px;background:rgba(255,255,255,.08)}
-.rcard small{display:block;font-size:.75rem;opacity:.85;font-weight:600}
-.rcard b{display:block;font-size:1.55rem;letter-spacing:-.03em;line-height:1.2;margin-top:2px}
-.rcard .mood{display:inline-block;margin-top:8px;font-size:.75rem;font-weight:700;background:rgba(255,255,255,.2);padding:3px 9px;border-radius:999px;backdrop-filter:blur(4px)}
-.rcard .chg{position:absolute;right:14px;bottom:12px;font-size:.72rem;font-weight:700;opacity:.9}
-/* 사진 모자이크 카드 — 관리자 카드, 지역을 고르기 전 사용자 카드 */
-.rcard.has-mosaic{min-height:164px;background:#1D2B3F}
-.rcard.has-mosaic::before{inset:0;width:auto;height:auto;border-radius:0;z-index:1;background:linear-gradient(180deg,color-mix(in oklab,var(--accent) 50%,transparent) 0%,color-mix(in oklab,var(--accent) 80%,#000) 60%,color-mix(in oklab,var(--accent) 70%,#000) 100%)}
-.rcard.has-mosaic::after{display:none}
-.rcard .mosaic{position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);z-index:0}
-.rcard .mosaic img{width:100%;height:100%;object-fit:cover;display:block}
-.rcard.has-mosaic .txt{position:relative;z-index:2;display:block}
-.rcard.has-mosaic .chg{z-index:2}
-.rnav{display:grid;gap:2px}
-.rnav a{display:flex;gap:10px;align-items:center;padding:.62rem .75rem;border-radius:12px;color:var(--sub);text-decoration:none;font-weight:700}
-.rnav a svg{width:20px;height:20px;flex:none}
-.rnav a:hover{background:var(--line-2);color:var(--text)}
-.rnav a[aria-current="page"]{background:var(--accent-soft);color:var(--accent-ink)}
-.count{margin-left:auto;background:#C2352C;color:#fff;border-radius:10px;font-size:.72rem;padding:0 7px;font-weight:800;min-width:20px;text-align:center;line-height:1.6}
-.acct{margin-top:auto;border:1px solid var(--line);border-radius:16px;padding:12px;display:grid;grid-template-columns:38px 1fr;gap:10px;align-items:center}
+.brand small{font-size:.72rem;font-weight:700;color:var(--faint)}
+.brand:hover{color:var(--accent-fg)}
+/* 기관명 자리: 지역 상징 원(사진) + 광역 · 시군구 이름 */
+.gorg{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);padding-left:clamp(16px,2vw,40px);border-left:1px solid var(--line);margin:14px 0}
+.gorg .emb{width:40px;height:40px;border-radius:50%;background:linear-gradient(140deg,var(--accent),var(--accent-2)) center/cover;flex:none;box-shadow:0 0 0 2px var(--surface),0 0 0 3.5px var(--accent)}
+.gorg small{display:block;font-size:.75rem;color:var(--sub);font-weight:600;line-height:1.2}
+.gorg b{display:block;font-size:1.3rem;letter-spacing:-.03em;line-height:1.2;white-space:nowrap}
+.gorg .chg{font-size:.75rem;color:var(--accent-fg);font-weight:700;white-space:nowrap;border:1px solid var(--accent-line);border-radius:4px;padding:2px 7px;margin-left:4px}
+.gorg:hover b{color:var(--accent-fg)}
+.rnav{display:flex;gap:clamp(12px,2vw,36px);margin-left:auto}
+.rnav a{display:flex;align-items:center;gap:8px;padding:0 4px;color:var(--text);text-decoration:none;font-weight:700;font-size:1.0625rem;position:relative;white-space:nowrap}
+.rnav a svg{width:20px;height:20px;flex:none;color:var(--faint)}
+.rnav a::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:3px;background:var(--accent);transform:scaleX(0);transition:transform .2s}
+.rnav a:hover::after{transform:scaleX(.5)}
+.rnav a[aria-current="page"],.rnav a[aria-current="page"] svg{color:var(--accent-fg)}
+.rnav a[aria-current="page"]::after{transform:none}
+.count{margin-left:2px;background:#C2352C;color:#fff;border-radius:10px;font-size:.72rem;padding:0 7px;font-weight:800;min-width:20px;text-align:center;line-height:1.6}
 .av{width:38px;height:38px;border-radius:50%;background:var(--accent-soft);color:var(--accent-ink);display:grid;place-items:center;font-weight:800;font-size:.8rem}
-.acct b{display:block;font-size:.9rem;line-height:1.3}
-.acct small{color:var(--sub);font-size:.75rem}
-.acct button{grid-column:1/-1}
-main{padding:clamp(20px,2.2vw,38px) var(--gutter) 80px;min-width:0;width:100%}
+main{padding:clamp(20px,2.2vw,36px) var(--gutter) 64px;max-width:var(--max-w);margin:0 auto;width:100%;min-width:0}
+.gfoot{background:#1E2124;color:#AEB4BD;font-size:.8rem;line-height:1.7}
+.gfoot .wrap{display:flex;gap:6px 28px;flex-wrap:wrap;align-items:baseline;padding-top:22px;padding-bottom:26px}
+.gfoot b{color:#fff;font-size:.95rem}
+.gfoot .sp{flex:1}
+.gfoot a{color:#E3E6EA}
 .topbar,.tabs{display:none}
+
+/* ---------- 메인 비주얼: 대표 사진 + 분위기 문구 + 자주 찾는 메뉴 ---------- */
+.hero{position:relative;overflow:hidden;border-radius:var(--r-lg);min-height:clamp(210px,16vw,280px);display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:20px 28px;padding:clamp(20px,2.4vw,36px);color:#fff;margin-bottom:clamp(18px,2vw,28px);
+  background:linear-gradient(90deg,color-mix(in oklab,var(--accent) 82%,#000) 0%,color-mix(in oklab,var(--accent) 45%,transparent) 62%,transparent 100%),var(--photo,linear-gradient(140deg,var(--accent),var(--accent-2))) center/cover}
+.hero small{font-size:.84rem;font-weight:700;opacity:.9}
+.hero h2{margin:4px 0 6px;font-size:clamp(1.8rem,2.4vw,2.6rem);letter-spacing:-.035em;line-height:1.15}
+.hero p{margin:0;max-width:46ch;opacity:.92}
+.hero .cr{position:absolute;right:12px;top:8px;font-size:.62rem;opacity:.7;max-width:50%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.quick{display:grid;grid-template-columns:repeat(3,minmax(100px,1fr));gap:8px}
+.quick a{background:var(--surface);color:var(--text);border-radius:var(--r);padding:14px 10px 12px;display:grid;justify-items:center;gap:6px;text-decoration:none;font-weight:700;font-size:.875rem;text-align:center;transition:transform .15s;box-shadow:var(--sh-2)}
+.quick a:hover{transform:translateY(-2px)}
+.quick a>span{width:42px;height:42px;border-radius:50%;background:var(--accent-soft);color:var(--accent-fg);display:grid;place-items:center}
+.quick svg{width:21px;height:21px}
+.quick small{color:var(--sub);font-weight:600;font-size:.72rem;margin-top:-4px}
 
 /* ---------- 분절형 선택(필터·탭) ---------- */
 .facets{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:14px 16px 12px;margin:0 0 20px;display:grid;gap:10px;box-shadow:0 1px 2px color-mix(in oklab,var(--accent) 8%,transparent)}
@@ -259,8 +274,8 @@ main{padding:clamp(20px,2.2vw,38px) var(--gutter) 80px;min-width:0;width:100%}
 .facet .seg{display:inline-grid;grid-auto-flow:column;grid-auto-columns:7rem;width:max-content;max-width:100%} /* 분야·연령 두 줄의 버튼을 모두 같은 폭으로 */
 .facet .seg button{justify-content:center}
 .fl{font-size:.78rem;font-weight:700;color:var(--sub)}
-.seg{display:flex;gap:4px;flex-wrap:wrap;background:var(--line-2);border-radius:13px;padding:4px;width:max-content;max-width:100%}
-.seg button{border:0;background:transparent;border-radius:10px;padding:.42rem .85rem;min-height:36px;font-weight:600;font-size:.875rem;color:var(--sub);display:inline-flex;align-items:center;gap:6px;transition:background-color .2s,color .2s,box-shadow .2s}
+.seg{display:flex;gap:4px;flex-wrap:wrap;background:var(--line-2);border-radius:8px;padding:4px;width:max-content;max-width:100%}
+.seg button{border:0;background:transparent;border-radius:6px;padding:.42rem .85rem;min-height:36px;font-weight:600;font-size:.875rem;color:var(--sub);display:inline-flex;align-items:center;gap:6px;transition:background-color .2s,color .2s,box-shadow .2s}
 .seg button i{font-style:normal;font-size:.72rem;font-weight:700;color:var(--faint);font-variant-numeric:tabular-nums;min-width:1ch}
 .seg button:hover:not(:disabled){color:var(--text);background:color-mix(in oklab,var(--surface) 60%,transparent)}
 .seg button:active:not(:disabled){transform:translateY(1px)}
@@ -288,19 +303,23 @@ main{padding:clamp(20px,2.2vw,38px) var(--gutter) 80px;min-width:0;width:100%}
 
 /* ---------- 폰: 위쪽 바 + 아래 탭 ---------- */
 @media (max-width:860px){
-  .app{grid-template-columns:1fr}
-  .rail{display:none}
-  .topbar{display:flex;position:sticky;top:0;z-index:15;color:#fff;padding:10px 16px;gap:10px;align-items:center;min-height:56px;background:linear-gradient(120deg,var(--accent),color-mix(in oklab,var(--accent) 55%,var(--accent-2)) 75%,var(--accent-2) 140%)}
-  .topbar a{color:#fff;text-decoration:none;flex:1;min-width:0;display:flex;align-items:baseline;gap:8px}
-  .topbar a b{font-size:1.05rem;white-space:nowrap}
-  .topbar a small{font-size:.75rem;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .topbar button{border:0;background:rgba(255,255,255,.2);color:#fff;border-radius:10px;min-width:36px;height:36px;padding:0 10px;font-weight:700;font-size:.8rem}
+  .ghead{display:none}
+  /* 폰 위쪽 바: 누리집 모바일처럼 흰 바탕 + 지역 상징 원 + 기관명 */
+  .topbar{display:flex;position:sticky;top:0;z-index:15;padding:8px 12px 8px 16px;gap:8px;align-items:center;min-height:56px;background:var(--surface);border-bottom:1px solid var(--line)}
+  .topbar a{color:var(--text);text-decoration:none;flex:1;min-width:0;display:flex;align-items:center;gap:9px}
+  .topbar .emb{width:30px;height:30px;border-radius:50%;flex:none;background:linear-gradient(140deg,var(--accent),var(--accent-2)) center/cover;box-shadow:0 0 0 2px var(--surface),0 0 0 3px var(--accent)}
+  .topbar a b{font-size:1.1rem;white-space:nowrap;letter-spacing:-.02em}
+  .topbar a small{font-size:.75rem;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .topbar button{border:1px solid var(--line);background:var(--surface);color:var(--sub);border-radius:var(--r-sm);min-width:36px;height:36px;padding:0 10px;font-weight:700;font-size:.8rem}
+  .gfoot .wrap{padding-bottom:calc(var(--nav-h) + 26px + env(safe-area-inset-bottom))}
+  .hero{grid-template-columns:minmax(0,1fr);min-height:0;padding-top:64px}
+  .quick{grid-template-columns:repeat(3,minmax(0,1fr))}
   .tabs{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);padding:4px 6px calc(4px + env(safe-area-inset-bottom));justify-content:space-around}
   .tabs a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.72rem;font-weight:700;color:var(--faint);text-decoration:none;padding:6px 2px;min-height:52px;justify-content:center;position:relative;border-radius:12px}
   .tabs a svg{width:22px;height:22px}
   .tabs a[aria-current="page"]{color:var(--accent-fg)}
   .tabs .count{position:absolute;top:3px;left:calc(50% + 6px);margin:0;font-size:.66rem}
-  main{padding:16px 16px calc(var(--nav-h) + 36px)}
+  main{padding:16px 16px 36px}
   .facet{grid-template-columns:minmax(0,1fr);gap:6px}
   /* 폰: 분야·연령 버튼을 3칸 같은 폭으로 줄바꿈 (이름 위 · 수 아래) */
   .facet .seg{display:grid;grid-auto-flow:row;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;overflow:visible}
@@ -308,5 +327,4 @@ main{padding:clamp(20px,2.2vw,38px) var(--gutter) 80px;min-width:0;width:100%}
   .seg{width:100%;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
   .seg::-webkit-scrollbar{display:none}
   .seg button{flex:none}
-  .topbar.has-photo{background:linear-gradient(90deg,color-mix(in oklab,var(--accent) 92%,#000) 0%,color-mix(in oklab,var(--accent) 55%,transparent) 100%),var(--photo) center/cover}
 }
