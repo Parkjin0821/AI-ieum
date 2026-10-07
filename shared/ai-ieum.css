@@ -238,8 +238,9 @@ main.center{flex:1;display:grid;align-content:center;padding-bottom:clamp(16px,1
 .gstrip .wrap{display:flex;align-items:center;gap:12px;min-height:30px}
 .gstrip .sp{flex:1}
 .gutil{display:flex;align-items:center;gap:2px;flex-wrap:wrap}
-.gutil>b{color:var(--text);font-weight:700;margin-right:6px}
-.gutil>small{margin-right:6px}
+/* 이름·메일도 버튼과 같은 8px 안쪽 여백 → 세로선(|) 양옆 간격이 어디서나 12px */
+.gutil>b{color:var(--text);font-weight:700;padding-left:8px;margin-right:4px}
+.gutil>small{padding-right:8px}
 .gutil button,.gutil a{border:0;background:none;color:var(--sub);font-weight:600;font-size:.72rem;padding:3px 8px;border-radius:4px;text-decoration:none;min-height:24px;display:inline-flex;align-items:center;gap:4px}
 /* 맨 끝 글자를 아래 본문 오른쪽 선에 맞춤 (안쪽 여백만큼 밖으로) */
 .gutil>:last-child{margin-right:-8px}
