@@ -241,6 +241,9 @@ main.center{flex:1;display:grid;align-content:center;padding-bottom:clamp(16px,1
 .gutil>b{color:var(--text);font-weight:700;margin-right:6px}
 .gutil>small{margin-right:6px}
 .gutil button,.gutil a{border:0;background:none;color:var(--sub);font-weight:600;font-size:.72rem;padding:3px 8px;border-radius:4px;text-decoration:none;min-height:24px;display:inline-flex;align-items:center;gap:4px}
+/* 맨 끝 글자를 아래 본문 오른쪽 선에 맞춤 (안쪽 여백만큼 밖으로) */
+.gutil>:last-child{margin-right:-8px}
+.rnav a:last-child{margin-right:-4px}
 .gutil button:hover,.gutil a:hover{color:var(--text);background:var(--surface)}
 .gutil i{width:1px;height:10px;background:var(--line);margin:0 2px}
 .gbar .wrap{display:flex;align-items:stretch;gap:clamp(16px,2vw,40px);min-height:var(--head-h)}
@@ -259,7 +262,7 @@ main.center{flex:1;display:grid;align-content:center;padding-bottom:clamp(16px,1
 .gorg b{display:block;font-size:1.3rem;letter-spacing:-.03em;line-height:1.2;white-space:nowrap}
 .gorg:hover b{color:var(--accent-fg)}
 .rnav{display:flex;gap:clamp(8px,1.2vw,22px);margin-left:auto} /* 오른쪽 끝(마지막 메뉴) 기준으로 붙여 정렬 */
-.rnav a{display:flex;align-items:center;gap:6px;padding:0 4px;color:var(--text);text-decoration:none;font-weight:600;font-size:.875rem;position:relative;white-space:nowrap}
+.rnav a{display:flex;align-items:center;gap:6px;padding:3px 4px 0;color:var(--text);text-decoration:none;font-weight:600;font-size:.875rem;position:relative;white-space:nowrap}
 .rnav a svg{width:16px;height:16px;flex:none;color:var(--faint)}
 .rnav a::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:3px;background:var(--accent);transform:scaleX(0);transition:transform .2s}
 .rnav a:hover::after{transform:scaleX(.5)}
