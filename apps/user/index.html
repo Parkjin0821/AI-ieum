@@ -88,7 +88,7 @@
 .studio{display:grid;grid-template-columns:minmax(0,1fr) clamp(300px,24vw,420px);gap:clamp(16px,1.4vw,28px);min-height:0}
 main.fit{height:calc(100vh - var(--head-total));height:calc(100dvh - var(--head-total));display:flex;flex-direction:column;overflow:hidden;padding-bottom:var(--gutter)}
 main.fit>.studio{flex:1;min-height:0}
-@media (max-height:760px) and (min-width:861px){ main.fit .phead .lead{display:none} main.fit .stepper{margin-bottom:12px} }
+@media (max-height:760px) and (min-width:861px){ main.fit .phead .lead{display:none} main.fit .phead.gov{margin-bottom:10px} }
 .chat{display:flex;flex-direction:column;min-height:0;overflow:hidden}
 .log{flex:1;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:10px}
 .msg{max-width:82%;padding:.6rem .85rem;border-radius:var(--r);white-space:pre-line;font-size:.9rem;line-height:1.6}
@@ -145,15 +145,16 @@ main.fit>.studio{flex:1;min-height:0}
 .review .detail > .empty{padding:0;margin:0;text-align:left}
 .queue{min-width:0}
 /* 대기열 탭: 같은 크기 5칸 (위 건수 · 아래 이름) */
-.qtabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;margin-bottom:12px}
-.qtabs button{border:0;border-left:1px solid var(--line-2);background:transparent;border-radius:0;min-height:52px;padding:6px 2px;display:grid;justify-items:center;align-content:center;gap:3px;font-weight:700;font-size:.75rem;color:var(--sub);white-space:nowrap;transition:background-color .2s,color .2s,box-shadow .2s}
-.qtabs button:first-child{border-left:0}
-.qtabs button b{font-size:1rem;line-height:1;color:var(--text);font-variant-numeric:tabular-nums}
-.qtabs button:hover{background:var(--line-2)}
-.qtabs button:active{transform:translateY(1px)}
-.qtabs button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent-ink);box-shadow:inset 0 -2px 0 var(--accent)}
-.qtabs button[aria-pressed="true"] b{color:var(--accent-fg)}
-.qtabs button.has b{color:var(--warn)}
+/* 확인함 대기열 = 관리자 현황 칸(.kstrip) 모양, 고른 칸은 위에 색 띠 */
+.kstrip.qtabs{grid-template-columns:repeat(5,minmax(0,1fr));margin-bottom:12px}
+.kstrip.qtabs button{border:0;border-left:1px solid var(--line-2);background:transparent;font:inherit;cursor:pointer;text-align:left;padding:10px 10px 9px;gap:4px;box-shadow:inset 0 3px 0 transparent;transition:background-color .15s,box-shadow .15s}
+.kstrip.qtabs button:first-child{border-left:0}
+.kstrip.qtabs button:hover{background:var(--line-2)}
+.kstrip.qtabs button[aria-pressed="true"]{background:var(--accent-soft);box-shadow:inset 0 3px 0 var(--accent)}
+.kstrip.qtabs button[aria-pressed="true"] .kl{color:var(--accent-ink)}
+.kstrip.qtabs .kl{font-size:.72rem;gap:5px;white-space:nowrap}
+.kstrip.qtabs b{font-size:1.3rem}
+.kstrip.qtabs b small{font-size:.7rem}
 .qlist{display:grid;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
 .qlist>.empty{padding:18px;margin:0}
 .qi{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;background:transparent;border-top:1px solid var(--line-2);padding:10px 14px}
@@ -243,7 +244,7 @@ details.thread .tl div.me{background:var(--accent-soft)}
 
 /* ---------- 폰 (기본 사용 환경) ---------- */
 @media (max-width:860px){
-  .stepper{display:none}
+  .jstep{display:none}
   .phead{margin-bottom:14px}
   .rtools .inp{max-width:none;flex:1 1 100%}
   .rtools .seg{display:grid;grid-auto-flow:row;grid-template-columns:repeat(3,minmax(0,1fr));width:100%}
@@ -421,9 +422,10 @@ function renderShell(){
 function stepper(cur){
   const steps = [["region","지역","#/region"],["templates","형식","#/"],["studio","주제","#/studio"],["review","확인","#/review"]];
   const at = steps.findIndex(s => s[0] === cur);
-  return `<nav aria-label="진행 단계"><ol class="stepper">${steps.map(([k,l,h],i) => `<li><a href="${h}" class="${i<at?"done":""}" ${i===at?'aria-current="step"':""}><i>${i<at?"✓":i+1}</i>${l}${k==="region"&&S.region?` · ${esc(regionName())}`:""}</a></li>`).join("")}</ol></nav>`;
+  return `<nav class="crumb jstep" aria-label="진행 단계 (${at + 1}/4)"><ol>${steps.map(([k,l,h],i) => `<li class="${i<at?"is-done":""}"><a href="${h}" ${i===at?'aria-current="step"':""}><i aria-hidden="true">${i<at?"✓":i+1}</i><span>${l}</span></a></li>`).join("")}</ol></nav>`;
 }
-const phead = (eyebrow, title, lead, right) => `<div class="phead"><div><div class="eyebrow">${eyebrow}</div><h1>${title}</h1>${lead?`<p class="lead">${lead}</p>`:""}</div>${right||""}</div>`;
+// 관리자와 같은 제목 줄: 오른쪽 위 진행 단계 + 제목 + 얇은 선 (eyebrow는 진행 단계가 대신함)
+const phead = (eyebrow, title, lead, steps) => `<div class="phead gov">${steps||""}<div><h1>${title}</h1>${lead?`<p class="lead">${lead}</p>`:""}</div></div>`;
 
 /* 장면 자동 재생 (hover·포커스·팝업) */
 const Player = {
@@ -886,7 +888,7 @@ function viewReview(selId){
   $("#view").innerHTML = `${phead("STEP 4 · 확인", "확인함", "1·2·3차를 순서대로 확인해요. 반려할 때는 사유가 꼭 필요해요.", stepper("review"))}
   <div class="review${sel?" open":""}">
     <div class="queue">
-      <div class="qtabs" role="group" aria-label="대기열">${TABS.map(x => { const n = mine().filter(x.f).length; return `<button data-tab="${x.k}" aria-pressed="${x.k===rv.tab}" aria-label="${x.l} ${n}건" class="${n && /^g/.test(x.k) ? "has" : ""}"><b>${n}</b>${x.s || x.l}</button>`; }).join("")}</div>
+      <div class="kstrip qtabs" role="group" aria-label="대기열">${TABS.map(x => { const n = mine().filter(x.f).length, tone = /^g/.test(x.k) ? (n ? "warn" : "off") : x.k === "making" ? "" : "ok"; return `<button data-tab="${x.k}" aria-pressed="${x.k===rv.tab}" aria-label="${x.l} ${n}건"><span class="kl ${tone}"><i></i>${x.s || x.l}</span><b>${n}<small>건</small></b></button>`; }).join("")}</div>
       <div class="qlist">${list.map(p => { const t = tplOf(p.templateId), c = Sh.candOf(p.cand); return `
         <button class="qi" data-sel="${p.id}" aria-current="${sel&&sel.id===p.id}">
           ${screen(t,0,{still:true})}

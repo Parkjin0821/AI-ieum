@@ -18,17 +18,8 @@
 
 
 /* ---------- 지자체 누리집식 개요 ---------- */
-/* 위치 표시 + 제목 아래 선 */
-.phead.gov{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;border-bottom:2px solid var(--text);padding-bottom:12px;margin-bottom:18px}
-.crumb{display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--sub);margin-bottom:6px}
-.phead.gov .crumb{grid-column:1/-1;justify-self:end}
+/* 제목 줄·위치 표시·현황 칸 기본 모양은 shared/ai-ieum.css (사용자 화면과 공용) */
 .crumb.top{justify-content:flex-end;margin-bottom:10px} /* 개요: 메인 비주얼보다 위, 맨 위에 */
-.crumb a{display:inline-flex;align-items:center;gap:4px;color:var(--sub);text-decoration:none}
-.crumb a:hover{color:var(--accent-fg);text-decoration:underline}
-.crumb svg{width:15px;height:15px}
-.crumb i{font-style:normal;color:var(--faint)}
-.crumb b{color:var(--text)}
-.phead.gov h1{margin:0}
 /* 자주 찾는 메뉴: 원형 아이콘 6칸 */
 /* 구역 제목: 굵은 제목 + 오른쪽 기준일·더보기 */
 .sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:0 0 10px}
@@ -40,19 +31,9 @@
 .sec-h .more:hover{color:var(--accent-fg)}
 /* 현황판 카드 */
 /* 운영 현황: 한 상자 안 4칸 (칸마다 상태 점 · 숫자 · 한 줄 설명), 칸을 누르면 그 화면으로 */
-.kstrip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden;margin-bottom:18px}
-.kstrip>*{display:grid;align-content:start;gap:6px;padding:16px 20px;color:inherit;text-decoration:none;border-left:1px solid var(--line-2);transition:background-color .15s}
-.kstrip>:first-child{border-left:0}
-.kstrip a:hover{background:var(--accent-soft)}
-.kstrip .kl{display:flex;align-items:center;gap:7px;font-size:.78rem;font-weight:600;color:var(--sub)}
-.kstrip .kl i{width:7px;height:7px;border-radius:50%;background:var(--accent);flex:none}
-.kstrip .ok i{background:var(--ok)} .kstrip .warn i{background:#E0A43A} .kstrip .red i{background:var(--seal)}
-.kstrip b{font-size:1.6rem;letter-spacing:-.03em;line-height:1.1;font-variant-numeric:tabular-nums}
-.kstrip b small{font-size:.8rem;color:var(--sub);font-weight:600;letter-spacing:0;margin-left:2px}
 .kstrip .ks{font-size:.74rem;color:var(--faint)}
 .kstrip .bar{height:5px;margin:2px 0}
 /* 개요의 나머지 구역도 같은 모양: 제목은 상자 밖, 상자는 테두리만 (그림자 없음) */
-.kstrip{margin-bottom:24px}
 .box{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:16px 20px}
 .box.flush{padding:0;overflow:hidden} .box.flush .tbl-wrap{border:0;border-radius:0}
 .colsec{display:flex;flex-direction:column;min-width:0} .colsec>.box{flex:1;display:flex;flex-direction:column}
@@ -63,12 +44,9 @@
 .box .goal .g{border-radius:8px;padding:8px 6px 7px;gap:5px} .box .goal .g b{font-size:.95rem} .box .goal .g.zero{border-width:1px}
 .box .btabs{margin-top:0} .box .bnote{margin:auto 0 0;padding-top:10px;font-size:.72rem;color:var(--faint)}
 /* 지역·템플릿·콘텐츠·저장 화면도 같은 모양: 얇은 제목 선, 짧은 설명, 표·상자는 테두리만 */
-.phead.gov{border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:16px}
-.phead.gov .lead{font-size:.82rem;max-width:72ch;margin-top:2px}
 .tbl-wrap{border-radius:var(--r-lg)}
 .secnote{font-size:.72rem;color:var(--faint);margin:8px 2px 0}
 .tbl .nw{white-space:nowrap}
-.kstrip .off i{background:var(--faint)}
 .kstrip.in{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:1fr;border:0;border-radius:0;margin:0;flex:1}
 .kstrip.in>:nth-child(3){border-left:0} .kstrip.in>:nth-child(n+3){border-top:1px solid var(--line-2)}
 .kstrip.in>*{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 24px} /* 이름은 왼쪽, 숫자는 오른쪽 */
@@ -95,7 +73,6 @@
 .blist time{color:var(--faint);font-size:.8rem;font-variant-numeric:tabular-nums}
 .bnote{margin:10px 0 0}
 /* 개요 글자·아이콘 한 단계 작게 (로그인 화면과 맞춤) */
-.phead.gov h1{font-size:clamp(1.2rem,1.3vw,1.45rem)}
 .sec-h h2{font-size:1rem} .sec-h.in h2{font-size:.95rem} .sec-h h2 svg{width:18px;height:18px} .sec-h .asof{font-size:.74rem} .sec-h .more{font-size:.78rem}
 .board .btabs button{font-size:.8rem;padding:7px 12px} .blist li a{font-size:.84rem;padding:9px 4px} .blist time,.blist .bm{font-size:.74rem}
 @media (max-width:1100px){ .qmenu{grid-template-columns:repeat(3,minmax(0,1fr))} .qmenu a:nth-child(4){border-left:0} .qmenu a:nth-child(n+4){border-top:1px solid var(--line-2)} .kstrip{grid-template-columns:repeat(2,minmax(0,1fr))} .kstrip>:nth-child(3){border-left:0} .kstrip>:nth-child(n+3){border-top:1px solid var(--line-2)} }
