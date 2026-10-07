@@ -126,8 +126,7 @@ textarea.inp{min-height:96px;resize:vertical}
 .lbl2{font-size:.8125rem;font-weight:700;color:var(--text);display:block;margin:0 0 6px}
 .empty{color:var(--sub);padding:28px 12px;text-align:center;font-size:.875rem}
 /* 알림: 밝은 카드 + 왼쪽 지역색 점, '앞 — 뒤' 문구는 뒤를 옅게 */
-.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,8px);display:flex;align-items:center;gap:10px;background:var(--surface);color:var(--text);border:1px solid var(--line);padding:10px 16px 10px 14px;border-radius:14px;width:max-content;opacity:0;transition:opacity .2s ease,transform .2s ease;pointer-events:none;z-index:50;font-size:.84rem;font-weight:700;line-height:1.4;max-width:min(calc(100vw - 32px),520px);box-shadow:0 2px 4px rgba(16,24,40,.06),0 12px 32px rgba(16,24,40,.14)}
-.toast::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,8px);display:flex;align-items:center;gap:10px;background:var(--surface);color:var(--text);border:1px solid var(--line);padding:10px 16px;border-radius:14px;width:max-content;opacity:0;transition:opacity .2s ease,transform .2s ease;pointer-events:none;z-index:50;font-size:.84rem;font-weight:700;line-height:1.4;max-width:min(calc(100vw - 32px),520px);box-shadow:0 2px 4px rgba(16,24,40,.06),0 12px 32px rgba(16,24,40,.14)}
 .toast small{font-size:.8rem;font-weight:500;color:var(--sub)}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 
@@ -285,7 +284,7 @@ main.center{flex:1;display:grid;align-content:center;padding-bottom:clamp(16px,1
 .gorg{position:relative;display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);padding:6px 10px 6px 6px;border-radius:12px;margin:10px 0 10px clamp(0px,1vw,20px);transition:background-color .15s}
 .gorg::before{content:"";position:absolute;left:calc(-1 * clamp(8px,1.5vw,30px));top:8px;bottom:8px;width:1px;background:var(--line)}
 a.gorg:hover{background:var(--line-2)}
-.gorg .emb{width:40px;height:40px;border-radius:50%;background:linear-gradient(140deg,var(--accent),var(--accent-2)) center/cover;flex:none;box-shadow:0 0 0 2px var(--surface),0 0 0 3.5px var(--accent)}
+.gorg .emb{width:40px;height:40px;border-radius:50%;background:linear-gradient(140deg,var(--accent),var(--accent-2)) center/cover;flex:none;box-shadow:0 0 0 1px var(--line)} /* 색 테두리 없이 얇은 회색 선만 */
 .gorg small{display:block;font-size:.75rem;color:var(--sub);font-weight:600;line-height:1.2}
 .gorg b{display:block;font-size:1.3rem;letter-spacing:-.03em;line-height:1.2;white-space:nowrap}
 a.gorg:hover b{color:var(--accent-fg)}
@@ -454,7 +453,7 @@ main{padding:clamp(16px,1.8vw,28px) var(--gutter) 40px;max-width:var(--max-w);ma
   /* 폰 위쪽 바: 누리집 모바일처럼 흰 바탕 + 지역 상징 원 + 기관명 */
   .topbar{display:flex;position:sticky;top:0;z-index:15;padding:8px 12px 8px 16px;gap:8px;align-items:center;min-height:56px;background:var(--surface);border-bottom:1px solid var(--line)}
   .topbar a{color:var(--text);text-decoration:none;flex:1;min-width:0;display:flex;align-items:baseline;gap:9px}
-  .topbar .emb{align-self:center;width:30px;height:30px;border-radius:50%;flex:none;background:linear-gradient(140deg,var(--accent),var(--accent-2)) center/cover;box-shadow:0 0 0 2px var(--surface),0 0 0 3px var(--accent)}
+  .topbar .emb{align-self:center;width:30px;height:30px;border-radius:50%;flex:none;background:linear-gradient(140deg,var(--accent),var(--accent-2)) center/cover;box-shadow:0 0 0 1px var(--line)}
   .topbar a b{font-size:1.1rem;white-space:nowrap;letter-spacing:-.02em}
   .topbar a small{font-size:.75rem;color:var(--sub);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .topbar button{border:1px solid var(--line);background:var(--surface);color:var(--sub);border-radius:var(--r-sm);min-width:36px;height:36px;padding:0 10px;font-weight:700;font-size:.8rem}

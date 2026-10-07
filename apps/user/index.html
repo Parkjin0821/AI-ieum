@@ -150,8 +150,15 @@ main.fit>.studio{flex:1;min-height:0}
 .kstrip.qtabs button{border:0;border-left:1px solid var(--line-2);background:transparent;font:inherit;cursor:pointer;text-align:left;transition:background-color .15s} /* 여백·글자 크기는 관리자 현황 칸과 같게 */
 .kstrip.qtabs button:first-child{border-left:0}
 .kstrip.qtabs button:hover{background:var(--line-2)}
-.kstrip.qtabs button[aria-pressed="true"]{background:var(--accent-soft)}
-.kstrip.qtabs button[aria-pressed="true"] .kl{color:var(--accent-ink)}
+/* 고른 칸은 기본색으로 채움 — 지금 어떤 목록을 보는지 한눈에 */
+.kstrip.qtabs button[aria-pressed="true"]{background:var(--accent);color:#fff}
+.kstrip.qtabs button[aria-pressed="true"] .kl,.kstrip.qtabs button[aria-pressed="true"] b small{color:rgba(255,255,255,.85)}
+.kstrip.qtabs button[aria-pressed="true"] .kl i{background:#fff}
+.kstrip.qtabs button[aria-pressed="true"]:hover{background:color-mix(in oklab,var(--accent) 88%,#000)} /* 다크 모드에서도 흰 글자가 읽히게 */
+/* 목록 위 제목: 고른 칸 이름 · 건수 */
+.qhead{display:flex;align-items:baseline;gap:8px;margin:0 2px 8px}
+.qhead b{font-size:1rem;letter-spacing:-.02em}
+.qhead span{font-size:.84rem;font-weight:700;color:var(--accent-fg)}
 .kstrip.qtabs .kl{white-space:nowrap}
 .qlist{display:grid;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
 .qlist>.empty{padding:18px;margin:0}
@@ -405,7 +412,8 @@ function renderShell(){
     : `<span class="emb"></span><span><small>${Sh.SIDO_LABEL}</small><b>지역 고르기</b></span>`;
   $("#acct").innerHTML = !sess
     ? Sh.themeBtn("gu") // 로그인 화면엔 로그인 카드가 있으니 화면 모드만
-    : `<b>${esc(r ? me() : sess.name)}</b><small>${sess.demo ? "시연 계정" : esc(sess.dept || "")}${r ? " · 1·2·3차 확인 담당" : ""}</small><i></i><button type="button" data-open-settings>설정 · 시연 도구</button><i></i>${Sh.themeBtn("gu")}<i></i>${sess.demo
+    // 관리자와 같은 순서: (설정) | 화면 모드 | 이름 · 소속 | 로그아웃
+    : `<button type="button" data-open-settings>설정 · 시연 도구</button><i></i>${Sh.themeBtn("gu")}<i></i><b>${esc(r ? me() : sess.name)}</b>${(() => { const sub = sess.demo ? "시연 계정" : sess.dept || sess.id || sess.email || ""; return sub ? `<small>${esc(sub)}</small>` : ""; })()}<i></i>${sess.demo
       ? `<button type="button" data-leave="#/login">로그인</button><i></i><button type="button" data-leave="#/signup">회원가입</button>` // 시연으로 둘러보는 중일 때만
       : `<button type="button" data-logout>로그아웃</button>`}`;
   $("#rcard").hidden = !sess; // 로그인 전에는 로고와 같은 곳(로그인)으로 가므로 숨김
@@ -887,6 +895,7 @@ function viewReview(selId){
   <div class="kstrip qtabs" role="group" aria-label="대기열">${TABS.map(x => { const n = mine().filter(x.f).length, tone = /^g/.test(x.k) ? (n ? "warn" : "off") : x.k === "making" ? "" : "ok"; return `<button data-tab="${x.k}" aria-pressed="${x.k===rv.tab}" aria-label="${x.l} ${n}건"><span class="kl ${tone}"><i></i>${x.s || x.l}</span><b>${n}<small>건</small></b></button>`; }).join("")}</div>
   <div class="review${sel?" open":""}">
     <div class="queue">
+      <div class="qhead"><b>${tab.l}</b><span>${list.length}건</span></div>
       <div class="qlist">${list.map(p => { const t = tplOf(p.templateId), c = Sh.candOf(p.cand); return `
         <button class="qi" data-sel="${p.id}" aria-current="${sel&&sel.id===p.id}">
           ${screen(t,0,{still:true})}
