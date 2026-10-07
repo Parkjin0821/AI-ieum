@@ -291,7 +291,7 @@ details.thread .tl div.me{background:var(--accent-soft)}
     <div class="gstrip"><div class="wrap"><span>전남광주통합특별시 · 전북특별자치도 시·군·구 관광 숏폼 기획 · 확인</span><span class="sp"></span><div class="gutil" id="acct"></div></div></div>
     <div class="gbar"><div class="wrap">
       <a class="brand" href="#/" data-home title="처음 화면으로 (필터·대화 초기화)"><i></i>AI-이음<small>사용자</small></a>
-      <a class="gorg" href="#/region" id="rcard"></a>
+      <div class="gorg" id="rcard" role="group"></div>
       <nav class="rnav" aria-label="주요 화면">
       <a href="#/" data-r="templates"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="12" rx="2"/><rect x="14" y="3" width="7" height="12" rx="2"/><path d="M3 20h18"/></svg><span>템플릿 고르기</span></a>
       <a href="#/studio" data-r="studio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.6A8 8 0 1 1 21 12z"/></svg><span>대화로 만들기</span></a>
@@ -399,8 +399,8 @@ function renderShell(){
   const r = sess ? Sh.regionOf(S.region) : null, s = r ? rs() : null;
   const ph = s ? Sh.photoUrl(s, 960) : "";
   const emb = ph ? ` style="background-image:url('${esc(ph)}')"` : "";
-  $("#rcard").title = r ? "지역 바꾸기" : "지역 고르기";
-  $("#rcard").setAttribute("aria-label", r ? `${r.sidoName} ${r.name} — 지역 바꾸기` : "지역 고르기");
+  // 지금 지역만 보여줌 (바꾸기는 메인 비주얼 '지역 바꾸기' · 폰 아래 '지역' 탭 · 설정에서)
+  $("#rcard").setAttribute("aria-label", r ? `지금 지역: ${r.sidoName} ${r.name}` : "지역을 아직 고르지 않았어요");
   $("#rcard").innerHTML = r
     ? `<span class="emb"${emb}></span><span><small>${esc(r.sidoName)}</small><b>${esc(r.name)}</b></span>`
     : `<span class="emb"></span><span><small>${Sh.SIDO_LABEL}</small><b>지역 고르기</b></span>`;
@@ -411,7 +411,7 @@ function renderShell(){
       : `<button type="button" data-logout>로그아웃</button>`}`;
   $("#rcard").hidden = !sess; // 로그인 전에는 로고와 같은 곳(로그인)으로 가므로 숨김
   $(".gbar .rnav").hidden = !sess; // 메뉴는 로그인한 뒤에
-  $("#topbar").innerHTML = !sess ? `<a href="#/login"><span class="emb"></span><b>AI-이음</b><small>${location.hash.startsWith("#/signup") ? "담당자 회원가입" : "담당자 로그인"}</small></a>${Sh.themeBtn("gu")}` : `<a href="#/region"><span class="emb"${emb}></span><b>${r ? esc(r.name) : "지역 고르기"}</b><small>${r ? esc(s.mood || r.sidoName) : "AI-이음"}</small></a><button type="button" data-open-settings aria-label="설정">⚙</button>`;
+  $("#topbar").innerHTML = !sess ? `<a href="#/login"><span class="emb"></span><b>AI-이음</b><small>${location.hash.startsWith("#/signup") ? "담당자 회원가입" : "담당자 로그인"}</small></a>${Sh.themeBtn("gu")}` : `<a href="#/"><span class="emb"${emb}></span><b>${r ? esc(r.name) : "지역 고르기"}</b><small>${r ? esc(s.mood || r.sidoName) : "AI-이음"}</small></a><button type="button" data-open-settings aria-label="설정">⚙</button>`;
   $$("[data-cnt]").forEach(c => { const n = S.region ? waiting() : 0; c.textContent = n; c.hidden = !n; });
   $$("[data-open-settings]").forEach(b => b.onclick = openSettings);
   $$("[data-logout]").forEach(b => b.onclick = logout);

@@ -257,11 +257,11 @@ main.center{flex:1;display:grid;align-content:center;padding-bottom:clamp(16px,1
 /* 지역 칸: 칸 전체가 버튼 하나 (누르면 지역 고르기). 로고와의 구분선은 칸 바깥 왼쪽에 */
 .gorg{position:relative;display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);padding:6px 10px 6px 6px;border-radius:12px;margin:10px 0 10px clamp(0px,1vw,20px);transition:background-color .15s}
 .gorg::before{content:"";position:absolute;left:calc(-1 * clamp(8px,1.5vw,30px));top:8px;bottom:8px;width:1px;background:var(--line)}
-.gorg:hover{background:var(--line-2)}
+a.gorg:hover{background:var(--line-2)}
 .gorg .emb{width:40px;height:40px;border-radius:50%;background:linear-gradient(140deg,var(--accent),var(--accent-2)) center/cover;flex:none;box-shadow:0 0 0 2px var(--surface),0 0 0 3.5px var(--accent)}
 .gorg small{display:block;font-size:.75rem;color:var(--sub);font-weight:600;line-height:1.2}
 .gorg b{display:block;font-size:1.3rem;letter-spacing:-.03em;line-height:1.2;white-space:nowrap}
-.gorg:hover b{color:var(--accent-fg)}
+a.gorg:hover b{color:var(--accent-fg)}
 .rnav{display:flex;gap:clamp(8px,1.2vw,22px);margin-left:auto} /* 오른쪽 끝(마지막 메뉴) 기준으로 붙여 정렬 */
 .rnav a{display:flex;align-items:center;gap:6px;padding:3px 4px 0;color:var(--text);text-decoration:none;font-weight:600;font-size:.875rem;position:relative;white-space:nowrap}
 .rnav a svg{width:16px;height:16px;flex:none;color:var(--faint)}
