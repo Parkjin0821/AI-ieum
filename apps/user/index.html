@@ -428,7 +428,7 @@ function renderShell(){
 function stepper(cur){
   const steps = [["region","지역","#/region"],["templates","형식","#/"],["studio","주제","#/studio"],["review","확인","#/review"]];
   const at = steps.findIndex(s => s[0] === cur);
-  return `<nav class="crumb jstep" aria-label="진행 단계 (${at + 1}/4)"><ol>${steps.map(([k,l,h],i) => `<li class="${i<at?"is-done":""}"><a href="${h}" ${i===at?'aria-current="step"':""}><i aria-hidden="true">${i<at?"✓":i+1}</i><span>${l}</span></a></li>`).join("")}</ol></nav>`;
+  return `<nav class="crumb jstep" aria-label="진행 단계 (${at + 1}/4)"><ol>${steps.map(([k,l,h],i) => `<li class="${i<at?"is-done":""}"><a href="${h}" ${i===at?'aria-current="step"':""}><i aria-hidden="true">${i<at?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>':i+1}</i><span>${l}</span></a></li>`).join("")}</ol></nav>`;
 }
 // 관리자와 같은 제목 줄: 오른쪽 위 진행 단계 + 제목 + 얇은 선 (eyebrow는 진행 단계가 대신함)
 const phead = (eyebrow, title, lead, steps) => `<div class="phead gov">${steps||""}<div><h1>${title}</h1>${lead?`<p class="lead">${lead}</p>`:""}</div></div>`;
