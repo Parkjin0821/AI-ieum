@@ -15,9 +15,6 @@
    지역 사진·색은 관리 대상으로만 보여준다. */
 
 /* 안내 띠의 공용 DB 상태 (초록: 연결됨 · 노랑: 이 주소에만 저장) */
-.dbs{font-weight:700;margin-right:6px}
-.dbs.ok::before,.dbs.off::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px;vertical-align:1px;background:var(--ok)}
-.dbs.off::before{background:#E0A43A}
 
 
 /* ---------- 지자체 누리집식 개요 ---------- */
@@ -84,9 +81,12 @@
 .blist li a:hover .bt{color:var(--accent-fg);text-decoration:underline}
 .blist .bt{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* 분류 표시: 같은 폭의 둥근 표 + 앞에 상태 점 — 제목 시작 위치가 줄마다 같아짐 */
-.blist .tag{width:4.9rem;justify-content:center;gap:5px;border-radius:999px;padding:3px 0;font-size:.7rem;font-weight:700;background:transparent;border:1px solid color-mix(in oklab,currentColor 30%,transparent)}
-.blist .tag::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
-.blist .tag:not(.ok):not(.warn):not(.red){color:var(--faint)}
+.ktag{display:inline-flex;align-items:center;justify-content:center;gap:4px;min-width:5.4rem;height:24px;padding:0 8px;border-radius:4px;border:1px solid;font-size:.72rem;font-weight:700;line-height:1;white-space:nowrap;vertical-align:middle}
+.ktag svg{width:14px;height:14px;flex:none}
+.ktag.warn{color:var(--warn);background:var(--warn-bg);border-color:color-mix(in oklab,var(--warn) 32%,transparent)}
+.ktag.ok{color:var(--ok);background:var(--ok-bg);border-color:color-mix(in oklab,var(--ok) 32%,transparent)}
+.ktag.red{color:var(--seal);background:var(--seal-bg);border-color:color-mix(in oklab,var(--seal) 32%,transparent)}
+.ktag.sys{color:var(--sub);background:var(--line-2);border-color:var(--line)}
 .blist .bm{color:var(--sub);font-size:.8rem;white-space:nowrap}
 .blist time{color:var(--faint);font-size:.8rem;font-variant-numeric:tabular-nums}
 .bnote{margin:10px 0 0}
@@ -292,9 +292,8 @@ $("#userBtn").onclick = () => { if (Sh.CFG.userAppUrl) window.open(Sh.CFG.userAp
 function renderShell(){
   const sess = Sh.auth.session(), admin = sess && sess.role === "admin";
   const userLink = `<a href="${esc(Sh.CFG.userAppUrl || "#")}" target="_blank" rel="noopener">사용자 사이트 열기 ↗</a>`;
-  const db = Sh.REMOTE ? `<span class="dbs ok">공용 DB 연결됨</span><i></i>` : `<a class="dbs off" href="#/storage" title="저장 · 백업 안내 보기">이 주소에만 저장 중</a><i></i>`;
   $("#acct").innerHTML = (admin
-    ? db + `${userLink}<i></i>${Sh.themeBtn("gu")}<i></i><b>${esc(sess.name)}</b><small>${sess.demo ? "시연 계정" : esc(sess.id || sess.email)}</small><i></i><button type="button" data-logout>${sess.demo ? "로그인" : "로그아웃"}</button>`
+    ? `${userLink}<i></i>${Sh.themeBtn("gu")}<i></i><b>${esc(sess.name)}</b><small>${sess.demo ? "시연 계정" : esc(sess.id || sess.email)}</small><i></i><button type="button" data-logout>${sess.demo ? "로그인" : "로그아웃"}</button>`
     : Sh.themeBtn("gu")); // 로그인 화면엔 화면 모드만
   $$("[data-logout]").forEach(b => b.onclick = logout);
   $(".tabs").hidden = !admin;
@@ -313,6 +312,15 @@ const ICON = {
   backup: icon('<path d="M12 4v10M8 10l4 4 4-4"/><path d="M4 16.5V19a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-2.5"/>'),
   link: icon('<rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 8h18M8 21h8M12 18v3"/>'),
 };
+/* 결정 기록 분류 꼬리표 — 지자체 게시판의 [공지]·[고시공고] 같은 각진 꼬리표 + 결재 그림, 폭 같게 */
+const KIND = {
+  request: ["확인 요청", "warn", '<rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4V2.8h6V4M9 11h6M9 15h4"/>'],
+  pass: ["통과", "ok", '<circle cx="12" cy="12" r="8.5"/><path d="M8 12.3l2.7 2.7L16 9.7"/>'],
+  reject: ["반려", "red", '<circle cx="12" cy="12" r="8.5"/><path d="M9 9l6 6M15 9l-6 6"/>'],
+  system: ["시스템", "sys", '<circle cx="12" cy="12" r="3"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M5.6 18.4l1.8-1.8M16.6 7.4l1.8-1.8"/>']
+};
+const kindOf = l => l.kind === "request" ? "request" : l.kind === "system" ? "system" : l.decision === "pass" ? "pass" : "reject";
+const ktag = k => { const [lab, cls, d] = KIND[k]; return `<span class="ktag ${cls}">${icon(d)}${lab}</span>`; };
 const pill = (n, cls) => n ? `<span class="pill ${cls||""}">${n}</span>` : `<span class="z">·</span>`;
 const freshA = () => ({ rg:{sido:"all", q:"", activeOnly:false}, data:{tab:"plans", region:"", status:"", q:""} });
 let A = freshA();
@@ -357,7 +365,7 @@ function route(){
   ({login:viewLogin, home:viewHome, regions:viewRegions, templates:viewTemplates, data:viewData, storage:viewStorage})[name]();
   /* 공용 DB가 없으면 사용자 페이지(다른 도메인)와 데이터를 공유하지 못한다는 걸 늘 보여준다 */
   renderShell();
-  // 노란 안내는 개요에만 — 다른 화면은 위 안내 띠의 "● 이 주소에만 저장 중"(누르면 저장 · 백업)으로 충분
+  // 공용 DB 미연결 안내는 개요에만 (자세한 건 저장 · 백업 화면)
   if (!Sh.REMOTE && name === "home") $("#view .crumb.top").insertAdjacentHTML("afterend", `<div class="miss">공용 DB 미연결 — 지금 바꾸는 내용은 이 관리자 주소에만 저장돼요. 사용자 페이지(다른 도메인)에 반영하려면 config.js에 Supabase를 연결하세요. <a href="#/storage">자세히</a></div>`);
 }
 window.addEventListener("hashchange", () => { route(); window.scrollTo(0,0); });
@@ -444,13 +452,11 @@ function viewHome(){
     <tbody>${regions.map(id => { const L = P.filter(p => p.region === id), n = s => L.filter(p => p.status === s).length; return `<tr><td>${regionCell(id)}</td><td>${esc(Sh.regionSettings(id).manager)}</td><td class="num">${pill(n("gate1_wait"),"warn")}</td><td class="num">${pill(n("gate2_wait"),"warn")}</td><td class="num">${pill(n("gate3_wait"),"warn")}</td><td class="num">${pill(n("making"))}</td><td class="num">${pill(n("published"),"ok")}</td><td class="num">${pill(n("rejected"),"red")}</td></tr>`; }).join("")}</tbody></table></div></div>
   </section>`;
   /* 최근 결정 기록: 지자체 공지 게시판처럼 [분류] 제목 ······ 담당자 · 날짜, 7줄 */
-  const kind = l => l.kind === "request" ? "request" : l.kind === "system" ? "system" : l.decision === "pass" ? "pass" : "reject";
-  const KL = { request: ["확인 요청", "warn"], pass: ["통과", "ok"], reject: ["반려", "red"], system: ["시스템", ""] };
   const board = k => {
-    const rows = logs.filter(l => k === "all" || kind(l) === k).slice(0, 7);
-    $("#blist").innerHTML = rows.map(l => { const p = DB.plans.find(x => x.id === l.planId), [lab, cls] = KL[kind(l)];
+    const rows = logs.filter(l => k === "all" || kindOf(l) === k).slice(0, 7);
+    $("#blist").innerHTML = rows.map(l => { const p = DB.plans.find(x => x.id === l.planId);
       const head = l.kind === "system" ? l.note : l.kind === "request" ? "1차 확인 요청" : `${l.gate}차 ${l.decision === "pass" ? "통과" : "반려"}`;
-      return `<li><a href="#/data"><span class="tag ${cls}">${lab}</span><span class="bt">${esc(head)}${p ? ` — ${esc(p.title)}` : ""}</span><span class="bm">${esc(l.reviewer)}</span><time datetime="${l.at}">${day(l.at)}</time></a></li>`; }).join("")
+      return `<li><a href="#/data">${ktag(kindOf(l))}<span class="bt">${esc(head)}${p ? ` — ${esc(p.title)}` : ""}</span><span class="bm">${esc(l.reviewer)}</span><time datetime="${l.at}">${day(l.at)}</time></a></li>`; }).join("")
       || `<li class="empty">기록이 없어요.</li>`;
   };
   board("all");
@@ -686,7 +692,6 @@ function viewData(){
   const plans = DB.plans.filter(p => (!f.region || p.region === f.region) && (!f.status || p.status === f.status) && (!f.q || (p.id + p.title + p.requestedBy).includes(f.q)));
   const ids = new Set(DB.plans.filter(p => !f.region || p.region === f.region).map(p => p.id));
   const logs = DB.logs.filter(l => ids.has(l.planId) && (!f.q || (l.planId + l.reviewer + (l.reasonText||"") + (l.note||"")).includes(f.q))).sort((a,b) => a.at < b.at ? 1 : -1);
-  const kind = l => l.kind === "request" ? "요청" : l.kind === "system" ? "시스템" : l.decision === "pass" ? "통과" : "반려";
   $("#view").innerHTML = `${phead("관리자 · 기록", "콘텐츠 · 기록", "모든 지역의 콘텐츠와 결정 기록이에요. 기록은 지울 수 없고, 고칠 때는 새 기록이 붙어요.",
     `<div class="hb"><button class="btn ghost" id="xCsv">${icon(DL)}CSV</button><button class="btn ghost" id="xJson">${icon(DL)}JSON</button></div>`)}
   <div class="tools">
@@ -699,7 +704,7 @@ function viewData(){
   ${f.tab === "plans" ? `<div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>지역</th><th>제목</th><th>형식</th><th>상태</th><th>요청</th><th>요청일</th></tr></thead>
     <tbody>${plans.map(p => { const t = Sh.templates().find(x => x.id === p.templateId); return `<tr class="clickable" data-p="${p.id}" tabindex="0"><td class="nw">${esc(p.id)}</td><td>${regionCell(p.region)}</td><td>${esc(p.title)}</td><td>${t?esc(t.name):esc(p.templateId)}</td><td><span class="tag ${p.status==="published"?"ok":p.status==="rejected"?"red":/wait/.test(p.status)?"warn":""}">${STATUS[p.status]}</span></td><td>${esc(p.requestedBy)}</td><td class="nw">${fmt(p.createdAt)}</td></tr>`; }).join("") || `<tr><td colspan="7" class="empty">없어요</td></tr>`}</tbody></table></div>`
   : `<div class="tbl-wrap"><table class="tbl"><thead><tr><th>시각</th><th>콘텐츠</th><th>지역</th><th>누가</th><th>단계</th><th>결정</th><th>사유 · 내용</th></tr></thead>
-    <tbody>${logs.map(l => { const p = DB.plans.find(x => x.id === l.planId); return `<tr><td class="nw">${fmt(l.at)}</td><td class="nw">${esc(l.planId)}</td><td>${p?esc(regionTitle(p.region)):""}</td><td>${esc(l.reviewer)}</td><td>${l.gate?l.gate+"차":"—"}</td><td><span class="tag ${l.decision==="pass"?"ok":l.decision==="reject"?"red":""}">${kind(l)}</span></td><td>${l.decision==="reject"?esc(`${l.reasonCategory} — ${l.reasonText}`):esc(l.note||"")}${l.gate===2&&l.decision==="pass"?`점검표 ${Object.values(l.checklist||{}).filter(Boolean).length}/6`:""}${l.uploadUrl?esc(l.uploadUrl):""}</td></tr>`; }).join("") || `<tr><td colspan="7" class="empty">없어요</td></tr>`}</tbody></table></div>`}`;
+    <tbody>${logs.map(l => { const p = DB.plans.find(x => x.id === l.planId); return `<tr><td class="nw">${fmt(l.at)}</td><td class="nw">${esc(l.planId)}</td><td>${p?esc(regionTitle(p.region)):""}</td><td>${esc(l.reviewer)}</td><td>${l.gate?l.gate+"차":"—"}</td><td>${ktag(kindOf(l))}</td><td>${l.decision==="reject"?esc(`${l.reasonCategory} — ${l.reasonText}`):esc(l.note||"")}${l.gate===2&&l.decision==="pass"?`점검표 ${Object.values(l.checklist||{}).filter(Boolean).length}/6`:""}${l.uploadUrl?esc(l.uploadUrl):""}</td></tr>`; }).join("") || `<tr><td colspan="7" class="empty">없어요</td></tr>`}</tbody></table></div>`}`;
   $$("[data-tab]").forEach(b => b.onclick = () => { f.tab = b.dataset.tab; viewData(); });
   $("#fRegion").onchange = e => { f.region = e.target.value; viewData(); };
   const st = $("#fStatus"); if (st) st.onchange = e => { f.status = e.target.value; viewData(); };
