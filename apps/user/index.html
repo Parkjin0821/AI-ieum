@@ -92,7 +92,7 @@ main.fit>.studio{flex:1;min-height:0}
 .chat{display:flex;flex-direction:column;min-height:0;overflow:hidden}
 .log{flex:1;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:10px}
 .msg{max-width:82%;padding:.6rem .85rem;border-radius:var(--r);white-space:pre-line;font-size:.9rem;line-height:1.6}
-.msg.ai{background:var(--line-2);align-self:flex-start;border-top-left-radius:5px}
+.msg.ai{background:var(--line-2);align-self:flex-start;border-top-left-radius:5px;white-space:normal} /* 문장을 억지로 끊지 않고 가로로 이어서, 말풍선 폭에서만 줄바꿈 */
 .msg.me{background:var(--accent);color:#fff;align-self:flex-end;border-top-right-radius:5px}
 .msg.err{background:var(--seal-bg);color:var(--seal);align-self:stretch;max-width:none;border-radius:var(--r);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .msg.err b{display:block}
@@ -146,15 +146,13 @@ main.fit>.studio{flex:1;min-height:0}
 .queue{min-width:0}
 /* 대기열 탭: 같은 크기 5칸 (위 건수 · 아래 이름) */
 /* 확인함 대기열 = 관리자 현황 칸(.kstrip) 모양, 고른 칸은 바탕색만 (관리자처럼 선 없음) */
-.kstrip.qtabs{grid-template-columns:repeat(5,minmax(0,1fr));margin-bottom:12px}
-.kstrip.qtabs button{border:0;border-left:1px solid var(--line-2);background:transparent;font:inherit;cursor:pointer;text-align:left;padding:10px 10px 9px;gap:4px;transition:background-color .15s}
+.kstrip.qtabs{grid-template-columns:repeat(5,minmax(0,1fr));margin-bottom:16px} /* 목록·상세 위에 화면 전체 폭으로 */
+.kstrip.qtabs button{border:0;border-left:1px solid var(--line-2);background:transparent;font:inherit;cursor:pointer;text-align:left;transition:background-color .15s} /* 여백·글자 크기는 관리자 현황 칸과 같게 */
 .kstrip.qtabs button:first-child{border-left:0}
 .kstrip.qtabs button:hover{background:var(--line-2)}
 .kstrip.qtabs button[aria-pressed="true"]{background:var(--accent-soft)}
 .kstrip.qtabs button[aria-pressed="true"] .kl{color:var(--accent-ink)}
-.kstrip.qtabs .kl{font-size:.72rem;gap:5px;white-space:nowrap}
-.kstrip.qtabs b{font-size:1.3rem}
-.kstrip.qtabs b small{font-size:.7rem}
+.kstrip.qtabs .kl{white-space:nowrap}
 .qlist{display:grid;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);overflow:hidden}
 .qlist>.empty{padding:18px;margin:0}
 .qi{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;background:transparent;border-top:1px solid var(--line-2);padding:10px 14px}
@@ -886,9 +884,9 @@ function viewReview(selId){
   if (sel) { const tab = TABS.find(x => x.f(sel)); if (tab) rv.tab = tab.k; }
   const tab = TABS.find(x => x.k === rv.tab), list = mine().filter(tab.f);
   $("#view").innerHTML = `${phead("STEP 4 · 확인", "확인함", "1·2·3차를 순서대로 확인해요. 반려할 때는 사유가 꼭 필요해요.", stepper("review"))}
+  <div class="kstrip qtabs" role="group" aria-label="대기열">${TABS.map(x => { const n = mine().filter(x.f).length, tone = /^g/.test(x.k) ? (n ? "warn" : "off") : x.k === "making" ? "" : "ok"; return `<button data-tab="${x.k}" aria-pressed="${x.k===rv.tab}" aria-label="${x.l} ${n}건"><span class="kl ${tone}"><i></i>${x.s || x.l}</span><b>${n}<small>건</small></b></button>`; }).join("")}</div>
   <div class="review${sel?" open":""}">
     <div class="queue">
-      <div class="kstrip qtabs" role="group" aria-label="대기열">${TABS.map(x => { const n = mine().filter(x.f).length, tone = /^g/.test(x.k) ? (n ? "warn" : "off") : x.k === "making" ? "" : "ok"; return `<button data-tab="${x.k}" aria-pressed="${x.k===rv.tab}" aria-label="${x.l} ${n}건"><span class="kl ${tone}"><i></i>${x.s || x.l}</span><b>${n}<small>건</small></b></button>`; }).join("")}</div>
       <div class="qlist">${list.map(p => { const t = tplOf(p.templateId), c = Sh.candOf(p.cand); return `
         <button class="qi" data-sel="${p.id}" aria-current="${sel&&sel.id===p.id}">
           ${screen(t,0,{still:true})}
