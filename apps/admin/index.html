@@ -178,6 +178,27 @@ a.kpi.link .kh::after{content:"보기 ›";margin-left:auto;color:var(--accent-f
 .cover .rh{font-size:.75rem;color:var(--sub);font-weight:700;align-self:center;justify-self:center;text-align:center}
 .cover .c{background:var(--line-2);border-radius:8px;min-height:32px;font-size:.9rem;font-weight:800;display:grid;place-items:center;font-variant-numeric:tabular-nums}
 .cover .c.zero{color:var(--seal);background:var(--seal-bg)}
+/* 커버 표를 누르는 걸러보기 */
+.cover.pick button{border:0;font-family:inherit;cursor:pointer;transition:background-color .15s,box-shadow .15s,color .15s}
+.cover.pick .h,.cover.pick .rh{background:none;border-radius:6px;padding:4px 2px}
+.cover.pick .h:hover,.cover.pick .rh:hover{color:var(--accent-fg);background:var(--accent-soft)}
+.cover.pick .h[aria-pressed="true"],.cover.pick .rh[aria-pressed="true"]{color:#fff;background:var(--accent)}
+.cover.pick .h.all{font-size:.7rem;color:var(--faint)}
+.cover.pick .h.all[aria-pressed="true"]{color:#fff}
+.cover.pick .c{color:var(--text)}
+.cover.pick .c:hover{box-shadow:inset 0 0 0 2px var(--accent-line)}
+.cover.pick .c.on{background:var(--accent-soft);color:var(--accent-ink);box-shadow:inset 0 0 0 2px var(--accent)}
+.cover.pick .c.zero{color:var(--seal)}
+.tfbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 14px;margin:0 0 10px;background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:var(--r);font-size:.875rem}
+.tfbar>span:first-child{font-weight:700;color:var(--accent-ink)}
+.tfbar .linkbtn{margin-left:auto}
+/* 템플릿 목록: 칸 폭 고정 — 줄마다 꼬리표·글자가 같은 자리에서 시작 */
+.tpl-tbl{table-layout:fixed;min-width:1080px}
+.tpl-tbl th.ctr,.tpl-tbl td.ctr{text-align:center}
+.tpl-tbl .thumb{margin:0 auto}
+.tpl-tbl .tags{display:flex;flex-wrap:wrap;gap:4px}
+.tpl-tbl td.name b,.tpl-tbl td.name small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tag.info.hit{background:var(--accent);color:#fff}
 
 /* 템플릿 편집 */
 .edit{display:grid;grid-template-columns:minmax(0,1fr) clamp(200px,18vw,260px);gap:22px}
@@ -263,7 +284,7 @@ a.kpi.link .kh::after{content:"보기 ›";margin-left:auto;color:var(--accent-f
     </div></div>
   </header>
   <div class="body">
-    <header class="topbar"><a href="#/" data-home><b>AI-이음 관리자</b><small>지역 41곳 · 템플릿 · 기록</small></a><button type="button" data-theme-toggle="icon" aria-label="화면 모드 바꾸기">◐</button><button type="button" id="userBtn">사용자 ↗</button></header>
+    <header class="topbar"><a href="#/" data-home><b>AI-이음 관리자</b><small>지역 41곳 · 템플릿 · 기록</small></a><button type="button" data-theme-toggle="icon" aria-label="화면 모드 바꾸기">◐</button><button type="button" id="userBtn">사용자</button></header>
     <main id="view" tabindex="-1"></main>
   </div>
   <footer class="gfoot"><div class="wrap"><span>사진: 한국관광공사(공공누리 제1유형) · 위키미디어 공용</span></div></footer>
@@ -294,7 +315,7 @@ $("#userBtn").onclick = () => { if (Sh.CFG.userAppUrl) window.open(Sh.CFG.userAp
 /* 헤더 기관명 자리 — 광역 운영 + 공용 DB 상태 */
 function renderShell(){
   const sess = Sh.auth.session(), admin = sess && sess.role === "admin";
-  const userLink = `<a href="${esc(Sh.CFG.userAppUrl || "#")}" target="_blank" rel="noopener">사용자 사이트 열기 ↗</a>`;
+  const userLink = `<a href="${esc(Sh.CFG.userAppUrl || "#")}" target="_blank" rel="noopener">사용자 사이트 열기</a>`;
   $("#acct").innerHTML = (admin
     ? `${userLink}<i></i>${Sh.themeBtn("gu")}<i></i><b>${esc(sess.name)}</b><small>${sess.demo ? "시연 계정" : esc(sess.id || sess.email)}</small><i></i><button type="button" data-logout>${sess.demo ? "로그인" : "로그아웃"}</button>`
     : Sh.themeBtn("gu")); // 로그인 화면엔 화면 모드만
@@ -325,7 +346,7 @@ const KIND = {
 const kindOf = l => l.kind === "request" ? "request" : l.kind === "system" ? "system" : l.decision === "pass" ? "pass" : "reject";
 const ktag = k => { const [lab, cls, d] = KIND[k]; return `<span class="ktag ${cls}">${icon(d)}${lab}</span>`; };
 const pill = (n, cls) => n ? `<span class="pill ${cls||""}">${n}</span>` : `<span class="z">·</span>`;
-const freshA = () => ({ rg:{sido:"all", q:"", activeOnly:false}, data:{tab:"plans", region:"", status:"", q:""} });
+const freshA = () => ({ rg:{sido:"all", q:"", activeOnly:false}, data:{tab:"plans", region:"", status:"", q:""}, tf:{cat:"", age:""} });
 let A = freshA();
 /* 제목을 누르면 개요로 돌아가고 필터·검색·열린 팝업을 처음 상태로 (저장된 데이터는 그대로) */
 $$("[data-home]").forEach(a => a.addEventListener("click", e => {
@@ -556,13 +577,15 @@ function viewTemplates(){
   const list = Sh.templates(), off = Sh.disabledIds(), on = list.filter(t => !off.includes(t.id));
   const missing = R.missingTypes(on), customized = !!Sh.read(Sh.KEY.tpl, null);
   const n = (c,a) => on.filter(t => t.categories.includes(c) && t.ages.includes(a)).length;
+  const f = A.tf, fit = t => (!f.cat || t.categories.includes(f.cat)) && (!f.age || t.ages.includes(f.age));
+  const shown = list.filter(fit), picked = (c, a) => (!f.cat || f.cat === c) && (!f.age || f.age === a) && (f.cat || f.age);
   $("#view").innerHTML = `${phead("관리자 · 템플릿", "템플릿 관리", `사용 중 ${on.length}개 / 전체 ${list.length}개 · 고치면 사용자 페이지에 바로 반영되고, 규칙을 어기면 저장되지 않아요.`,
     `<div class="hb"><button class="btn" id="tNew">${icon('<path d="M12 5v14M5 12h14"/>')}새 템플릿</button><button class="btn ghost" id="tDl">${icon(DL)}JSON 내려받기</button>${customized?`<button class="btn red" id="tReset">기본값으로</button>`:""}</div>`)}
   ${missing.length ? `<div class="miss">사용 중인 템플릿이 없는 유형: ${missing.join(", ")} — 사용자 화면에서 이 유형은 고를 형식이 없어요.</div>` : ""}
   <div class="cols" style="margin-bottom:24px">
-    <section class="colsec"><div class="sec-h"><h2>분야 · 연령 커버</h2><span class="asof">사용 중인 템플릿 수 · 빨간 칸은 고를 형식 없음</span></div>
-      <div class="box"><div class="cover" aria-label="사용 중 템플릿의 분야 · 연령 커버"><span></span>${R.CATS.map(c => `<span class="h">${c}</span>`).join("")}
-      ${R.AGES.map(a => `<span class="rh">${a}</span>${R.CATS.map(c => { const k = n(c,a); return `<span class="c${k?"":" zero"}">${k}</span>`; }).join("")}`).join("")}</div></div>
+    <section class="colsec"><div class="sec-h"><h2>분야 · 연령 커버</h2><span class="asof">사용 중인 템플릿 수 · 숫자를 누르면 아래 목록을 걸러 봐요</span></div>
+      <div class="box"><div class="cover pick" role="group" aria-label="분야 · 연령 커버 — 누르면 아래 목록을 걸러 봐요"><button class="h all" data-tf="|" aria-pressed="${!f.cat && !f.age}" title="전체 보기">전체</button>${R.CATS.map(c => `<button class="h" data-tf="${c}|" aria-pressed="${f.cat === c && !f.age}">${c}</button>`).join("")}
+      ${R.AGES.map(a => `<button class="rh" data-tf="|${a}" aria-pressed="${!f.cat && f.age === a}">${a}</button>${R.CATS.map(c => { const k = n(c,a); return `<button class="c${k?"":" zero"}${picked(c,a)?" on":""}" data-tf="${c}|${a}" aria-pressed="${f.cat === c && f.age === a}" aria-label="${c} ${a} 사용 중 ${k}개 — 목록 걸러 보기">${k}</button>`; }).join("")}`).join("")}</div></div>
     </section>
     <section class="colsec"><div class="sec-h"><h2>규칙 검사</h2><span class="asof">장면 4·6·8초 · 15~45초 · 마지막은 정보 장면</span></div>
       <div class="box flush"><div class="kstrip in">
@@ -573,17 +596,27 @@ function viewTemplates(){
       </div></div>
     </section>
   </div>
-  <div class="sec-h"><h2>템플릿 목록</h2><span class="asof">사용을 끄면 사용자 화면에서 빠져요</span></div>
-  <div class="tbl-wrap"><table class="tbl"><thead><tr><th>사용</th><th></th><th>이름</th><th>분야 · 연령</th><th>훅</th><th class="num">장면 · 길이</th><th>규칙 검사</th><th></th></tr></thead>
-  <tbody>${list.map(t => { const e = R.validateTemplate(t), used = !off.includes(t.id); return `<tr>
-    <td><label class="switch"><input type="checkbox" data-on="${t.id}" ${used?"checked":""}><span class="sr">${esc(t.name)} 사용</span></label></td>
-    <td><div class="thumb">${Sh.screen(t,0,{still:true})}</div></td>
+  <div class="sec-h" id="tlist"><h2>템플릿 목록</h2><span class="asof">사용을 끄면 사용자 화면에서 빠져요</span></div>
+  ${f.cat || f.age ? `<div class="tfbar"><span>보기</span><b>${[f.cat || "모든 분야", f.age || "모든 연령"].join(" · ")}</b><span class="note">${shown.length}개 (사용 중 ${shown.filter(t => !off.includes(t.id)).length})</span><button class="linkbtn" data-tf="|">전체 보기</button></div>` : ""}
+  <div class="tbl-wrap"><table class="tbl tpl-tbl"><colgroup><col style="width:72px"><col style="width:100px"><col><col style="width:150px"><col style="width:200px"><col style="width:140px"><col style="width:130px"><col style="width:100px"><col style="width:84px"></colgroup>
+  <thead><tr><th class="ctr">사용</th><th class="ctr">첫 장면</th><th>이름</th><th>분야</th><th>연령</th><th>훅</th><th class="ctr">장면 · 길이</th><th class="ctr">규칙 검사</th><th class="ctr">수정</th></tr></thead>
+  <tbody>${shown.map(t => { const e = R.validateTemplate(t), used = !off.includes(t.id); return `<tr>
+    <td class="ctr"><label class="switch"><input type="checkbox" data-on="${t.id}" ${used?"checked":""}><span class="sr">${esc(t.name)} 사용</span></label></td>
+    <td class="ctr"><div class="thumb">${Sh.screen(t,0,{still:true})}</div></td>
     <td class="name"><b>${esc(t.name)}</b><small>${esc(t.id)}</small></td>
-    <td><div class="tags">${t.categories.map(c => `<span class="tag">${c}</span>`).join("")}${t.ages.map(a => `<span class="tag info">${a}</span>`).join("")}</div></td>
+    <td><div class="tags">${t.categories.map(c => `<span class="tag${c === f.cat ? " accent" : ""}">${c}</span>`).join("")}</div></td>
+    <td><div class="tags">${t.ages.map(a => `<span class="tag info${a === f.age ? " hit" : ""}">${a}</span>`).join("")}</div></td>
     <td>${HOOK[t.hook.type] || esc(t.hook.type)}</td>
-    <td class="num">${t.scenes.length}장면 · ${R.totalSeconds(t)}초</td>
-    <td>${e.length ? `<span class="tag red">오류 ${e.length}</span>` : `<span class="tag ok">통과</span>`}</td>
-    <td><button class="btn ghost sm" data-edit="${t.id}">수정</button></td></tr>`; }).join("")}</tbody></table></div>`;
+    <td class="ctr nw">${t.scenes.length}장면 · ${R.totalSeconds(t)}초</td>
+    <td class="ctr">${e.length ? `<span class="tag red">오류 ${e.length}</span>` : `<span class="tag ok">통과</span>`}</td>
+    <td class="ctr"><button class="btn ghost sm" data-edit="${t.id}">수정</button></td></tr>`; }).join("") || `<tr><td colspan="9" class="empty">이 조건에 맞는 템플릿이 없어요 — 새 템플릿을 만들어 채워 주세요.</td></tr>`}</tbody></table></div>`;
+  $$("[data-tf]").forEach(b => b.onclick = () => {
+    const [c, a] = b.dataset.tf.split("|");
+    const same = A.tf.cat === c && A.tf.age === a;
+    A.tf = same ? {cat:"", age:""} : {cat:c, age:a}; // 같은 걸 다시 누르면 풀림
+    viewTemplates();
+    if (A.tf.cat || A.tf.age) $("#tlist").scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block:"start"});
+  });
   $$("[data-on]").forEach(x => x.onchange = () => {
     const off = new Set(Sh.disabledIds()); x.checked ? off.delete(x.dataset.on) : off.add(x.dataset.on);
     Sh.write(Sh.KEY.off, [...off]); toast(x.checked ? "사용으로 바꿨어요" : "사용 중지했어요 — 사용자 화면에서 빠져요"); viewTemplates();
