@@ -334,10 +334,11 @@ main{padding:clamp(16px,1.8vw,28px) var(--gutter) 40px;max-width:var(--max-w);ma
 /* 형식 걸러보기: 지자체 검색 조건 상자처럼 — 이름 칸 | 따로 떨어진 칩 버튼 (회색 묶음 대신) */
 .facets .fl{color:var(--text);font-size:.8rem;padding-right:12px;border-right:1px solid var(--line);line-height:30px}
 .facets .facet{gap:12px}
-.facets .facet .seg{background:none;padding:0;gap:6px;grid-auto-columns:auto}
-.facets .facet .seg button{border:1px solid var(--line);background:var(--surface);border-radius:6px;min-height:32px;padding:.3rem .8rem;color:var(--sub);gap:5px;transition:border-color .15s,background-color .15s,color .15s}
-.facets .facet .seg button:hover:not(:disabled){border-color:var(--accent-line);color:var(--text);background:var(--surface)}
-.facets .facet .seg button[aria-pressed="true"]{border-color:var(--accent-mid);background:var(--accent-soft);color:var(--accent-ink);font-weight:700;box-shadow:none}
+.facets .facet .seg{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:0;gap:0;overflow:hidden;grid-auto-columns:auto} /* 한 묶음, 칸 사이만 얇은 선 */
+.facets .facet .seg button{border:0;border-left:1px solid var(--line-2);border-radius:0;background:transparent;min-height:32px;padding:.3rem .85rem;color:var(--sub);gap:5px;box-shadow:none;transition:background-color .15s,color .15s}
+.facets .facet .seg button:first-child{border-left:0}
+.facets .facet .seg button:hover:not(:disabled){background:var(--line-2);color:var(--text)}
+.facets .facet .seg button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent-ink);font-weight:700;box-shadow:none} /* 은은하게: 연한 바탕 + 진한 글자만 */
 .facets .facet .seg button[aria-pressed="true"] i{color:var(--accent-fg)}
 .seg{display:flex;gap:4px;flex-wrap:wrap;background:var(--line-2);border-radius:8px;padding:4px;width:max-content;max-width:100%}
 .seg button{border:0;background:transparent;border-radius:6px;padding:.42rem .85rem;min-height:36px;font-weight:600;font-size:.875rem;color:var(--sub);display:inline-flex;align-items:center;gap:6px;transition:background-color .2s,color .2s,box-shadow .2s}
@@ -480,6 +481,7 @@ main{padding:clamp(16px,1.8vw,28px) var(--gutter) 40px;max-width:var(--max-w);ma
   /* 폰: 분야·연령 버튼을 3칸 같은 폭으로 줄바꿈 (이름 위 · 수 아래) */
   .facet .seg{display:grid;grid-auto-flow:row;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;overflow:visible}
   .facets .fl{border-right:0;padding-right:0;line-height:1.4} /* 폰: 이름이 버튼 위에 오니 오른쪽 구분선 없이 */
+  .facets .facet .seg button:nth-child(3n+1){border-left:0} .facets .facet .seg button:nth-child(n+4){border-top:1px solid var(--line-2)} /* 폰 3칸 줄바꿈: 줄 첫 칸은 왼쪽 선 없이, 둘째 줄부터 위 선 */
   .facet .seg button{flex-direction:column;gap:0;padding:.3rem .2rem;line-height:1.25}
   .seg{width:100%;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
   .seg::-webkit-scrollbar{display:none}
