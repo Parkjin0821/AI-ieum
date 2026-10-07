@@ -285,7 +285,7 @@ a.kpi.link .kh::after{content:"보기 ›";margin-left:auto;color:var(--accent-f
     </div></div>
   </header>
   <div class="body">
-    <header class="topbar"><a href="#/" data-home><b>AI-이음 관리자</b><small>지역 41곳 · 템플릿 · 기록</small></a><button type="button" data-theme-toggle="icon" aria-label="화면 모드 바꾸기">◐</button><button type="button" id="userBtn">사용자</button></header>
+    <header class="topbar"><a href="#/" data-home><b>AI-이음 관리자</b><small>지역 41곳 · 템플릿 · 기록</small></a><button type="button" data-theme-toggle="icon" aria-label="화면 모드 바꾸기">◐</button></header>
     <main id="view" tabindex="-1"></main>
   </div>
   <footer class="gfoot"><div class="wrap"><span>사진: 한국관광공사(공공누리 제1유형) · 위키미디어 공용</span></div></footer>
@@ -312,13 +312,11 @@ const W = window.Workflow, Sh = window.Shared, R = window.TemplateRules;
 const { esc, fmt, day, ROLE, SRC, HOOK, STATUS } = Sh;
 const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
 let DB = { plans: [], logs: [], threads: {} };
-$("#userBtn").onclick = () => { if (Sh.CFG.userAppUrl) window.open(Sh.CFG.userAppUrl, "_blank", "noopener"); else toast("config.js에 사용자 사이트 주소가 없어요"); };
 /* 헤더 기관명 자리 — 광역 운영 + 공용 DB 상태 */
 function renderShell(){
   const sess = Sh.auth.session(), admin = sess && sess.role === "admin";
-  const userLink = `<a href="${esc(Sh.CFG.userAppUrl || "#")}" target="_blank" rel="noopener">사용자 사이트 열기</a>`;
   $("#acct").innerHTML = (admin
-    ? `${userLink}<i></i>${Sh.themeBtn("gu")}<i></i><b>${esc(sess.name)}</b><small>${sess.demo ? "시연 계정" : esc(sess.id || sess.email)}</small><i></i><button type="button" data-logout>${sess.demo ? "로그인" : "로그아웃"}</button>`
+    ? `${Sh.themeBtn("gu")}<i></i><b>${esc(sess.name)}</b><small>${sess.demo ? "시연 계정" : esc(sess.id || sess.email)}</small><i></i><button type="button" data-logout>${sess.demo ? "로그인" : "로그아웃"}</button>`
     : Sh.themeBtn("gu")); // 로그인 화면엔 화면 모드만
   $$("[data-logout]").forEach(b => b.onclick = logout);
   $(".tabs").hidden = !admin;
@@ -347,7 +345,9 @@ const KIND = {
 const kindOf = l => l.kind === "request" ? "request" : l.kind === "system" ? "system" : l.decision === "pass" ? "pass" : "reject";
 const ktag = k => { const [lab, cls, d] = KIND[k]; return `<span class="ktag ${cls}">${icon(d)}${lab}</span>`; };
 const pill = (n, cls) => n ? `<span class="pill ${cls||""}">${n}</span>` : `<span class="z">·</span>`;
-const freshA = () => ({ rg:{sido:"all", q:"", activeOnly:false}, data:{tab:"plans", region:"", status:"", q:""}, tf:{cat:"", age:""} });
+const freshA = () => ({ rg:{sido:"all", q:"", activeOnly:false}, data:{tab:"plans", region:"", status:"", q:""}, tf:{cat:"", age:""}, after:"" });
+/* 바로가기에서 정한 '그린 뒤 할 일'을 한 번만 실행 (그 화면의 버튼을 그대로 누름 → 결과가 버튼과 같음) */
+const runAfter = (key, sel) => { if (A.after !== key) return; A.after = ""; const b = $(sel); if (b) b.click(); };
 let A = freshA();
 /* 제목을 누르면 개요로 돌아가고 필터·검색·열린 팝업을 처음 상태로 (저장된 데이터는 그대로) */
 $$("[data-home]").forEach(a => a.addEventListener("click", e => {
@@ -444,16 +444,16 @@ function viewHome(){
   const waitAll = wait(1) + wait(2) + wait(3), on = Sh.enabledTemplates().length, rej = P.filter(p => p.status === "rejected").length;
   const now = new Date(), asOf = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,"0")}.${String(now.getDate()).padStart(2,"0")} ${String(now.getHours()).padStart(2,"0")}:${String(now.getMinutes()).padStart(2,"0")}`;
   const stat = (href, cls, label, num, unit, sub, extra) => `<a href="${href}"><span class="kl ${cls}"><i></i>${label}</span><b>${num}<small>${unit}</small></b>${extra || ""}<span class="ks">${sub}</span></a>`;
-  const qm = (href, ic, label, sub, ext) => `<a href="${href}"${ext ? ' target="_blank" rel="noopener"' : ""}><span>${ic}</span><b>${label}</b><small>${sub}</small></a>`;
+  const qm = (href, ic, label, sub, act, ext) => `<a href="${href}"${act ? ` data-act="${act}"` : ""}${ext ? ' target="_blank" rel="noopener"' : ""}><span>${ic}</span><b>${label}</b><small>${sub}</small></a>`;
   $("#view").innerHTML = `${crumb("관리자 · 개요", "top")}<section class="hero has-slides" aria-label="광역 운영 소개"><span class="slides" aria-hidden="true"></span><span class="slide-cap"></span>
     <div><small>광역 운영 · ${Sh.SIDO_LABEL}</small><h2>관광 숏폼 광역 관리</h2><p>지역 ${active}곳에서 11월 1일까지 40편 게시를 목표로 해요. 지금 ${pub.length}편 게시, ${waitAll}건이 확인을 기다려요.</p></div></section>
   <nav class="qmenu" aria-label="자주 찾는 메뉴">
-    ${qm("#/data", ICON.wait, "확인 대기", `${waitAll}건`)}
-    ${qm("#/regions", ICON.people, "지역 · 담당자", `${active}곳 사용`)}
-    ${qm("#/templates", ICON.tpl, "템플릿 관리", `${on}개 사용`)}
-    ${qm("#/data", ICON.stamp, "결정 기록", `${logs.length}건`)}
-    ${qm("#/storage", ICON.backup, "저장 · 백업", Sh.REMOTE ? "공용 DB" : "이 주소만")}
-    ${qm(esc(Sh.CFG.userAppUrl || "#"), ICON.link, "사용자 사이트", "새 창", true)}
+    ${qm("#/data", ICON.wait, "확인 대기 처리", "1·2·3차 대기만", "wait")}
+    ${qm("#/templates", ICON.tpl, "새 템플릿 만들기", "규칙 검사 함께", "newTpl")}
+    ${qm("#/regions", ICON.people, "담당자 · 지역 색", "지역별 설정")}
+    ${qm("#/data", ICON.stamp, "결정 기록 내려받기", "CSV 파일", "csv")}
+    ${qm("#/storage", ICON.backup, "백업 받기", "JSON 파일", "backup")}
+    ${qm(esc(Sh.CFG.userAppUrl || "#"), ICON.link, "사용자 사이트", "새 창으로 열기", "", true)}
   </nav>
   <div class="sec-h"><h2>운영 현황</h2><span class="asof">${asOf} 기준 · 이 브라우저의 시연 데이터</span></div>
   <div class="kstrip">
@@ -487,6 +487,13 @@ function viewHome(){
   board("all");
   $$("[data-bt]").forEach(b => b.onclick = () => { $$("[data-bt]").forEach(x => x.setAttribute("aria-selected", x === b)); board(b.dataset.bt); });
   Sh.slideshow($(".hero .slides"), $(".hero .slide-cap"), 6000);
+  $$(".qmenu [data-act]").forEach(a => a.onclick = ev => {
+    const act = a.dataset.act;
+    if (act === "wait") { A.data = Object.assign(freshA().data, { tab:"plans", status:"wait" }); }
+    else if (act === "csv") { A.data = Object.assign(freshA().data, { tab:"logs" }); A.after = "csv"; }
+    else A.after = act; // newTpl · backup
+    if (location.hash === a.getAttribute("href")) { ev.preventDefault(); route(); }
+  });
 }
 
 /* =========================================================
@@ -629,6 +636,7 @@ function viewTemplates(){
   };
   $("#tDl").onclick = () => download("templates.json", JSON.stringify(Sh.templates(), null, 2));
   const rst = $("#tReset"); if (rst) rst.onclick = () => { if (!confirm("관리자가 고친 템플릿을 모두 버리고 기본 data/templates.json으로 되돌릴까요?")) return; Sh.remove(Sh.KEY.tpl); Sh.remove(Sh.KEY.off); toast("기본값으로 되돌렸어요"); viewTemplates(); };
+  runAfter("newTpl", "#tNew");
 }
 function editTemplate(src, isNew){
   const t = JSON.parse(JSON.stringify(src));
@@ -726,7 +734,7 @@ function editTemplate(src, isNew){
 function viewData(){
   const f = A.data;
   const regions = [...new Set(DB.plans.map(p => p.region))].sort();
-  const plans = DB.plans.filter(p => (!f.region || p.region === f.region) && (!f.status || p.status === f.status) && (!f.q || (p.id + p.title + p.requestedBy).includes(f.q)));
+  const plans = DB.plans.filter(p => (!f.region || p.region === f.region) && (!f.status || p.status === f.status || (f.status === "wait" && /gate\d_wait/.test(p.status))) && (!f.q || (p.id + p.title + p.requestedBy).includes(f.q)));
   const ids = new Set(DB.plans.filter(p => !f.region || p.region === f.region).map(p => p.id));
   const logs = DB.logs.filter(l => ids.has(l.planId) && (!f.q || (l.planId + l.reviewer + (l.reasonText||"") + (l.note||"")).includes(f.q))).sort((a,b) => a.at < b.at ? 1 : -1);
   $("#view").innerHTML = `${phead("관리자 · 기록", "콘텐츠 · 기록", "모든 지역의 콘텐츠와 결정 기록이에요. 기록은 지울 수 없고, 고칠 때는 새 기록이 붙어요.",
@@ -735,7 +743,7 @@ function viewData(){
     <div class="seg" role="group" aria-label="표"><button data-tab="plans" aria-pressed="${f.tab==="plans"}">콘텐츠<i>${plans.length}</i></button><button data-tab="logs" aria-pressed="${f.tab==="logs"}">결정 기록<i>${logs.length}</i></button></div>
     <span class="sp"></span>
     <select class="inp" id="fRegion" aria-label="지역"><option value="">모든 지역</option>${regions.map(r => `<option value="${esc(r)}" ${f.region===r?"selected":""}>${esc(regionTitle(r))}</option>`).join("")}</select>
-    ${f.tab==="plans" ? `<select class="inp" id="fStatus" aria-label="상태"><option value="">모든 상태</option>${Object.entries(STATUS).map(([k,v]) => `<option value="${k}" ${f.status===k?"selected":""}>${v}</option>`).join("")}</select>` : ""}
+    ${f.tab==="plans" ? `<select class="inp" id="fStatus" aria-label="상태"><option value="">모든 상태</option><option value="wait" ${f.status==="wait"?"selected":""}>확인 대기 (1·2·3차)</option>${Object.entries(STATUS).map(([k,v]) => `<option value="${k}" ${f.status===k?"selected":""}>${v}</option>`).join("")}</select>` : ""}
     <input class="inp" id="fq" type="search" placeholder="ID·제목·사람·사유" aria-label="찾기" value="${esc(f.q)}">
   </div>
   ${f.tab === "plans" ? `<div class="tbl-wrap"><table class="tbl"><thead><tr><th>ID</th><th>지역</th><th>제목</th><th>형식</th><th>상태</th><th>요청</th><th>요청일</th></tr></thead>
@@ -751,6 +759,7 @@ function viewData(){
     ? download("content_plans.csv", csv([["id","region","title","templateId","status","requestedBy","createdAt","parentId"], ...plans.map(p => [p.id,p.region,p.title,p.templateId,p.status,p.requestedBy,p.createdAt,p.parentId])]), "text/csv")
     : download("review_logs.csv", csv([["id","planId","kind","gate","decision","reviewer","at","reasonCategory","reasonText","note","uploadUrl"], ...logs.map(l => [l.id,l.planId,l.kind,l.gate,l.decision,l.reviewer,l.at,l.reasonCategory,l.reasonText,l.note,l.uploadUrl])]), "text/csv");
   $("#xJson").onclick = () => download(f.tab === "plans" ? "content_plans.json" : "review_logs.json", JSON.stringify(f.tab === "plans" ? plans : logs, null, 2));
+  runAfter("csv", "#xCsv");
 }
 function planDetail(p){
   const d = $("#dlg"), c = Sh.candOf(p.cand), t = Sh.templates().find(x => x.id === p.templateId);
@@ -817,6 +826,7 @@ function viewStorage(){
   };
   $("#rDb").onclick = () => { if (!confirm("이 브라우저의 시연 콘텐츠·결정 기록을 지우고 예시 데이터로 되돌릴까요? (시연 전용)")) return; Sh.remove(Sh.KEY.db); DB = Sh.loadDB(); Sh.saveDB(DB); toast("시연 기록을 처음 상태로 되돌렸어요"); viewStorage(); };
   $("#rCfg").onclick = () => { if (!confirm("고친 템플릿, 사용 중지 목록, 지역 설정(담당자·색)을 모두 기본값으로 되돌릴까요?")) return; [Sh.KEY.tpl, Sh.KEY.off, Sh.KEY.regions].forEach(Sh.remove); toast("기본값으로 되돌렸어요"); viewStorage(); };
+  runAfter("backup", "#bOut");
 }
 
 /* 팝업 바깥 클릭으로 닫기 (편집 중인 템플릿 팝업은 제외 — 저장 안 한 내용 보호) */
