@@ -15,7 +15,7 @@
    사진은 위키미디어 공용(김장 일반 장면, 이 행사 사진 아님) — 제출본은 현장 촬영·관광공사 사진으로 교체 */
 import { Muxer, ArrayBufferTarget } from "https://cdn.jsdelivr.net/npm/mp4-muxer@5.1.3/+esm";
 
-const W = 1080, H = 1920, FPS = 30, NAME = "김장대전_시안_v1";
+const W = 1080, H = 1920, FPS = 30, NAME = "김장대전_시안_v2";
 const st = document.getElementById("st"), say = t => { st.textContent = t; window.__status = t; };
 const cv = document.getElementById("c"), g = cv.getContext("2d");
 const C = "https://upload.wikimedia.org/wikipedia/commons/thumb/";
@@ -35,9 +35,9 @@ const S = [
   { t: [0, 3],   p: "prep",   cap: "올해 김장,\n또 **혼자** 하실 거예요?", sub: "절이고 · 씻고 · 양념까지…" },
   { t: [3, 7],   p: "salted", cap: "광주에선\n**'비비기만'** 하면 끝", sub: "절임배추 · 양념 다 준비돼 있어요" },
   { t: [7, 12],  p: "mix",    cap: "온 가족이\n함께 **쓱쓱**", sub: "아이도 장갑 끼고 한 포기", flag: "현장 촬영 필요 · 아이가 처음 버무리는 컷" },
-  { t: [12, 16], p: "kimchi", cap: "세계김치연구소\n**품평 통과** 김치", sub: "공동 레시피 · 공동구매 재료" },
+  { t: [12, 16], p: "kimchi", cap: "세계김치연구소\n**레시피** 그대로", sub: "광주·전남산 재료 · 지난해 1만 8천 명이 찾았어요" },
   { t: [16, 21], p: "suyuk",  cap: "갓 버무린 김치에\n**수육 한 점**", sub: "이 맛에 김장하죠", flag: "있으면 최고 · 아이가 한 입 먹는 컷" },
-  { t: [21, 25], p: "box",    cap: "직접 버무리기 · 완제품\n**택배까지**", sub: "10kg 가격은 발표 후 안내" },
+  { t: [21, 25], p: "box",    cap: "직접 버무리기 · 완제품\n**택배까지**", sub: "10kg 버무림 67,000원 · 택배 72,000원" },
   { t: [25, 30], p: "mix2",   end: true },
 ];
 const DUR = 30, XF = 0.4; // 장면 사이 0.4초 겹침
@@ -104,13 +104,13 @@ function endCard(lt, alpha){
   g.globalAlpha = alpha * e(.25); const y0 = 930 + 30 * (1 - e(.25));
   rr(90, y0, W - 180, 430, 32); g.fillStyle = "rgba(255,255,255,.96)"; g.fill();
   g.textAlign = "left";
-  [["📅", "11.27(금) – 12.13(일)"], ["📍", "광주김치타운 (남구 임암동)"], ["📝", "사전 신청 kimchigwangju.co.kr"]].forEach(([ic, tx], k) => {
+  [["📅", "11.27(금) – 12.13(일)"], ["📍", "광주김치타운 (남구 김치로 60)"], ["📝", "kimchigwangju.co.kr 예약 중"]].forEach(([ic, tx], k) => {
     const y = y0 + 110 + k * 120; g.font = "50px 'Noto Sans KR'"; g.fillStyle = "#1A1A1A"; g.fillText(ic, 140, y);
     g.font = "700 48px 'Noto Sans KR'"; g.fillText(tx, 220, y);
     if (k < 2){ g.fillStyle = "#EAE2DE"; g.fillRect(140, y + 40, W - 280, 2); }
   });
   g.textAlign = "center"; g.globalAlpha = alpha * e(.5);
-  g.font = "600 34px 'Noto Sans KR'"; g.fillStyle = "rgba(255,255,255,.9)"; g.fillText("문의 062-676-3601 · 가격은 발표 후 안내", W / 2, 1460);
+  g.font = "600 34px 'Noto Sans KR'"; g.fillStyle = "rgba(255,255,255,.9)"; g.fillText("주말은 일찍 마감돼요 · 문의 062-676-3601", W / 2, 1460);
   g.font = "500 22px 'Noto Sans KR'"; g.fillStyle = "rgba(255,255,255,.7)";
   ["사진(Wikimedia Commons): Caroline Knox, Joseph Steinberg, gwangju kimchi, Junho Jung (CC BY-SA)",
    "USAG-Humphreys (CC BY 2.0) · Galen Putnam, U.S. Army (퍼블릭 도메인)",
