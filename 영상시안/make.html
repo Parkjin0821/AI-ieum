@@ -15,7 +15,9 @@
    사진은 위키미디어 공용(김장 일반 장면, 이 행사 사진 아님) — 제출본은 현장 촬영·관광공사 사진으로 교체 */
 import { Muxer, ArrayBufferTarget } from "https://cdn.jsdelivr.net/npm/mp4-muxer@5.1.3/+esm";
 
-const W = 1080, H = 1920, FPS = 30, NAME = "김장대전_시안_v2";
+// ?br=3e6&suffix=_폰 → 폰·웹 공유용 가벼운 파일 (기본 7Mbps)
+const Q = new URLSearchParams(location.search), BR = +Q.get("br") || 7e6;
+const W = 1080, H = 1920, FPS = 30, NAME = "김장대전_시안_v2" + (Q.get("suffix") || "");
 const st = document.getElementById("st"), say = t => { st.textContent = t; window.__status = t; };
 const cv = document.getElementById("c"), g = cv.getContext("2d");
 const C = "https://upload.wikimedia.org/wikipedia/commons/thumb/";
@@ -133,7 +135,7 @@ async function main(){
   if (!(await VideoEncoder.isConfigSupported({ codec, width: W, height: H })).supported) codec = "avc1.4d0028";
   const muxer = new Muxer({ target: new ArrayBufferTarget(), video: { codec: "avc", width: W, height: H, frameRate: FPS }, fastStart: "in-memory" });
   const enc = new VideoEncoder({ output: (c, m) => muxer.addVideoChunk(c, m), error: e => say("오류: " + e.message) });
-  enc.configure({ codec, width: W, height: H, bitrate: 7e6, framerate: FPS, avc: { format: "avc" } });
+  enc.configure({ codec, width: W, height: H, bitrate: BR, framerate: FPS, avc: { format: "avc" } });
   const N = DUR * FPS, shots = [];
   for (let n = 0; n < N; n++){
     const t = n / FPS; frame(t);
