@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>김장대전 일반 쇼츠형 시안 만들기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Brush+Script&family=Noto+Sans+KR:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;background:#111;color:#eee;font:14px/1.5 "Noto Sans KR",sans-serif;display:grid;gap:12px;justify-items:center;padding:16px}
+  canvas{width:270px;height:480px;border-radius:12px;background:#000}
+  #st{font-weight:700}
+</style></head><body>
+<p id="st">준비 중…</p>
+<canvas id="c" width="1080" height="1920"></canvas>
+<script type="module">
+/* 2026 빛고을 사랑나눔 김장대전 — 30초 '일반 쇼츠형' 시안 v4
+   레퍼런스(2026-10-10 조사): 광주 김장대전·김치축제 영상 — 2022 공식 홍보영상, 오늘광주는(2024·2025 김장대전),
+   광주김치타운 김치 만들기 체험(소셜기자단), 광주김치축제 공식·현장 스케치 쇼츠
+   → 화면 가득 찬 실사 · 1~1.5초마다 끊어 붙이기 · 살짝 흔들리는 손 촬영 느낌 · 흰 글자+검은 테두리 자막 · 첫 2초만 큰 제목
+   → 스티커·카드·진행 띠·이모지 같은 꾸밈은 쓰지 않음
+   사진은 위키미디어 공용(김장 일반 장면, 이 행사 사진 아님) — 제출본은 현장 촬영으로 교체. ?br=3200000&suffix=_폰 → 폰용 */
+import { Muxer, ArrayBufferTarget } from "https://cdn.jsdelivr.net/npm/mp4-muxer@5.1.3/+esm";
+
+const Q = new URLSearchParams(location.search), BR = +Q.get("br") || 7e6;
+const W = 1080, H = 1920, FPS = 30, DUR = 30, NAME = "김장대전_쇼츠_v4" + (Q.get("suffix") || "");
+const st = document.getElementById("st"), say = t => { st.textContent = t; window.__status = t; };
+const cv = document.getElementById("c"), g = cv.getContext("2d");
+const F = "'Noto Sans KR'", BRUSH = "'Nanum Brush Script'";
+
+const C = "https://upload.wikimedia.org/wikipedia/commons/thumb/";
+const P = {
+  prep:  "f/f8/Korean_cuisine-Gimjang-Preparation_for_making_kimchi-01.jpg",
+  salted:"f/ff/Korean_cuisine-Salted_baechu-01.jpg",
+  mix:   "e/eb/Gimjang_in_Gaemi_Village%2C_1_December_2012.jpg",
+  mix2:  "e/e9/Gimjang_in_Gaemi_Village%2C_1_December_2012_2.jpg",
+  km:    "f/fd/Kimchi_making.jpg",
+  kimchi:"0/04/Baechu-gimchi.jpg",
+  bowl:  "6/61/Baechu_kimchi.jpg",
+  suyuk: "c/c4/Korea-Gangneung-Suyuk-Steamed_pork-01.jpg",
+  e48:   "1/1f/Kimchi_Making_Event_%289391048%29.jpg",
+  e49:   "5/54/Kimchi_Making_Event_%289391049%29.jpg",
+  e52:   "4/49/Kimchi_Making_Event_%289391052%29.jpg",
+  box:   "5/5b/Kimchi_Making_Event_%289391050%29.jpg",
+  fest:  "b/b6/%EA%B4%91%EC%A3%BC%EA%B9%80%EC%B9%98%EC%B6%95%EC%A0%9C.jpg",   // 광주김치축제 실제 사진 (아이들 버무리기)
+  dok:   "d/de/Gimchi-dok.jpg",                                                 // 옹기 (공식 홍보영상의 옹기 장면)
+  bsg:   "3/34/Bossam-gimchi_1.jpg",                                            // 젓가락으로 속 넣기
+  gjb:   "7/76/Gwangju-Bossam.jpg",                                             // 광주 보쌈
+};
+const SRC = k => k === "fest" ? `https://upload.wikimedia.org/wikipedia/commons/${P.fest}` : `${C}${P[k]}/960px-${P[k].split("/").pop()}`; // 700px 원본은 축소본이 없음
+const imgs = {};
+const load = k => new Promise((ok, no) => { const i = new Image(); i.crossOrigin = "anonymous"; i.onload = () => ok(imgs[k] = i); i.onerror = () => no(new Error("사진 못 받음: " + k)); i.src = SRC(k); });
+
+/* 컷 목록: 시작·길이·사진·확대·초점(사진 안 비율 위치)·자막(**노랑**)·교체 표시 */
+/* 광주 레퍼런스 기준 컷 구성 (2026-10-10):
+   김치타운 체험 쇼츠 → 장갑 낀 손 클로즈업·한 장씩 속 넣기 / 오늘광주는 → 긴 탁자 가득한 양념·절임배추 /
+   광주김치축제 → 앞치마 입은 아이들 / 2022 공식 홍보영상 → 옹기·명인 레시피·남도 재료·'김장할 맛 난다!' */
+const SHOTS = [
+  { d: 1.3, k: "prep",   z: 1.0, fx: .5,  fy: .55 },
+  { d: 1.2, k: "salted", z: 1.15, fx: .45, fy: .5 },
+  { d: 1.3, k: "salted", z: 1.7, fx: .72, fy: .5,  s: "배추 절일 필요 없어요" },
+  { d: 1.3, k: "mix",    z: 1.0, fx: .5,  fy: .5,  s: "양념까지 다 준비돼 있고" },
+  { d: 1.3, k: "e52",    z: 1.0, fx: .5,  fy: .55, s: "가서 **버무리기만** 하면 끝" },
+  { d: 1.3, k: "bsg",    z: 1.25, fx: .5, fy: .5,  s: "한 장 한 장 쓱쓱" },
+  { d: 1.5, k: "fest",   z: 1.0, fx: .5,  fy: .5,  fit: true, s: "애들도 앞치마 입고 같이" },
+  { d: 1.2, k: "fest",   z: 1.35, fx: .3, fy: .6,  fit: true, s: "우리 집 김장, 한 상에서" },
+  { d: 1.3, k: "kimchi", z: 1.0, fx: .5,  fy: .5,  s: "**명인 레시피** 그대로" },
+  { d: 1.3, k: "dok",    z: 1.1, fx: .5,  fy: .5,  s: "남도 재료로만 담가요" },
+  { d: 1.4, k: "gjb",    z: 1.0, fx: .5,  fy: .5,  s: "갓 버무린 김치에" },
+  { d: 1.5, k: "gjb",    z: 1.7, fx: .62, fy: .45, s: "**수육 한 점** 크…", swap: "아이가 한 입 먹는 컷" },
+  { d: 1.3, k: "bowl",   z: 1.1, fx: .5,  fy: .5,  s: "이 맛에 김장하죠" },
+  { d: 1.4, k: "e48",    z: 1.0, fx: .5,  fy: .6,  s: "10kg 직접 버무리면" },
+  { d: 1.4, k: "e48",    z: 1.7, fx: .42, fy: .76, s: "**6만 7천 원**" },
+  { d: 1.4, k: "e49",    z: 1.0, fx: .5,  fy: .45, s: "택배로 받으면 7만 2천 원" },
+  { d: 1.4, k: "box",    z: 1.0, fx: .5,  fy: .55, s: "부모님 댁으로 바로 보내요" },
+  { d: 1.6, k: "mix2",   z: 1.2, fx: .5,  fy: .5,  s: "작년엔 **1만 8천 명**이 다녀갔어요" },
+  { d: 1.6, k: "kimchi", z: 1.4, fx: .35, fy: .45, s: "11.27 ~ 12.13 **광주김치타운**" },
+  { d: 4.0, k: "dok",    z: 1.05, fx: .5,  fy: .5,  end: true },
+];
+let acc = 0; SHOTS.forEach((s, i) => { s.t0 = acc; acc += s.d; s.i = i; });
+
+/* 손으로 든 카메라처럼 아주 살짝 흔들리고, 컷 안에서 천천히 다가감 */
+const ph = i => [Math.sin(i * 12.9898) * 43758.5453 % 1, Math.sin(i * 78.233) * 12345.678 % 1].map(Math.abs);
+function shot(s, lt){
+  const img = imgs[s.k], [a, b] = ph(s.i + 1), u = lt / s.d;
+  if (s.fit) return fitShot(s, lt, img, a, b, u);
+  const z = s.z * (1 + (s.end ? .12 : .045) * u);
+  const sc = Math.max(W / img.width, H / img.height) * z, w = img.width * sc, h = img.height * sc;
+  const jx = Math.sin(lt * 1.7 + a * 6) * 7 + Math.sin(lt * 4.3 + b * 6) * 3, jy = Math.sin(lt * 1.3 + b * 6) * 6 + Math.sin(lt * 3.7 + a * 6) * 3;
+  let x = W / 2 - s.fx * w + jx, y = H / 2 - s.fy * h + jy;
+  x = Math.min(0, Math.max(W - w, x)); y = Math.min(0, Math.max(H - h, y));
+  g.save(); g.translate(W / 2, H / 2); g.rotate((Math.sin(lt * 1.1 + a * 6) * .25) * Math.PI / 180); g.translate(-W / 2, -H / 2);
+  g.drawImage(img, x - 8, y - 8, w + 16, h + 16); g.restore();
+}
+
+/* 작은 가로 사진: 뒤는 흐리게 꽉 채우고, 가운데에 선명하게 (가로 영상을 쇼츠에 올릴 때 흔한 모양) */
+function fitShot(s, lt, img, a, b, u){
+  const bs = Math.max(W / img.width, H / img.height) * 1.1, bw = img.width * bs, bh = img.height * bs;
+  g.save(); g.filter = "blur(28px) brightness(.55)"; g.drawImage(img, (W - bw) / 2, (H - bh) / 2, bw, bh); g.restore();
+  // 창: 화면 폭 × 사진 비율, 그 안에서 초점(fx, fy)이 가운데 오게 확대 — 창 밖으로 빈틈이 생기지 않게 가두기
+  const z = s.z * (1 + .05 * u) * 1.02, fw = W * z, fh = fw * img.height / img.width, wh = W * img.height / img.width, top = 840 - wh / 2;
+  const jx = Math.sin(lt * 1.7 + a * 6) * 5, jy = Math.sin(lt * 1.3 + b * 6) * 4;
+  const x = Math.min(0, Math.max(W - fw, W / 2 - s.fx * fw + jx)), y = Math.min(top, Math.max(top + wh - fh, top + wh / 2 - s.fy * fh + jy));
+  g.save(); g.beginPath(); g.rect(0, top, W, wh); g.clip(); g.drawImage(img, x, y, fw, fh); g.restore();
+}
+
+/* 자막: 흰 글자 + 두꺼운 검은 테두리, 강조는 노랑 (쇼츠에서 흔한 모양) */
+function sub(text, cy, size, pop = 1){
+  const parts = text.split(/(\*\*[^*]+\*\*)/).filter(Boolean).map(p => ({ t: p.replace(/\*\*/g, ""), hl: p.startsWith("**") }));
+  g.save(); g.font = `900 ${size}px ${F}`; g.letterSpacing = "-1px"; g.textBaseline = "middle"; g.lineJoin = "round";
+  const tw = parts.reduce((n, p) => n + g.measureText(p.t).width, 0);
+  g.translate(W / 2, cy); g.scale(pop, pop); let x = -tw / 2;
+  for (const p of parts){ g.lineWidth = size * .2; g.strokeStyle = "#000"; g.strokeText(p.t, x, 0); g.fillStyle = p.hl ? "#FFE13A" : "#fff"; g.fillText(p.t, x, 0); x += g.measureText(p.t).width; }
+  g.restore();
+}
+function small(text, x, y, { size = 26, align = "left", color = "rgba(255,255,255,.82)" } = {}){
+  g.save(); g.font = `700 ${size}px ${F}`; g.textAlign = align; g.shadowColor = "rgba(0,0,0,.7)"; g.shadowBlur = 8; g.fillStyle = color; g.fillText(text, x, y); g.restore();
+}
+
+function frame(t){
+  const s = SHOTS.find(x => t >= x.t0 && t < x.t0 + x.d) || SHOTS[SHOTS.length - 1], lt = t - s.t0;
+  g.fillStyle = "#000"; g.fillRect(0, 0, W, H);
+  shot(s, lt);
+  // 첫 2.5초: 큰 제목 (윗부분)
+  if (t < 2.5){ const pop = Math.min(1, .86 + t * 1.4); sub("올해 김장은", 470, 118, pop); sub("**광주김치타운**에서", 610, 118, pop); }
+  // 컷마다 자막 (같은 자막이 이어지면 튀지 않음)
+  if (s.s){ const prev = SHOTS[s.i - 1], fresh = !prev || prev.s !== s.s; sub(s.s, 1290, 80, fresh ? Math.min(1, .9 + lt * 1.2) : 1); }
+  if (s.end){
+    const a = Math.min(1, lt / .3);
+    g.save(); g.fillStyle = `rgba(0,0,0,${.35 * a})`; g.fillRect(0, 0, W, H); g.restore();
+    // 2022 공식 홍보영상의 문구 '김장할 맛 난다!'를 붓글씨로
+    const bp = Math.min(1, .8 + lt * .9);
+    g.save(); g.translate(W / 2, 980); g.scale(bp, bp); g.font = `190px ${BRUSH}`; g.textAlign = "center"; g.textBaseline = "middle"; g.lineJoin = "round";
+    g.lineWidth = 16; g.strokeStyle = "rgba(0,0,0,.85)"; g.strokeText("김장할 맛 난다!", 0, 0); g.fillStyle = "#fff"; g.fillText("김장할 맛 난다!", 0, 0); g.restore();
+    if (lt > .4) sub("**빛고을 사랑나눔 김장대전**", 1170, 70);
+    if (lt > .8) sub("예약 kimchigwangju.co.kr", 1290, 58);
+    if (lt > 1.1) sub("주말은 금방 마감돼요", 1380, 54);
+    if (lt > 1.4){
+      ["사진(Wikimedia Commons): 준태쨔응(광주김치축제) · gwangju kimchi · Caroline Knox",
+       "Joseph Steinberg · tecking · 최광모 (CC BY-SA) · USAG-Humphreys (CC BY 2.0)",
+       "Galen Putnam, U.S. Army (퍼블릭 도메인) · 시안용 참고 사진, 김장대전 행사 사진 아님"].forEach((l, k) => small(l, W / 2, 1680 + k * 32, { size: 21, align: "center" }));
+    }
+  }
+  small("시안 · 참고 사진(김장 일반)", 48, 96);
+  if (s.swap) small(`※ 현장 촬영으로 교체: ${s.swap}`, W - 48, 96, { align: "right", color: "#FFE13A" });
+}
+
+async function main(){
+  say("글꼴·사진 불러오는 중…");
+  await Promise.all([`700 40px ${F}`, `900 40px ${F}`, `80px ${BRUSH}`].map(f => document.fonts.load(f, "김장대전가나다0123")));
+  await Promise.all(Object.keys(P).map(load));
+  let codec = "avc1.640028";
+  if (!(await VideoEncoder.isConfigSupported({ codec, width: W, height: H })).supported) codec = "avc1.4d0028";
+  const muxer = new Muxer({ target: new ArrayBufferTarget(), video: { codec: "avc", width: W, height: H, frameRate: FPS }, fastStart: "in-memory" });
+  const enc = new VideoEncoder({ output: (c, m) => muxer.addVideoChunk(c, m), error: e => say("오류: " + e.message) });
+  enc.configure({ codec, width: W, height: H, bitrate: BR, framerate: FPS, avc: { format: "avc" } });
+  const N = DUR * FPS, SHOT = [1.0, 4.4, 9.4, 11.0, 14.8, 21.8, 28.6].map(s => Math.round(s * FPS)), shots = [];
+  for (let n = 0; n < N; n++){
+    frame(n / FPS);
+    if (SHOT.includes(n)) shots.push(await createImageBitmap(cv));
+    const vf = new VideoFrame(cv, { timestamp: Math.round(n * 1e6 / FPS), duration: Math.round(1e6 / FPS) });
+    enc.encode(vf, { keyFrame: n % (FPS * 2) === 0 }); vf.close();
+    while (enc.encodeQueueSize > 8) await new Promise(r => setTimeout(r, 5));
+    if (n % 30 === 0) say(`영상 만드는 중… ${Math.round(n / N * 100)}%`);
+  }
+  await enc.flush(); muxer.finalize();
+  say("저장 중…");
+  await fetch(`/save?name=${encodeURIComponent(NAME + ".mp4")}`, { method: "POST", body: muxer.target.buffer });
+  const pv = new OffscreenCanvas(270 * 7 + 8 * 6, 480), pg = pv.getContext("2d"); pg.fillStyle = "#111"; pg.fillRect(0, 0, pv.width, pv.height);
+  shots.forEach((b, k) => pg.drawImage(b, k * 278, 0, 270, 480));
+  await fetch(`/save?name=${encodeURIComponent(NAME + "_미리보기.jpg")}`, { method: "POST", body: await pv.convertToBlob({ type: "image/jpeg", quality: .88 }) });
+  say(`완료 — ${NAME}.mp4 (${(muxer.target.buffer.byteLength / 1048576).toFixed(1)} MB, ${codec})`);
+}
+main().catch(e => say("오류: " + e.message));
+</script></body></html>
