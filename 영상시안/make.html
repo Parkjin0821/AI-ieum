@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>김장대전 시안 영상 만들기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;background:#111;color:#eee;font:14px/1.5 "Noto Sans KR",sans-serif;display:grid;gap:12px;justify-items:center;padding:16px}
+  canvas{width:270px;height:480px;border-radius:12px;background:#000}
+  #st{font-weight:700}
+</style></head><body>
+<p id="st">준비 중…</p>
+<canvas id="c" width="1080" height="1920"></canvas>
+<script type="module">
+/* 2026 빛고을 사랑나눔 김장대전 — 30초 세로 시안 (docs/김장대전-영상기획.md 4장 시나리오)
+   사진은 위키미디어 공용(김장 일반 장면, 이 행사 사진 아님) — 제출본은 현장 촬영·관광공사 사진으로 교체 */
+import { Muxer, ArrayBufferTarget } from "https://cdn.jsdelivr.net/npm/mp4-muxer@5.1.3/+esm";
+
+const W = 1080, H = 1920, FPS = 30, NAME = "김장대전_시안_v1";
+const st = document.getElementById("st"), say = t => { st.textContent = t; window.__status = t; };
+const cv = document.getElementById("c"), g = cv.getContext("2d");
+const C = "https://upload.wikimedia.org/wikipedia/commons/thumb/";
+const P = {
+  prep:  { f: "f/f8/Korean_cuisine-Gimjang-Preparation_for_making_kimchi-01.jpg", by: "Caroline Knox", lic: "CC BY-SA 3.0" },
+  salted:{ f: "f/ff/Korean_cuisine-Salted_baechu-01.jpg", by: "Joseph Steinberg", lic: "CC BY-SA 2.0" },
+  mix:   { f: "e/eb/Gimjang_in_Gaemi_Village%2C_1_December_2012.jpg", by: "USAG-Humphreys", lic: "CC BY 2.0" },
+  mix2:  { f: "e/e9/Gimjang_in_Gaemi_Village%2C_1_December_2012_2.jpg", by: "USAG-Humphreys", lic: "CC BY 2.0" },
+  kimchi:{ f: "0/04/Baechu-gimchi.jpg", by: "gwangju kimchi", lic: "CC BY-SA 2.0" },
+  suyuk: { f: "c/c4/Korea-Gangneung-Suyuk-Steamed_pork-01.jpg", by: "Junho Jung", lic: "CC BY-SA 3.0" },
+  box:   { f: "5/5b/Kimchi_Making_Event_%289391050%29.jpg", by: "Galen Putnam, U.S. Army", lic: "퍼블릭 도메인" },
+};
+const url = p => `${C}${p.f}/960px-${p.f.split("/").pop()}`;
+
+/* 장면: [시작, 끝) 초 · 사진 · 큰 자막(**강조**) · 작은 자막 · 촬영 필요 표시 */
+const S = [
+  { t: [0, 3],   p: "prep",   cap: "올해 김장,\n또 **혼자** 하실 거예요?", sub: "절이고 · 씻고 · 양념까지…" },
+  { t: [3, 7],   p: "salted", cap: "광주에선\n**'비비기만'** 하면 끝", sub: "절임배추 · 양념 다 준비돼 있어요" },
+  { t: [7, 12],  p: "mix",    cap: "온 가족이\n함께 **쓱쓱**", sub: "아이도 장갑 끼고 한 포기", flag: "현장 촬영 필요 · 아이가 처음 버무리는 컷" },
+  { t: [12, 16], p: "kimchi", cap: "세계김치연구소\n**품평 통과** 김치", sub: "공동 레시피 · 공동구매 재료" },
+  { t: [16, 21], p: "suyuk",  cap: "갓 버무린 김치에\n**수육 한 점**", sub: "이 맛에 김장하죠", flag: "있으면 최고 · 아이가 한 입 먹는 컷" },
+  { t: [21, 25], p: "box",    cap: "직접 버무리기 · 완제품\n**택배까지**", sub: "10kg 가격은 발표 후 안내" },
+  { t: [25, 30], p: "mix2",   end: true },
+];
+const DUR = 30, XF = 0.4; // 장면 사이 0.4초 겹침
+
+const imgs = {};
+const load = k => new Promise((ok, no) => { const i = new Image(); i.crossOrigin = "anonymous"; i.onload = () => ok(imgs[k] = i); i.onerror = () => no(new Error("사진 못 받음: " + k)); i.src = url(P[k]); });
+const ease = x => 1 - Math.pow(1 - Math.min(1, Math.max(0, x)), 3);
+
+function cover(img, scale, dx, dy, blur){
+  const r = Math.max(W / img.width, H / img.height) * scale, w = img.width * r, h = img.height * r;
+  g.save(); if (blur) g.filter = `blur(${blur}px)`;
+  g.drawImage(img, (W - w) / 2 + dx, (H - h) / 2 + dy, w, h); g.restore();
+}
+function rr(x, y, w, h, r){ g.beginPath(); g.roundRect(x, y, w, h, r); }
+/* **강조** 를 노란색으로 */
+function rich(line, x, y, size, color){
+  const parts = line.split(/(\*\*[^*]+\*\*)/).filter(Boolean); let cx = x;
+  for (const p of parts){ const hl = p.startsWith("**"); const t = hl ? p.slice(2, -2) : p;
+    g.fillStyle = hl ? "#FFD43B" : color; g.fillText(t, cx, y); cx += g.measureText(t).width; }
+}
+function badge(){
+  g.font = "700 30px 'Noto Sans KR'"; g.letterSpacing = "0px";
+  const t1 = "시안", t2 = "빛고을 김장대전 · 참고 사진(김장 일반)";
+  const w1 = g.measureText(t1).width + 36; rr(64, 96, w1, 56, 28); g.fillStyle = "#FFD43B"; g.fill();
+  g.fillStyle = "#1A1A1A"; g.fillText(t1, 82, 135);
+  g.font = "500 28px 'Noto Sans KR'"; g.fillStyle = "rgba(255,255,255,.92)"; g.fillText(t2, 64 + w1 + 16, 134);
+}
+function credit(k, a){ const p = P[k]; g.globalAlpha = a * .8; g.font = "500 24px 'Noto Sans KR'"; g.fillStyle = "#fff";
+  g.fillText(`사진: ${p.by} · ${p.lic} · Wikimedia Commons`, 64, 1556); g.globalAlpha = 1; }
+
+function scene(i, t, alpha){
+  const s = S[i], lt = t - s.t[0], len = s.t[1] - s.t[0], pr = Math.min(1, lt / len);
+  g.globalAlpha = alpha;
+  if (s.end) return endCard(lt, alpha);
+  cover(imgs[s.p], 1.14 - .09 * pr, (i % 2 ? 1 : -1) * 30 * (pr - .5), 0);
+  // 글자 아래·위 어둡게
+  let gr = g.createLinearGradient(0, 760, 0, H); gr.addColorStop(0, "rgba(0,0,0,0)"); gr.addColorStop(.55, "rgba(0,0,0,.62)"); gr.addColorStop(1, "rgba(0,0,0,.85)");
+  g.fillStyle = gr; g.fillRect(0, 760, W, H - 760);
+  gr = g.createLinearGradient(0, 0, 0, 420); gr.addColorStop(0, "rgba(0,0,0,.55)"); gr.addColorStop(1, "rgba(0,0,0,0)"); g.fillStyle = gr; g.fillRect(0, 0, W, 420);
+  badge();
+  // 촬영 필요 표시
+  if (s.flag){ g.font = "700 30px 'Noto Sans KR'"; const tw = g.measureText("🎥  " + s.flag).width + 44;
+    rr(64, 186, tw, 60, 14); g.fillStyle = "rgba(255,255,255,.94)"; g.fill(); g.fillStyle = "#B3261E"; g.fillText("🎥  " + s.flag, 86, 227); }
+  // 자막: 아래에서 올라오며 나타남
+  const e = ease(lt / .45); g.globalAlpha = alpha * e; const oy = 46 * (1 - e);
+  const lines = s.cap.split("\n"); g.font = "900 92px 'Noto Sans KR'"; g.letterSpacing = "-3px";
+  g.shadowColor = "rgba(0,0,0,.45)"; g.shadowBlur = 18;
+  const top = 1468 - lines.length * 112 - 70;
+  lines.forEach((l, k) => rich(l, 64, top + k * 112 + oy, 92, "#fff"));
+  g.shadowBlur = 0; g.letterSpacing = "0px";
+  g.font = "600 44px 'Noto Sans KR'"; g.fillStyle = "rgba(255,255,255,.9)"; g.fillText(s.sub, 66, top + lines.length * 112 + 18 + oy);
+  credit(s.p, alpha); g.globalAlpha = 1;
+}
+
+function endCard(lt, alpha){
+  cover(imgs.mix2, 1.2, 0, 0, 18);
+  const gr = g.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, "rgba(150,22,22,.88)"); gr.addColorStop(1, "rgba(70,10,10,.94)");
+  g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  const e = k => ease((lt - k) / .5); g.textAlign = "center";
+  g.globalAlpha = alpha * e(0); g.font = "700 40px 'Noto Sans KR'"; g.fillStyle = "#FFD43B"; g.fillText("올해 김장은 광주에서", W / 2, 560);
+  g.font = "900 108px 'Noto Sans KR'"; g.letterSpacing = "-4px"; g.fillStyle = "#fff";
+  g.fillText("2026 빛고을", W / 2, 700); g.fillText("사랑나눔 김장대전", W / 2, 830); g.letterSpacing = "0px";
+  // 정보 카드
+  g.globalAlpha = alpha * e(.25); const y0 = 930 + 30 * (1 - e(.25));
+  rr(90, y0, W - 180, 430, 32); g.fillStyle = "rgba(255,255,255,.96)"; g.fill();
+  g.textAlign = "left";
+  [["📅", "11.27(금) – 12.13(일)"], ["📍", "광주김치타운 (남구 임암동)"], ["📝", "사전 신청 kimchigwangju.co.kr"]].forEach(([ic, tx], k) => {
+    const y = y0 + 110 + k * 120; g.font = "50px 'Noto Sans KR'"; g.fillStyle = "#1A1A1A"; g.fillText(ic, 140, y);
+    g.font = "700 48px 'Noto Sans KR'"; g.fillText(tx, 220, y);
+    if (k < 2){ g.fillStyle = "#EAE2DE"; g.fillRect(140, y + 40, W - 280, 2); }
+  });
+  g.textAlign = "center"; g.globalAlpha = alpha * e(.5);
+  g.font = "600 34px 'Noto Sans KR'"; g.fillStyle = "rgba(255,255,255,.9)"; g.fillText("문의 062-676-3601 · 가격은 발표 후 안내", W / 2, 1460);
+  g.font = "500 22px 'Noto Sans KR'"; g.fillStyle = "rgba(255,255,255,.7)";
+  ["사진(Wikimedia Commons): Caroline Knox, Joseph Steinberg, gwangju kimchi, Junho Jung (CC BY-SA)",
+   "USAG-Humphreys (CC BY 2.0) · Galen Putnam, U.S. Army (퍼블릭 도메인)",
+   "시안용 참고 사진 — 이 행사 사진이 아님"].forEach((l, k) => g.fillText(l, W / 2, 1620 + k * 34));
+  g.textAlign = "left"; g.globalAlpha = 1;
+}
+
+function frame(t){
+  g.fillStyle = "#000"; g.fillRect(0, 0, W, H);
+  const i = S.findIndex(s => t >= s.t[0] && t < s.t[1]); const cur = i < 0 ? S.length - 1 : i;
+  scene(cur, t, 1);
+  const nx = S[cur + 1]; if (nx && t > nx.t[0] - XF) scene(cur + 1, t, (t - (nx.t[0] - XF)) / XF);
+}
+
+async function main(){
+  say("글꼴·사진 불러오는 중…");
+  await Promise.all(["500 40px 'Noto Sans KR'", "600 40px 'Noto Sans KR'", "700 40px 'Noto Sans KR'", "900 40px 'Noto Sans KR'"].map(f => document.fonts.load(f, "김장대전가나다")));
+  await Promise.all(Object.keys(P).map(load));
+  let codec = "avc1.640028";
+  if (!(await VideoEncoder.isConfigSupported({ codec, width: W, height: H })).supported) codec = "avc1.4d0028";
+  const muxer = new Muxer({ target: new ArrayBufferTarget(), video: { codec: "avc", width: W, height: H, frameRate: FPS }, fastStart: "in-memory" });
+  const enc = new VideoEncoder({ output: (c, m) => muxer.addVideoChunk(c, m), error: e => say("오류: " + e.message) });
+  enc.configure({ codec, width: W, height: H, bitrate: 7e6, framerate: FPS, avc: { format: "avc" } });
+  const N = DUR * FPS, shots = [];
+  for (let n = 0; n < N; n++){
+    const t = n / FPS; frame(t);
+    if ([45, 150, 280, 420, 560, 700, 840].includes(n)) shots.push(await createImageBitmap(cv));
+    const vf = new VideoFrame(cv, { timestamp: Math.round(n * 1e6 / FPS), duration: Math.round(1e6 / FPS) });
+    enc.encode(vf, { keyFrame: n % (FPS * 2) === 0 }); vf.close();
+    while (enc.encodeQueueSize > 8) await new Promise(r => setTimeout(r, 5));
+    if (n % 30 === 0) say(`영상 만드는 중… ${Math.round(n / N * 100)}%`);
+  }
+  await enc.flush(); muxer.finalize();
+  say("저장 중…");
+  await fetch(`/save?name=${encodeURIComponent(NAME + ".mp4")}`, { method: "POST", body: muxer.target.buffer });
+  // 미리보기: 장면 7컷을 한 장으로
+  const pv = new OffscreenCanvas(270 * 7 + 8 * 6, 480), pg = pv.getContext("2d"); pg.fillStyle = "#111"; pg.fillRect(0, 0, pv.width, pv.height);
+  shots.forEach((b, k) => pg.drawImage(b, k * 278, 0, 270, 480));
+  const blob = await pv.convertToBlob({ type: "image/jpeg", quality: .88 });
+  await fetch(`/save?name=${encodeURIComponent(NAME + "_미리보기.jpg")}`, { method: "POST", body: blob });
+  say(`완료 — ${NAME}.mp4 (${(muxer.target.buffer.byteLength / 1048576).toFixed(1)} MB, ${codec})`);
+}
+main().catch(e => say("오류: " + e.message));
+</script></body></html>
