@@ -227,6 +227,50 @@ a.kpi.link .kh::after{content:"보기 ›";margin-left:auto;color:var(--accent-f
   .dlg-f{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
   .dlg-f .note,.dlg-f #pReset{grid-column:1/-1;margin:0 !important} /* 데스크톱용 왼쪽 밀기(margin-right:auto) 해제 */
   .dlg-f .btn{min-width:0}
+  /* 폰: 넓은 표를 한 줄 = 카드 하나로. 칸 이름은 data-label(머리줄에서 복사)로 왼쪽에 */
+  .tbl-wrap{overflow:visible;border:0;border-radius:0;background:transparent}
+  .tbl,.tbl tbody{display:block}
+  .tbl thead,.tbl colgroup{display:none}
+  .tbl tr{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);padding:2px 14px;margin-bottom:10px}
+  .tbl td{display:grid;grid-template-columns:5.2rem minmax(0,1fr);gap:10px;align-items:center;justify-items:start;padding:8px 0;border-bottom:1px solid var(--line-2);text-align:left!important;width:auto!important;white-space:normal}
+  .tbl td:last-child{border-bottom:0}
+  .tbl td::before{content:attr(data-label);font-size:.75rem;font-weight:700;color:var(--sub)}
+  .tbl td[data-label=""],.tbl td.name,.tbl td.empty{grid-template-columns:minmax(0,1fr)}
+  .tbl td[data-label=""]::before,.tbl td.name::before,.tbl td.empty::before{display:none}
+  .tbl td.name{order:-1;padding-top:12px} /* 지역·이름 칸이 카드 제목 */
+  .tbl td.name:last-child,.tbl td.name+td{border-bottom:1px solid var(--line-2)}
+  .tbl td .inp{min-width:0!important;width:100%}
+  .tbl tr.clickable:hover td{background:transparent}
+  .tbl tr.clickable:active{background:var(--accent-soft)}
+  .box.flush .tbl tr{border:0;border-bottom:1px solid var(--line);border-radius:0;margin:0}
+  .box.flush .tbl tr:last-child{border-bottom:0}
+  /* 지역별 현황: 지역·담당자 아래에 건수 6칸을 한 줄로 */
+  .tbl.stat tr{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));padding:4px 14px 10px}
+  .tbl.stat td:not(.num){grid-column:1/-1}
+  .tbl.stat td:first-child{grid-template-columns:1fr;padding-top:10px} .tbl.stat td:first-child::before{display:none} /* 지역이 카드 제목 */
+  .tbl.stat td.num{grid-template-columns:1fr;justify-items:center;gap:3px;border:0;padding:6px 0 0}
+  .tbl.stat td.num::before{font-size:.68rem;white-space:nowrap}
+  /* 지역 카드: 사진 띠 → 지역 이름 → 색·문구·담당자 → 교차 확인·사용·관광자료 세 칸 → 되돌리기 */
+  .tbl.rtbl tr{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:10px;padding:12px 14px 6px}
+  .tbl.rtbl td{grid-column:1/-1}
+  .tbl.rtbl td:nth-child(1){order:-2;grid-template-columns:1fr;padding:0;border:0}
+  .tbl.rtbl td:nth-child(1)::before{display:none}
+  .tbl.rtbl .phbtn{width:100%;height:96px}
+  .tbl.rtbl .phbtn::after{opacity:1;inset:auto 8px 8px auto;padding:3px 9px;border-radius:999px} /* 폰엔 마우스가 없으니 '바꾸기'를 늘 보이게 */
+  .tbl.rtbl td:nth-child(7),.tbl.rtbl td:nth-child(8),.tbl.rtbl td:nth-child(9){grid-column:auto;grid-template-columns:1fr;justify-items:center;gap:4px;border-bottom:0}
+  .tbl.rtbl td:nth-child(10){grid-template-columns:1fr;justify-items:end;border-top:1px solid var(--line-2);padding:8px 0}
+  .tbl.rtbl td:nth-child(10)::before{display:none}
+  /* 템플릿 카드: 왼쪽에 첫 장면, 오른쪽에 이름·분야·연령… */
+  .tpl-tbl{min-width:0}
+  .tpl-tbl tr{display:grid;grid-template-columns:72px minmax(0,1fr);column-gap:14px}
+  .tpl-tbl td{grid-column:2}
+  .tpl-tbl td:nth-child(2){grid-column:1;grid-row:1/span 5;align-self:start;grid-template-columns:1fr;padding-top:12px;border:0}
+  .tpl-tbl td:nth-child(2)::before,.tpl-tbl td:nth-child(9)::before{display:none}
+  .tpl-tbl .thumb{width:72px;margin:0}
+  .tpl-tbl td:nth-child(9){grid-template-columns:1fr;justify-items:end}
+  /* 최근 결정 기록: 제목을 두 줄까지 */
+  .blist li a{align-items:start}
+  .blist .bt{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.4}
 }
 .filebtn{position:relative;overflow:hidden}
 .filebtn input{position:absolute;inset:0;opacity:0;cursor:pointer}
@@ -336,6 +380,14 @@ $$("[data-home]").forEach(a => a.addEventListener("click", e => {
   toast("처음 화면으로 돌아왔어요");
 }));
 function toast(m){ const t = $("#toast"), [a, ...b] = String(m).split(" — "); t.innerHTML = `<span>${esc(a)}${b.length ? ` <small>${esc(b.join(" — "))}</small>` : ""}</span>`; t.classList.add("show"); clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove("show"), 2200); }
+// 폰에서 표가 카드로 바뀔 때 쓸 칸 이름 — 머리줄(th) 글자를 같은 순서의 td에 data-label로 (화면을 그릴 때마다)
+function labelTables(){
+  $$("#view table.tbl").forEach(t => {
+    const names = [...t.querySelectorAll("thead th")].map(th => th.textContent.trim());
+    t.querySelectorAll("tbody tr").forEach(tr => [...tr.children].forEach((td, i) => { if (td.colSpan === 1) td.dataset.label = names[i] || ""; }));
+  });
+}
+new MutationObserver(labelTables).observe($("#view"), { childList: true, subtree: true });
 // 화면 표기는 지금 광역 이름으로 ("전남광주통합특별시 보성군") — id의 옛 약칭("전남 보성군")은 저장 열쇠라 그대로
 const regionTitle = id => { const r = Sh.regionOf(id); return r ? `${r.sidoName} ${r.name}` : id; };
 function regionCell(id, sub){
@@ -450,7 +502,7 @@ function viewHome(){
     </section>
   </div>
   <section class="colsec" style="margin-top:24px"><div class="sec-h"><h2>지역별 현황</h2><span class="asof">콘텐츠가 하나 이상 있는 지역</span></div>
-    <div class="box flush"><div class="tbl-wrap"><table class="tbl"><thead><tr><th>지역</th><th>담당자</th><th class="num">1차</th><th class="num">2차</th><th class="num">3차</th><th class="num">제작 중</th><th class="num">게시</th><th class="num">반려</th></tr></thead>
+    <div class="box flush"><div class="tbl-wrap"><table class="tbl stat"><thead><tr><th>지역</th><th>담당자</th><th class="num">1차</th><th class="num">2차</th><th class="num">3차</th><th class="num">제작 중</th><th class="num">게시</th><th class="num">반려</th></tr></thead>
     <tbody>${regions.map(id => { const L = P.filter(p => p.region === id), n = s => L.filter(p => p.status === s).length; return `<tr><td>${regionCell(id)}</td><td>${esc(Sh.regionSettings(id).manager)}</td><td class="num">${pill(n("gate1_wait"),"warn")}</td><td class="num">${pill(n("gate2_wait"),"warn")}</td><td class="num">${pill(n("gate3_wait"),"warn")}</td><td class="num">${pill(n("making"))}</td><td class="num">${pill(n("published"),"ok")}</td><td class="num">${pill(n("rejected"),"red")}</td></tr>`; }).join("")}</tbody></table></div></div>
   </section>`;
   /* 최근 결정 기록: 지자체 공지 게시판처럼 [분류] 제목 ······ 담당자 · 날짜, 7줄 */
@@ -485,7 +537,7 @@ function viewRegions(){
     <label class="switch"><input type="checkbox" id="onlyA" ${f.activeOnly?"checked":""}> 사용 중만</label>
     <input class="inp" id="rq" type="search" placeholder="지역·담당자 찾기" aria-label="지역 찾기" value="${esc(f.q)}">
   </div>
-  <div class="tbl-wrap"><table class="tbl"><thead><tr><th>사진</th><th>색 (진한 · 밝은)</th><th>지역</th><th>분위기 문구</th><th>슬로건</th><th>담당자</th><th>교차 확인</th><th>사용</th><th class="num">관광자료</th><th></th></tr></thead><tbody id="rbody"></tbody></table></div>
+  <div class="tbl-wrap"><table class="tbl rtbl"><thead><tr><th>사진</th><th>색 (진한 · 밝은)</th><th>지역</th><th>분위기 문구</th><th>슬로건</th><th>담당자</th><th>교차 확인</th><th>사용</th><th class="num">관광자료</th><th></th></tr></thead><tbody id="rbody"></tbody></table></div>
   <p class="secnote">교차 확인을 켜면 요청한 사람은 2차를 통과시킬 수 없어요. 담당자가 한 명인 지역은 끄고 쓰세요 (기본 꺼짐). · 기본 색은 각 지자체 누리집의 대표색(공식 CI 아님), 슬로건은 누리집·언론에서 확인한 것 — 출처는 docs/region-brand.md.</p>`;
   const body = () => {
     const list = Sh.REGIONS.filter(r => (f.sido === "all" || r.sido === f.sido) && (!f.activeOnly || Sh.regionSettings(r.id).active) && (!f.q || (r.name + r.sidoName + Sh.regionSettings(r.id).manager).includes(f.q)));

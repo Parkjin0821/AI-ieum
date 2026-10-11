@@ -275,7 +275,19 @@ details.thread .tl div.me{background:var(--accent-soft)}
   .chat{min-height:0}
   .log{padding:14px}
   .msg{max-width:90%}
-  .conds{display:flex;gap:14px;overflow-x:auto;scrollbar-width:none;padding:8px 12px 4px}
+  /* '지금 고른 지역' 띠: 버튼을 아래 줄 전체 폭으로 — 이름이 세 줄로 쪼개지지 않게 */
+  .here{flex-wrap:wrap}
+  .here .btn{flex:1 1 100%}
+  /* 지역 카드 사진 출처: 폰 카드가 좁아 잘리던 것을 두 줄까지 (저작자·라이선스가 다 보여야 함) */
+  .rtile .band .cr{white-space:normal;text-align:right;line-height:1.2;max-width:58%;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+  /* 확인함 5칸: 폰 폭(칸당 약 68px)에 이름이 안 잘리게 — 가운데 정렬, 점 빼고 글자·숫자 작게 */
+  .kstrip.qtabs>*{padding:10px 2px;gap:3px;justify-items:center;text-align:center}
+  .kstrip.qtabs .kl{font-size:.7rem;gap:0}
+  .kstrip.qtabs .kl i{display:none}
+  .kstrip.qtabs b{font-size:1.3rem}
+  .kstrip.qtabs b small{font-size:.7rem}
+  /* 조건 줄은 옆으로 넘기는 줄 — 오른쪽 끝을 흐리게 해서 더 있다는 걸 보여 줌 */
+  .conds{display:flex;gap:14px;overflow-x:auto;scrollbar-width:none;padding:8px 32px 4px 12px;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent)}
   .conds::-webkit-scrollbar{display:none}
   .crow{flex:none;overflow:visible}
   .crow .lbl{width:auto}
