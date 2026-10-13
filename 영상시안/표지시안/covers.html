@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>김장대전 표지 시안</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Nanum+Brush+Script&family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>
+/* 표지 시안 5종 — 한 장 = 1080×1920 (쇼츠 세로). ?n=1~5 면 그 한 장만 원래 크기로 (PNG 뽑기용) */
+:root{ --red:#C8281E; --red-d:#8E1A12; --cream:#F6EFDF; --ink:#211816; --yel:#FFD23F; --grn:#2F6B3A; --kakao:#FEE500;
+  --disp:"Black Han Sans","Noto Sans KR",sans-serif; --body:"Noto Sans KR","Malgun Gothic",sans-serif; --brush:"Nanum Brush Script",cursive; }
+*{box-sizing:border-box}
+body{margin:0;background:#2a2421;font-family:var(--body);color:var(--ink)}
+.gallery{display:flex;flex-wrap:wrap;gap:28px;justify-content:center;padding:28px 16px}
+.slot{display:grid;gap:8px;justify-items:center;color:#eee;font-size:14px}
+.slot .frame{width:270px;height:480px;overflow:hidden;border-radius:14px}
+.slot .frame>.cv{transform:scale(.25);transform-origin:0 0}
+body.one{background:transparent}
+body.one .gallery{padding:0;display:block}
+body.one .slot{display:block}
+body.one .slot .frame{width:1080px;height:1920px;border-radius:0}
+body.one .slot .frame>.cv{transform:none}
+body.one .slot>span{display:none}
+
+.cv{position:relative;width:1080px;height:1920px;overflow:hidden;background:var(--cream);color:var(--ink);text-align:left}
+.ai{position:absolute;top:64px;right:64px;z-index:5;background:rgba(17,17,17,.82);color:#fff;font:700 30px/1 var(--body);padding:14px 22px;border-radius:14px}
+.credit{position:absolute;left:0;right:0;bottom:34px;z-index:5;text-align:center;font:500 22px/1.45 var(--body);color:rgba(33,24,22,.62)}
+.credit.lt{color:rgba(255,255,255,.7)}
+.info{font:700 46px/1.45 var(--body);text-align:center}
+.info small{display:block;font-size:34px;font-weight:500;opacity:.85}
+.photo{position:absolute;background:center/cover no-repeat}
+
+/* ① 카톡형 — 영상 첫 장면 그대로: 엄마 질문 → 딸의 노란 답 → 링크 미리보기 */
+.c1{background:#B9CBDA}
+.c1 .room{position:absolute;top:0;left:0;right:0;height:150px;background:rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;font:700 40px var(--body);color:#1E2830}
+.c1 .chat{position:absolute;top:250px;left:70px;right:70px;display:grid;gap:34px}
+.c1 .who{font:500 30px var(--body);color:#33414D;margin:0 0 10px 6px}
+.c1 .b{background:#fff;border-radius:10px 44px 44px 44px;padding:34px 46px;font:700 62px/1.35 var(--body);justify-self:start;max-width:860px;box-shadow:0 6px 0 rgba(0,0,0,.06)}
+.c1 .b big{font-family:var(--disp);font-weight:400;font-size:104px;color:var(--red);line-height:1}
+.c1 .me{justify-self:end;background:var(--kakao);border-radius:44px 10px 44px 44px;padding:40px 52px;font-family:var(--disp);font-weight:400;font-size:118px;line-height:1.08;letter-spacing:-.02em;transform:rotate(-2.5deg);box-shadow:0 18px 0 rgba(0,0,0,.12)}
+.c1 .me em{font-style:normal;color:var(--red)}
+.c1 .link{justify-self:end;width:760px;background:#fff;border-radius:28px;overflow:hidden;box-shadow:0 6px 0 rgba(0,0,0,.06)}
+.c1 .link .photo{position:relative;height:420px}
+.c1 .link div{padding:24px 34px 28px;font:700 42px/1.3 var(--body)}
+.c1 .link small{display:block;font:500 28px var(--body);color:#6b6b6b;margin-top:6px}
+.c1 .info{position:absolute;left:0;right:0;bottom:120px;color:#14202A}
+
+/* ② 가볍게 — 꽉 찬 김치 사진 위 큰 글자 한 방 (무등일보 LED 오프닝 느낌) */
+.c2{background:#1a0e0b}
+.c2 .photo{inset:0;filter:saturate(1.15) contrast(1.05)}
+.c2::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,6,4,.55) 0%,rgba(20,6,4,.15) 35%,rgba(20,6,4,.35) 60%,rgba(20,6,4,.92) 100%)}
+.c2 .q{position:absolute;z-index:2;top:330px;left:0;right:0;text-align:center;font:400 120px/1 var(--disp);color:#fff;opacity:.92}
+.c2 .q s{text-decoration-thickness:12px;text-decoration-color:var(--yel)}
+.c2 .big{position:absolute;z-index:2;top:520px;left:0;right:0;text-align:center;font:400 300px/1 var(--disp);color:var(--yel);letter-spacing:-.04em;-webkit-text-stroke:10px #1a0e0b;paint-order:stroke fill;text-shadow:0 22px 0 rgba(0,0,0,.35)}
+.c2 .sub{position:absolute;z-index:2;top:880px;left:0;right:0;text-align:center;font:900 58px/1.3 var(--body);color:#fff}
+.c2 .sub b{color:var(--yel)}
+.c2 .title{position:absolute;z-index:2;bottom:330px;left:0;right:0;text-align:center;color:#fff}
+.c2 .title small{display:block;font:700 44px var(--body);opacity:.9}
+.c2 .title b{display:block;font:400 150px/1.05 var(--disp)}
+.c2 .info{position:absolute;z-index:2;bottom:120px;left:0;right:0;color:#fff}
+
+/* ③ 공식 포스터 계보 — 빛고을/사랑나눔/김장대전 쌓기 + 옹기 + 검색창 (역대 포스터 공통 요소) */
+.c3{background:var(--cream)}
+.c3::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 80% 18%,rgba(200,40,30,.10),transparent 45%),radial-gradient(circle at 10% 90%,rgba(47,107,58,.10),transparent 40%)}
+.c3 .stack{position:absolute;top:210px;left:90px;right:90px;line-height:.98}
+.c3 .stack .y{display:inline-block;background:var(--grn);color:#fff;font:700 44px var(--body);padding:10px 24px;border-radius:999px;margin-bottom:26px}
+.c3 .stack i{display:block;font-style:normal;font:400 120px var(--disp);color:var(--ink)}
+.c3 .stack b{display:block;font:400 250px var(--disp);color:var(--red);letter-spacing:-.03em}
+.c3 .brush{position:absolute;top:900px;left:90px;font:400 132px/1 var(--brush);color:var(--red-d);transform:rotate(-4deg)}
+.c3 .dok{position:absolute;right:-230px;top:1080px;width:700px;height:700px;border-radius:50%;box-shadow:0 0 0 16px #fff, 0 30px 60px rgba(60,20,10,.25)}
+.c3 .search{position:absolute;left:90px;top:1110px;width:520px;display:flex;align-items:center;gap:14px;background:#fff;border:6px solid var(--grn);border-radius:16px;padding:18px 22px;font:700 34px var(--body);color:#222}
+.c3 .search i{margin-left:auto;font-style:normal;background:var(--grn);color:#fff;border-radius:10px;width:58px;height:58px;display:grid;place-items:center;font-size:32px}
+.c3 .info{position:absolute;left:90px;top:1270px;max-width:560px;text-align:left;color:var(--ink)}
+.c3 .info span{color:var(--red)}
+.c3 .credit{color:rgba(33,24,22,.55)}
+
+/* ④ 숫자형 — 100포기 → 0포기 */
+.c4{background:#171311;color:#fff}
+.c4 .from{position:absolute;top:300px;left:0;right:0;text-align:center;font:400 250px/1 var(--disp);color:#6d625c;text-decoration:line-through;text-decoration-thickness:22px;text-decoration-color:var(--red)}
+.c4 .lab{position:absolute;left:0;right:0;text-align:center;font:700 46px var(--body);color:#b6aaa2}
+.c4 .lab.a{top:240px}.c4 .lab.b{top:640px;color:var(--yel)}
+.c4 .to{position:absolute;top:700px;left:0;right:0;text-align:center;font:400 400px/1 var(--disp);color:var(--yel);letter-spacing:-.04em}
+.c4 .line{position:absolute;top:1150px;left:0;right:0;text-align:center;font:900 64px/1.35 var(--body)}
+.c4 .line b{color:var(--yel)}
+.c4 .photo{left:90px;right:90px;top:1360px;height:240px;border-radius:24px;opacity:.95}
+.c4 .tag{position:absolute;left:0;right:0;top:1630px;text-align:center;font:700 40px/1.45 var(--body);color:#fff}
+.c4 .tag small{display:block;font-size:32px;font-weight:500;color:#cfc4bc}
+
+/* ⑤ 붓글씨형 — 처음 시안(빨강→초록)을 사진·붓글씨로 */
+.c5{background:linear-gradient(180deg,#C8281E 0%,#7A2A1A 46%,#2F6B3A 100%)}
+.c5 .photo{left:0;right:0;top:0;height:900px;-webkit-mask-image:linear-gradient(180deg,#000 70%,transparent);mask-image:linear-gradient(180deg,#000 70%,transparent)}
+.c5 .brush{position:absolute;top:760px;left:0;right:0;text-align:center;font:400 210px/1 var(--brush);color:#fff;text-shadow:0 8px 0 rgba(0,0,0,.35);transform:rotate(-3deg)}
+.c5 .title{position:absolute;top:1010px;left:0;right:0;text-align:center;color:#fff}
+.c5 .title small{display:block;font:700 54px var(--body)}
+.c5 .title b{display:block;font:400 200px/1.02 var(--disp);-webkit-text-stroke:8px rgba(0,0,0,.35);paint-order:stroke fill}
+.c5 .info{position:absolute;top:1340px;left:0;right:0;color:#fff}
+</style>
+</head>
+<body>
+<div class="gallery">
+
+<div class="slot" data-n="1"><div class="frame"><div class="cv c1">
+  <div class="ai">AI 활용</div>
+  <div class="room">엄마 💛</div>
+  <div class="chat">
+    <div><p class="who">엄마</p><div class="b">딸, 올해 김장<br><big>100포기</big> 할까?</div></div>
+    <div class="me">번거롭게?<br><em>아니,</em> 가볍게.</div>
+    <div class="link"><div class="photo" style="background-image:url(img/kimchi.jpg)"></div><div>2026 빛고을 사랑나눔 김장대전<small>kimchigwangju.co.kr</small></div></div>
+  </div>
+  <div class="info">11.27(금) ~ 12.13(일) · 광주김치타운<small>가격·일정 10.12 공식 누리집 기준</small></div>
+  <div class="credit">사진: gwangju kimchi (CC BY-SA 2.0, 위키미디어 공용) · 시안용, 행사 사진 아님</div>
+</div></div><span>① 카톡형 — 영상 첫 장면</span></div>
+
+<div class="slot" data-n="2"><div class="frame"><div class="cv c2">
+  <div class="photo" style="background-image:url(img/bowl.jpg);background-position:58% 50%"></div>
+  <div class="ai">AI 활용</div>
+  <div class="q"><s>번거롭게?</s></div>
+  <div class="big">가볍게.</div>
+  <div class="sub">절임배추·양념 준비 끝<br><b>버무리면 끝.</b></div>
+  <div class="title"><small>2026 빛고을 사랑나눔</small><b>김장대전</b></div>
+  <div class="info">11.27(금) ~ 12.13(일) · 광주김치타운<small>예약 kimchigwangju.co.kr</small></div>
+  <div class="credit lt">사진: 최광모 (CC BY-SA 4.0, 위키미디어 공용) · 시안용, 행사 사진 아님</div>
+</div></div><span>② 가볍게 — 큰 글자 한 방</span></div>
+
+<div class="slot" data-n="3"><div class="frame"><div class="cv c3">
+  <div class="ai">AI 활용</div>
+  <div class="stack"><span class="y">2026</span><i>빛고을</i><i>사랑나눔</i><b>김장대전</b></div>
+  <div class="brush">버무리면 끝!</div>
+  <div class="photo dok" style="background-image:url(img/dok.jpg);background-position:45% 60%"></div>
+  <div class="search">빛고을사랑나눔김장대전<i>⌕</i></div>
+  <div class="info">11.27(금) ~ 12.13(일)<br><span>광주김치타운</span><small>남구 김치로 60<br>예약 kimchigwangju.co.kr</small></div>
+  <div class="credit">사진: gwangju kimchi (CC BY-SA 2.0, 위키미디어 공용) · 시안용, 행사 사진 아님</div>
+</div></div><span>③ 공식 포스터 계보형</span></div>
+
+<div class="slot" data-n="4"><div class="frame"><div class="cv c4">
+  <div class="ai">AI 활용</div>
+  <div class="lab a">작년 우리 집</div>
+  <div class="from">100포기</div>
+  <div class="lab b">올해 우리 집</div>
+  <div class="to">0포기</div>
+  <div class="line">절이고 씻는 건 끝.<br><b>버무리기만, 10kg 6만 7천 원</b></div>
+  <div class="photo" style="background-image:url(img/salted.jpg);background-position:50% 45%"></div>
+  <div class="tag">2026 빛고을 사랑나눔 김장대전<small>11.27(금) ~ 12.13(일) · 광주김치타운 · 10.12 공식 누리집 기준</small></div>
+  <div class="credit lt">사진: Joseph Steinberg (CC BY-SA 2.0, 위키미디어 공용) · 시안용, 행사 사진 아님</div>
+</div></div><span>④ 숫자형 — 100포기 → 0포기</span></div>
+
+<div class="slot" data-n="5"><div class="frame"><div class="cv c5">
+  <div class="photo" style="background-image:url(img/kimchi.jpg);background-position:40% 50%"></div>
+  <div class="ai">AI 활용</div>
+  <div class="brush">김장할 맛 난다!</div>
+  <div class="title"><small>2026 빛고을 사랑나눔</small><b>김장대전</b></div>
+  <div class="info">11.27(금) ~ 12.13(일)<br>광주김치타운<br>예약 kimchigwangju.co.kr<small>가격·일정 10.12 공식 누리집 기준 · AI를 활용해 만들었습니다</small></div>
+  <div class="credit lt">사진: gwangju kimchi (CC BY-SA 2.0, 위키미디어 공용) · 시안용, 행사 사진 아님</div>
+</div></div><span>⑤ 붓글씨형 — 처음 시안 업그레이드</span></div>
+
+</div>
+<script>
+const n = new URLSearchParams(location.search).get("n");
+if (n) { document.body.classList.add("one"); document.querySelectorAll(".slot").forEach(s => { if (s.dataset.n !== n) s.remove(); }); }
+</script>
+</body>
+</html>
