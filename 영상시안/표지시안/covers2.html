@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>김장대전 표지 가안 2</title>
+<style>
+/* 가안 2 — 디자인 철학 「발효의 질서」 · 공식 누리집 색(#E10000·#D8382B·#E19B54·#F2EDE6·#FFEB00)과 글꼴(G마켓 산스·Pretendard)
+   해외 레퍼런스: Sulki & Min 'Cabbage Thoughts'(겹 띠 글자) · Umami 발효 축제(둥근 거품) · Asaba 'Kewpie 채소'(사진 주인공·작은 글자) · Yataï(두 색) · Kieler Woche(해마다 쓰는 하나의 표식)
+   한 장 = 1080×1920. ?n=1~4 면 한 장만 원래 크기로 (PNG 뽑기용) */
+@font-face{font-family:"Gmarket";src:url(fonts/GmarketSansLight.woff) format("woff");font-weight:300}
+@font-face{font-family:"Gmarket";src:url(fonts/GmarketSansMedium.woff) format("woff");font-weight:500}
+@font-face{font-family:"Gmarket";src:url(fonts/GmarketSansBold.woff) format("woff");font-weight:700}
+@font-face{font-family:"Pretendard";src:url(fonts/Pretendard-Regular.woff2) format("woff2");font-weight:400}
+@font-face{font-family:"Pretendard";src:url(fonts/Pretendard-Medium.woff2) format("woff2");font-weight:500}
+@font-face{font-family:"Pretendard";src:url(fonts/Pretendard-Bold.woff2) format("woff2");font-weight:700}
+@font-face{font-family:"Pretendard";src:url(fonts/Pretendard-Black.woff2) format("woff2");font-weight:900}
+:root{
+  --red:#E10000; --chili:#D8382B; --deep:#A3140C; --ochre:#E19B54; --rice:#F2EDE6; --paper:#FBF8F3; --yel:#FFEB00; --leaf:#3F6B37; --ink:#1E1A18;
+  --disp:"Gmarket",sans-serif; --body:"Pretendard",sans-serif; --M:84px;
+}
+*{box-sizing:border-box;margin:0}
+body{background:#2a2421;font-family:var(--body);color:var(--ink)}
+.gallery{display:flex;flex-wrap:wrap;gap:28px;justify-content:center;padding:28px 16px}
+.slot{display:grid;gap:8px;justify-items:center;color:#eee;font-size:14px}
+.slot .frame{width:270px;height:480px;overflow:hidden;border-radius:14px}
+.slot .frame>.cv{transform:scale(.25);transform-origin:0 0}
+body.one{background:transparent}
+body.one .gallery{padding:0;display:block}
+body.one .slot{display:block}
+body.one .slot .frame{width:1080px;height:1920px;border-radius:0}
+body.one .slot .frame>.cv{transform:none}
+body.one .slot>span{display:none}
+
+.cv{position:relative;width:1080px;height:1920px;overflow:hidden;background:var(--rice);color:var(--ink)}
+.ai{position:absolute;top:72px;right:var(--M);font:700 26px/1 var(--body);letter-spacing:.02em;padding:12px 18px;border:2px solid currentColor;border-radius:999px}
+.eyebrow{font:500 34px/1 var(--disp);letter-spacing:.04em}
+/* 아래 정보: 표본 라벨처럼 같은 기준선·같은 간격 */
+.meta{position:absolute;left:var(--M);right:var(--M);display:grid;grid-template-columns:150px 1fr;row-gap:0;font:500 34px/1 var(--body)}
+.meta dt,.meta dd{padding:22px 0;border-top:2px solid currentColor}
+.meta dt{font:700 26px/34px var(--body);letter-spacing:.08em;opacity:.7}
+.meta dd{font-weight:700;letter-spacing:-.01em}
+.credit{position:absolute;left:var(--M);right:var(--M);bottom:56px;font:400 21px/1.4 var(--body);opacity:.62}
+
+/* ① 결 — 배춧잎 단면 띠로 채운 글자 (Sulki & Min) */
+.c1{background:var(--deep);color:var(--paper)}
+.c1 .eyebrow{position:absolute;top:84px;left:var(--M)}
+.c1 .ttl{position:absolute;top:250px;left:0;right:0;text-align:center;font:700 470px/.94 var(--disp);letter-spacing:-.06em;
+  background:url(bands.svg) 0 0/1080px 64px repeat;-webkit-background-clip:text;background-clip:text;color:transparent}
+.c1 .say{position:absolute;top:1218px;left:var(--M);right:var(--M);font:500 66px/1.25 var(--disp);letter-spacing:-.02em}
+.c1 .say b{font-weight:700;color:var(--yel)}
+.c1 .meta{top:1452px}
+
+/* ② 두 색 — 빨강 원 하나, 미색 바탕 하나, 발효 거품 (Yataï · Umami) */
+.c2{background:var(--rice)}
+.c2 .eyebrow{position:absolute;top:84px;left:var(--M);color:var(--red)}
+.c2 .q{position:absolute;top:262px;left:0;right:0;text-align:center;font:500 84px/1 var(--disp);color:var(--ink);letter-spacing:-.02em}
+.c2 .q s{text-decoration-thickness:8px;text-decoration-color:var(--red)}
+.c2 .disc{position:absolute;top:410px;left:84px;width:912px;height:912px;border-radius:50%;background:var(--red);display:grid;place-items:center}
+.c2 .disc b{font:700 250px/1 var(--disp);color:var(--paper);letter-spacing:-.06em;transform:translateY(12px)}
+.c2 .bub{position:absolute;border-radius:50%;border:5px solid var(--red)}
+.c2 .ttl{position:absolute;top:1380px;left:var(--M);font:700 128px/1 var(--disp);color:var(--red);letter-spacing:-.04em}
+.c2 .meta{top:1544px;color:var(--ink)}
+
+/* ③ 100포기 — 셀 수 있는 표식 (Kieler Woche 같은 해마다의 표식) */
+.c3{background:var(--paper)}
+.c3 .eyebrow{position:absolute;top:84px;left:var(--M);color:var(--ink)}
+.c3 .lab{position:absolute;left:var(--M);font:700 30px/1 var(--body);letter-spacing:.08em;color:var(--ink);opacity:.62}
+.c3 .grid{position:absolute;top:262px;left:var(--M);width:912px;display:grid;grid-template-columns:repeat(10,1fr);gap:10px 0;justify-items:center}
+.c3 .grid svg{width:56px;height:66px}
+.c3 .n100{position:absolute;top:196px;right:var(--M);font:700 30px/1 var(--body);letter-spacing:.04em;color:var(--leaf)}
+.c3 .zero{position:absolute;top:1128px;left:var(--M);display:flex;align-items:baseline;gap:28px;color:var(--red)}
+.c3 .zero b{font:700 330px/.8 var(--disp);letter-spacing:-.06em}
+.c3 .zero span{font:700 96px/1 var(--disp);letter-spacing:-.03em}
+.c3 .say{position:absolute;top:1420px;left:var(--M);right:var(--M);font:500 46px/1.3 var(--disp);color:var(--ink);letter-spacing:-.02em}
+.c3 .say b{font-weight:700;color:var(--red)}
+.c3 .meta{top:1574px;color:var(--ink);font-size:30px}
+.c3 .meta dt,.c3 .meta dd{padding:16px 0}
+
+/* ④ 생 — 사진이 주인공, 글자는 작게 (Asaba 'Kewpie 채소') */
+.c4{background:var(--rice)}
+.c4 .photo{position:absolute;left:0;top:0;width:1080px;height:1196px;background:url(img/v_kimchi.jpg) 50% 34%/1080px auto no-repeat}
+.c4 .ai{color:var(--ink);background:rgba(251,248,243,.7)}
+.c4 .tiny{position:absolute;top:76px;left:var(--M);font:500 30px/1.35 var(--disp);color:var(--ink);letter-spacing:.02em}
+.c4 .ttl{position:absolute;top:1262px;left:var(--M);font:700 168px/1 var(--disp);color:var(--red);letter-spacing:-.05em}
+.c4 .say{position:absolute;top:1452px;left:var(--M);font:500 44px/1.3 var(--disp);color:var(--ink);letter-spacing:-.02em}
+.c4 .say b{color:var(--chili);font-weight:700}
+.c4 .meta{top:1546px}
+.c4 .credit{color:var(--ink)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="cab" viewBox="0 0 64 76">
+    <path d="M32 3C49 9 58 26 56 44C54 62 44 73 32 73C20 73 10 62 8 44C6 26 15 9 32 3Z" fill="currentColor"/>
+    <path d="M32 12V68M32 30L20 22M32 30L44 22M32 46L18 38M32 46L46 38" stroke="var(--paper)" stroke-width="3" stroke-linecap="round" fill="none" opacity=".9"/>
+  </symbol>
+</svg>
+<div class="gallery">
+
+<div class="slot" data-n="1"><div class="frame"><div class="cv c1">
+  <div class="eyebrow">2026 빛고을 사랑나눔</div>
+  <div class="ai">AI 활용</div>
+  <div class="ttl">김장<br>대전</div>
+  <p class="say">번거롭게? 아니,<br><b>가볍게.</b></p>
+  <dl class="meta"><dt>기간</dt><dd>11.27 금 — 12.13 일</dd><dt>장소</dt><dd>광주김치타운 · 남구 김치로 60</dd><dt>예약</dt><dd>kimchigwangju.co.kr</dd></dl>
+  <p class="credit">일정은 10.12 공식 누리집 기준</p>
+</div></div><span>① 결 — 배춧잎 단면 띠 글자</span></div>
+
+<div class="slot" data-n="2"><div class="frame"><div class="cv c2">
+  <div class="eyebrow">2026 빛고을 사랑나눔</div>
+  <div class="ai" style="color:var(--ink)">AI 활용</div>
+  <p class="q"><s>번거롭게?</s></p>
+  <div class="disc"><b>가볍게.</b></div>
+  <i class="bub" style="top:1150px;left:930px;width:46px;height:46px"></i>
+  <i class="bub" style="top:1236px;left:972px;width:28px;height:28px"></i>
+  <i class="bub" style="top:1292px;left:940px;width:16px;height:16px"></i>
+  <p class="ttl">김장대전</p>
+  <dl class="meta"><dt>기간</dt><dd>11.27 금 — 12.13 일</dd><dt>장소</dt><dd>광주김치타운</dd><dt>예약</dt><dd>kimchigwangju.co.kr</dd></dl>
+  <p class="credit">일정은 10.12 공식 누리집 기준</p>
+</div></div><span>② 두 색 — 빨강 원과 발효 거품</span></div>
+
+<div class="slot" data-n="3"><div class="frame"><div class="cv c3">
+  <div class="eyebrow">2026 빛고을 사랑나눔 김장대전</div>
+  <div class="ai">AI 활용</div>
+  <p class="lab" style="top:196px">작년 우리 집</p>
+  <p class="n100">100포기</p>
+  <div class="grid" id="g100"></div>
+  <p class="lab" style="top:1058px">올해 우리 집</p>
+  <div class="zero"><b>0</b><span>포기</span></div>
+  <p class="say">절이고 씻는 건 끝. <b>버무리기만.</b><br>10kg 6만 7천 원</p>
+  <dl class="meta"><dt>기간</dt><dd>11.27 금 — 12.13 일</dd><dt>장소</dt><dd>광주김치타운</dd><dt>예약</dt><dd>kimchigwangju.co.kr</dd></dl>
+  <p class="credit">가격·일정은 10.12 공식 누리집 기준</p>
+</div></div><span>③ 100포기 — 셀 수 있는 표식</span></div>
+
+<div class="slot" data-n="4"><div class="frame"><div class="cv c4">
+  <div class="photo"></div>
+  <p class="tiny">2026 빛고을 사랑나눔<br>김장대전</p>
+  <div class="ai">AI 활용</div>
+  <p class="ttl">김장대전</p>
+  <p class="say">절임배추·양념 준비 끝, <b>버무리면 끝.</b></p>
+  <dl class="meta"><dt>기간</dt><dd>11.27 금 — 12.13 일</dd><dt>장소</dt><dd>광주김치타운</dd><dt>예약</dt><dd>kimchigwangju.co.kr</dd></dl>
+  <p class="credit">사진: gwangju kimchi (CC BY-SA 2.0, 위키미디어 공용) · 시안용, 행사 사진 아님 · 일정은 10.12 공식 누리집 기준</p>
+</div></div><span>④ 생 — 사진이 주인공</span></div>
+
+</div>
+<script>
+// ③ 100포기: 열 줄 열 칸, 한 포기씩
+const g = document.getElementById("g100");
+if (g) g.innerHTML = Array.from({length:100}, (_, i) => `<svg style="color:${["#3F6B37","#5C8A43","#8DB05A"][i % 3 === 0 ? 0 : i % 3 === 1 ? 1 : 2]}"><use href="#cab"/></svg>`).join("");
+const n = new URLSearchParams(location.search).get("n");
+if (n) { document.body.classList.add("one"); document.querySelectorAll(".slot").forEach(s => { if (s.dataset.n !== n) s.remove(); }); }
+</script>
+</body>
+</html>
